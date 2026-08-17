@@ -10,6 +10,9 @@
 El servicio `migrate` debe terminar correctamente antes de iniciar API y worker. No se ejecutan
 migraciones implícitas durante el arranque de la aplicación.
 
+El worker usa pool Celery `solo`: cada tarea Monte Carlo controla su propio pool de procesos. No
+debe cambiarse a prefork sin desactivar primero la paralelización interna.
+
 ## Producción
 
 Validar CI y luego ejecutar:

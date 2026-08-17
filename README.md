@@ -89,6 +89,12 @@ El comando ejecuta 100.000 torneos por cada modo (300.000 en total), el backtest
 exportación de cinco llaves en PNG 4K, SVG y PDF. Guarda el bundle trazable bajo
 `storage/release-acceptance/`.
 
+Para crear el `PredictionSnapshot` inicial o ejecutar la misma operación que encola el botón:
+
+```bash
+python scripts/update_world_cup.py --iterations 100000 --workers 24
+```
+
 ## Contratos y límites
 
 - Cada dato externo guarda fuente, URL, consulta y calidad A/B/C/D/X.

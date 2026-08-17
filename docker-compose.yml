@@ -73,7 +73,7 @@ services:
 
   worker:
     <<: *backend
-    command: ["celery", "-A", "services.api.tasks:celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]
+    command: ["celery", "-A", "services.api.tasks:celery_app", "worker", "--loglevel=INFO", "--pool=solo", "--concurrency=1"]
     healthcheck:
       test: ["CMD-SHELL", "celery -A services.api.tasks:celery_app inspect ping -d celery@$$HOSTNAME --timeout=5"]
       interval: 30s
