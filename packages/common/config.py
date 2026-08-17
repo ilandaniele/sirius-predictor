@@ -21,6 +21,7 @@ class Settings(BaseSettings):
     redis_url: str = "redis://localhost:6379/0"
     storage_path: Path = ROOT / "storage"
     scenario_path: Path = ROOT / "data" / "scenario.yaml"
+    scenario_48_path: Path = ROOT / "data" / "scenario-48.yaml"
     teams_path: Path = ROOT / "data" / "teams.csv"
     sources_path: Path = ROOT / "data" / "sources.yaml"
     cors_origins: list[str] = Field(default_factory=lambda: ["http://localhost:3000"])
@@ -28,9 +29,16 @@ class Settings(BaseSettings):
     http_max_bytes: int = 5 * 1024 * 1024
     collector_rate_limit_seconds: float = 1.0
     default_simulations: int = 100_000
-    model_version: str = "0.1.0"
+    model_version: str = "0.2.0"
     api_key: SecretStr | None = None
     post_rate_limit_per_minute: int = 10
+
+    def scenario_path_for(self, format_size: int = 64) -> Path:
+        if format_size == 64:
+            return self.scenario_path
+        if format_size == 48:
+            return self.scenario_48_path
+        raise ValueError("format_size must be 48 or 64")
 
 
 @lru_cache(maxsize=1)

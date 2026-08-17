@@ -1,8 +1,10 @@
 from __future__ import annotations
 
-import math
+from collections.abc import Mapping
 from dataclasses import dataclass
 from datetime import UTC, datetime
+
+from packages.sirius.models import SiriusAssessment
 
 from .domain import Team
 
@@ -32,15 +34,20 @@ def lunar_longitude(when: datetime) -> EphemerisValue:
 
 
 class SiriusExperimentalLayer:
-    """Small, bounded and auditable proxy for publicly described Sirius layers.
+    """Bounded adapter from reviewed Sirius assessments to match strength.
 
-    The static index is scenario input, not a learned truth. Event-time modulation uses lunar
-    longitude solely so kickoff sensitivity is measurable. The layer is never presented as
-    scientifically validated and can be disabled completely by selecting baseline mode.
+    When assessments are supplied, missing evidence is neutral. Direct callers
+    without assessments retain the explicitly labelled scenario proxy for
+    backwards compatibility; production simulations always supply assessments.
     """
 
-    def __init__(self, max_elo_adjustment: float = 35.0):
+    def __init__(
+        self,
+        max_elo_adjustment: float = 35.0,
+        assessments: Mapping[str, SiriusAssessment] | None = None,
+    ):
         self.max_elo_adjustment = float(max_elo_adjustment)
+        self.assessments = dict(assessments or {})
 
     def components(
         self,
@@ -50,23 +57,39 @@ class SiriusExperimentalLayer:
     ) -> dict[str, float | str]:
         """Expose structural, annual, temporal and uncertainty terms separately."""
 
-        structural = team.sirius_index
-        annual = 0.0
+        assessment = self.assessments.get(team.team_id)
+        if assessment is None:
+            structural = team.sirius_index
+            annual = 0.0
+            confidence = team.sirius_confidence
+            evidence_status = "scenario_proxy_x"
+        else:
+            structural = (
+                (assessment.journey_index.value - 50.0) / 50.0
+                if assessment.journey_index.value is not None
+                else 0.0
+            )
+            annual = (
+                0.5 * (assessment.coronation_index.value - 50.0) / 50.0
+                if assessment.coronation_index.value is not None
+                else 0.0
+            )
+            confidence = assessment.data_confidence
+            evidence_status = assessment.journey_index.status
         temporal = 0.0
         if kickoff is None:
             temporal_status = "neutral_missing_round_time"
         else:
-            moon = lunar_longitude(kickoff).longitude
-            temporal = 0.35 * math.cos(math.radians(moon))
-            temporal_status = "event_time_proxy"
+            temporal_status = "event_chart_available_no_team_testimony"
         return {
             "structural": structural,
             "annual": annual,
             "temporal": temporal,
             "rival_specific": 0.0,
-            "data_confidence": team.sirius_confidence,
+            "data_confidence": confidence,
             "round": round_name or "unknown",
             "temporal_status": temporal_status,
+            "evidence_status": evidence_status,
         }
 
     def adjustment(

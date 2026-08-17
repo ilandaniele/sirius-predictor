@@ -201,7 +201,7 @@ class BirthData(Base, IdMixin, TimestampMixin):
     rodden_rating: Mapped[str | None] = mapped_column(String(8))
     __table_args__ = (
         CheckConstraint(
-            "time_known = 0 OR (birth_time IS NOT NULL AND timezone IS NOT NULL)",
+            "time_known IS FALSE OR (birth_time IS NOT NULL AND timezone IS NOT NULL)",
             name="known_time_requires_value",
         ),
     )

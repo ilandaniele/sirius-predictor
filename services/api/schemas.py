@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from typing import Any
+from typing import Any, Literal
 
 from pydantic import BaseModel, Field, field_validator
 
@@ -18,6 +18,7 @@ class ProvenanceView(BaseModel):
 
 
 class SimulationRequest(BaseModel):
+    format_size: Literal[48, 64] = 64
     iterations: int = Field(default=100_000, ge=100, le=1_000_000)
     seed: int = Field(default=2030, ge=0, le=2**31 - 1)
     mode: ModelMode = ModelMode.HYBRID
@@ -39,6 +40,7 @@ class JobAccepted(BaseModel):
 
 
 class UpdateRequest(BaseModel):
+    format_size: Literal[48, 64] = 64
     iterations: int = Field(default=100_000, ge=100, le=1_000_000)
     seed: int = Field(default=2030, ge=0, le=2**31 - 1)
     modes: list[ModelMode] = Field(default_factory=lambda: list(ModelMode))

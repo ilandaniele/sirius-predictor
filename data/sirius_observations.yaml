@@ -1,0 +1,8 @@
+schema_version: sirius-observations-v1
+status: reviewed_observations_only
+policy:
+  scientific_status: experimental_not_scientifically_validated
+  unknown_birth_time: omit_time_dependent_features
+  automatic_archive_integration: false
+  note: El archivo histórico genera candidatos. Sólo observaciones confirmadas manualmente ingresan al motor.
+records: []

@@ -1,15 +1,18 @@
 # Mundial 2030 Sirius Engine
 
-Aplicación profesional y actualizable para estudiar un **escenario hipotético** de Mundial 2030
-con 64 selecciones, 16 grupos y dos clasificados por grupo. Compara tres modelos independientes:
+Aplicación profesional y actualizable para estudiar **escenarios hipotéticos** de Mundial 2030
+con 64 selecciones por defecto o una alternativa de 48. Compara tres modelos independientes:
 `FOOTBALL_ONLY`, `SIRIUS_ONLY` y `HYBRID`.
 
 > La astrología no está científicamente validada para predecir resultados deportivos. Sirius se
 > implementa como modelo experimental, auditable y siempre comparado con el baseline futbolístico.
 
-## Escenario fijo
+## Formatos disponibles
 
-- 64 selecciones; 4 bombos de 16; grupos A–P.
+- Predeterminado: 64 selecciones; 4 bombos de 16; grupos A–P; clasifican dos.
+- Alternativo: 48 selecciones; 4 bombos de 12; grupos A–L; clasifican dos y los ocho
+  mejores terceros, siguiendo la [estructura oficial de 2026](https://inside.fifa.com/organisation/fifa-council/media-releases/fifa-council-approves-international-match-calendars).
+  La asignación del cuadro 2030 sigue siendo una proyección explícita.
 - España, Portugal, Marruecos, Argentina, Paraguay y Uruguay en Bombo 1.
 - Máximo dos UEFA y máximo una selección de cualquier otra confederación por grupo.
 - Argentina y España en sectores opuestos como supuesto configurable.
@@ -55,6 +58,8 @@ npm run dev
 
 API: `http://localhost:8000`; web: `http://localhost:3000`.
 
+El selector `64 CUPOS / 48 CUPOS` está arriba del dashboard. `64` siempre abre primero.
+
 ## Docker Compose
 
 Copiar `.env.example` a `.env`, reemplazar secretos y ejecutar:
@@ -94,6 +99,24 @@ Para crear el `PredictionSnapshot` inicial o ejecutar la misma operación que en
 ```bash
 python scripts/update_world_cup.py --iterations 100000 --workers 24
 ```
+
+Para correr el formato alternativo:
+
+```bash
+python scripts/update_world_cup.py --format-size 48 --iterations 100000 --workers 8
+python scripts/release_acceptance.py --format-size 48 --iterations 100000 --workers 8
+```
+
+Una prueba rápida, útil antes de lanzar 100.000 simulaciones:
+
+```bash
+python scripts/update_world_cup.py --format-size 64 --iterations 1000 --workers 1
+```
+
+`ACTUALIZAR` captura el feed paginado completo de Juan Cruz Sirius desde la primera publicación
+disponible, conserva hashes y provenance, detecta menciones técnicas y manda toda interpretación a
+revisión. Sólo observaciones confirmadas en `data/sirius_observations.yaml` afectan a Sirius; si no
+hay evidencia, el ajuste es neutral y el dashboard lo declara.
 
 ## Contratos y límites
 

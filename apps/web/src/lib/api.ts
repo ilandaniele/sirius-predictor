@@ -5,9 +5,11 @@ import type {
   HistoryPoint,
   Prediction,
   Scenario,
+  SiriusArchive,
   SourceRecord,
   Team,
-  UpdateEvent
+  UpdateEvent,
+  JobStatus
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
@@ -23,18 +25,26 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  scenario: () => request<ApiEnvelope<Scenario>>("/scenario"),
-  teams: () => request<ApiEnvelope<Team[]>>("/teams"),
-  latest: () => request<ApiEnvelope<Prediction | null>>("/predictions/latest"),
-  history: () => request<ApiEnvelope<HistoryPoint[]>>("/predictions/history"),
-  draw: (seed = 2030) => request<ApiEnvelope<Draw>>(`/draw?seed=${seed}`),
+  scenario: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Scenario>>(`/scenario?format_size=${formatSize}`),
+  teams: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Team[]>>(`/teams?format_size=${formatSize}`),
+  latest: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Prediction | null>>(`/predictions/latest?format_size=${formatSize}`),
+  history: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<HistoryPoint[]>>(`/predictions/history?format_size=${formatSize}`),
+  draw: (seed = 2030, formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Draw>>(`/draw?seed=${seed}&format_size=${formatSize}`),
   sources: () => request<ApiEnvelope<SourceRecord[]>>("/sources"),
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
-  update: async () => {
+  siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),
+  job: (jobId: string) => request<ApiEnvelope<JobStatus>>(`/jobs/${jobId}`),
+  asset: (path: string) => `${API_URL}${path}`,
+  update: async (formatSize: 48 | 64 = 64) => {
     const response = await fetch("/api/update", {
       method: "POST",
-      body: JSON.stringify({ iterations: 100_000, seed: 2030 })
+      body: JSON.stringify({ iterations: 100_000, seed: 2030, format_size: formatSize })
     });
     if (!response.ok) throw new Error(`API ${response.status}: ${await response.text()}`);
     return response.json() as Promise<{ job_id: string; status: string; detail: string }>;

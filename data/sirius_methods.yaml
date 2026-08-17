@@ -1,19 +1,25 @@
 metadata:
-  version: public-method-proxy-v1
+  version: public-method-evidence-v2
   status: experimental_not_scientifically_validated
   primary_archive: https://astrologiadeportivaa.blogspot.com/
   reconstructed_as_of: 2026-08-17
   policy: Publicar aciertos y errores; no ajustar pesos después de conocer resultados.
-implemented_proxy:
+legacy_scenario_proxy:
+  production_enabled: false
   structural_prior:
     input: sirius_index
     confidence: sirius_confidence
     formula: max_elo_adjustment * sirius_index * confidence * modulation
     warning: Índice hipotético del escenario; no es un dato observado ni un resultado científico.
-  event_time:
+  event_time_legacy:
     input: lunar_longitude_at_kickoff
     provider: Swiss Ephemeris when available; explicit mean-lunar fallback otherwise
     scope: Sólo final con fecha y hora; otras rondas usan señal estructural sin carta de evento.
+reviewed_evidence_pipeline:
+  observations: data/sirius_observations.yaml
+  archive: complete_paginated_blogger_feed
+  automatic_archive_integration: false
+  missing_evidence: neutral
   historical_backtest:
     input: expanding_team_performance_by_moon_sign
     leakage_control: Sólo partidos anteriores al pronosticado, con prior bayesiano.
@@ -77,4 +83,3 @@ rules:
   avoid_posthoc: true
   separate_signal_from_data_confidence: true
   publish_negative_results: true
-

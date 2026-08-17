@@ -19,7 +19,15 @@ export type Scenario = {
   scenario_id: string;
   as_of: string;
   status: string;
-  format: { teams: number; groups: number; group_size: number };
+  format: {
+    teams: 48 | 64;
+    pots: number;
+    pot_size: number;
+    groups: number;
+    group_size: number;
+    qualifiers_per_group: number;
+    best_third_placed: number;
+  };
   final: { city: string; local_date: string; base_hour: number };
 };
 
@@ -49,6 +57,56 @@ export type Prediction = {
   model_comparison?: Record<string, number | null>;
   changes?: string[];
   update_summary?: string;
+  format_size?: 48 | 64;
+  scenario_id?: string;
+  bracket_urls?: Array<{
+    rank: number;
+    png: string;
+    svg: string;
+    pdf: string;
+  }>;
+  sirius_assessments?: Record<string, SiriusAssessment>;
+  sirius_evidence_audit?: {
+    reviewed_observations: number;
+    pending_observations: number;
+    teams_with_evidence: number;
+  };
+};
+
+export type SiriusAssessment = {
+  journey_index: { value: number | null; status: string; evidence_count: number };
+  coronation_index: { value: number | null; status: string; evidence_count: number };
+  data_confidence: number;
+  explanation: string;
+};
+
+export type SiriusArchive = {
+  source_name: string;
+  source_url: string;
+  consulted_at: string;
+  quality: "B";
+  declared_total: number;
+  captured_total: number;
+  complete: boolean;
+  earliest_published_at: string;
+  latest_published_at: string;
+  sports_relevant_total: number;
+  technique_mentions: Record<string, number>;
+  review_policy: string;
+  recent_sports_posts: Array<{
+    post_id: string;
+    published_at: string;
+    url: string;
+    title: string;
+    technique_mentions: string[];
+    review_status: string;
+  }>;
+};
+
+export type JobStatus = {
+  job_id: string;
+  status: string;
+  result: { snapshot_id?: string; summary?: string } | null;
 };
 
 export type Draw = Record<string, Team[]>;

@@ -11,7 +11,7 @@ from typing import Any
 
 import pandas as pd  # type: ignore[import-untyped]
 
-from engine.config import load_scenario, load_teams
+from engine.config import load_scenario, load_teams, teams_for_scenario
 from engine.domain import SimulationBundle
 from engine.sim import _sensitivity_table, run_engine
 from packages.common.types import ModelMode
@@ -32,12 +32,14 @@ class ParallelSimulationResult:
     top_brackets: list[dict[str, Any]]
     sensitivity: pd.DataFrame
     chunks: list[SimulationBundle]
+    sirius_assessments: dict[str, dict[str, Any]]
+    sirius_evidence_audit: dict[str, Any]
 
 
 def _chunk_job(arguments: tuple[str, str, int, int, str, int]) -> SimulationBundle:
     scenario_path, teams_path, count, seed, mode, final_hour = arguments
     scenario = load_scenario(scenario_path)
-    teams = load_teams(teams_path)
+    teams = teams_for_scenario(load_teams(teams_path), scenario)
     return run_engine(
         teams,
         scenario,
@@ -105,7 +107,7 @@ def run_parallel(
     if iterations <= 0:
         raise ValueError("iterations must be positive")
     scenario = load_scenario(scenario_path)
-    teams = load_teams(teams_path)
+    teams = teams_for_scenario(load_teams(teams_path), scenario)
     worker_count = max(1, min(workers or (os.cpu_count() or 1), iterations))
     base, remainder = divmod(iterations, worker_count)
     counts = [base + int(index < remainder) for index in range(worker_count)]
@@ -197,7 +199,7 @@ def run_parallel(
         bracket["count"] = cluster_counts[str(bracket["signature"])]
         bracket["density_percent"] = 100 * int(bracket["count"]) / iterations
     run_id = hashlib.sha256(
-        f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}".encode()
+        f"{scenario.scenario_id}:{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}".encode()
     ).hexdigest()[:16]
     if not math.isclose(float(ranking["Campeón %"].sum()), 100.0, abs_tol=1e-9):
         raise RuntimeError("parallel aggregation lost champion probability mass")
@@ -215,4 +217,6 @@ def run_parallel(
         top_brackets=top_brackets,
         sensitivity=sensitivity,
         chunks=chunks,
+        sirius_assessments=chunks[0].sirius_assessments,
+        sirius_evidence_audit=chunks[0].sirius_evidence_audit,
     )

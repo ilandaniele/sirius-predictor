@@ -9,7 +9,7 @@ from time import perf_counter
 import pandas as pd  # type: ignore[import-untyped]
 
 from engine.backtest import EDITION_FOLDERS, load_historical_matches
-from engine.config import load_scenario, load_teams, validate_scenario
+from engine.config import load_scenario, load_teams, teams_for_scenario, validate_scenario
 from engine.updates import StateStore
 from packages.common.types import ModelMode
 from packages.football import DrawEngine
@@ -25,17 +25,20 @@ def _records(frame: pd.DataFrame) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run v0.1.0 release acceptance")
+    parser = argparse.ArgumentParser(description="Run v0.2.0 release acceptance")
     parser.add_argument("--iterations", type=int, default=100_000)
     parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--format-size", type=int, choices=(48, 64), default=64)
     args = parser.parse_args()
     if args.iterations < 100_000:
         raise ValueError("release acceptance requires at least 100,000 iterations")
 
-    scenario_path = ROOT / "data" / "scenario.yaml"
+    scenario_path = ROOT / "data" / (
+        "scenario.yaml" if args.format_size == 64 else "scenario-48.yaml"
+    )
     teams_path = ROOT / "data" / "teams.csv"
     scenario = load_scenario(scenario_path)
-    teams = load_teams(teams_path)
+    teams = teams_for_scenario(load_teams(teams_path), scenario)
     validate_scenario(scenario, teams)
     output = ROOT / "storage" / "release-acceptance" / datetime.now(UTC).strftime("%Y%m%dT%H%M%SZ")
     output.mkdir(parents=True, exist_ok=False)
@@ -125,9 +128,10 @@ def main() -> None:
         output / "brackets-4k",
     )
     manifest = {
-        "release": "0.1.0",
+        "release": "0.2.0",
         "created_at": datetime.now(UTC).isoformat(),
         "scenario": scenario.scenario_id,
+        "format_size": args.format_size,
         "iterations_per_mode": args.iterations,
         "draw": {
             "seconds": draw_seconds,
@@ -146,7 +150,7 @@ def main() -> None:
         "simulations": simulations,
         "brackets": bracket_manifests,
         "acceptance": {
-            "teams": len(teams) == 64,
+            "teams": len(teams) == args.format_size,
             "legal_draws": draw_analysis.iterations >= 100_000,
             "simulations_each_mode": all(
                 item["champion_probability_sum"] > 99.999 for item in simulations.values()

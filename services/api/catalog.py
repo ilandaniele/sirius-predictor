@@ -1,5 +1,7 @@
 from __future__ import annotations
 
+import json
+from collections import Counter
 from functools import lru_cache
 from pathlib import Path
 from typing import Any
@@ -9,6 +11,7 @@ import yaml
 from packages.common.config import ROOT
 
 from .schemas import ProvenanceView
+from .update_pipeline import PredictionArchive
 
 
 @lru_cache(maxsize=1)
@@ -36,8 +39,6 @@ def latest_run_summary(storage_path: Path) -> dict[str, Any] | None:
     latest = storage_path / "runs" / "latest.json"
     if not latest.exists():
         return None
-    import json
-
     return json.loads(latest.read_text(encoding="utf-8"))
 
 
@@ -65,6 +66,42 @@ def latest_backtest(storage_path: Path) -> dict[str, Any] | None:
     path = storage_path / "backtests" / "latest.json"
     if not path.exists():
         return None
-    import json
-
     return json.loads(path.read_text(encoding="utf-8"))
+
+
+def latest_sirius_archive(storage_path: Path, limit: int = 50) -> dict[str, Any] | None:
+    event = PredictionArchive(storage_path).latest_update_event()
+    if event is None:
+        return None
+    source = next(
+        (item for item in event.get("sources", []) if item.get("source_id") == "sirius_blog"),
+        None,
+    )
+    if source is None or not source.get("snapshot_path"):
+        return None
+    snapshot_root = (storage_path / "source_snapshots").resolve()
+    target = Path(str(source["snapshot_path"])).resolve()
+    if snapshot_root not in target.parents or not target.is_file():
+        return None
+    raw = json.loads(target.read_text(encoding="utf-8"))
+    if raw.get("schema_version") != "sirius-archive-v2":
+        return None
+    sports_posts = [post for post in raw.get("posts", []) if post.get("sports_relevant")]
+    techniques = Counter(
+        technique for post in sports_posts for technique in post.get("technique_mentions", [])
+    )
+    return {
+        "source_name": raw["source_name"],
+        "source_url": raw["source_url"],
+        "consulted_at": raw["consulted_at"],
+        "quality": raw["quality"],
+        "declared_total": raw["declared_total"],
+        "captured_total": raw["captured_total"],
+        "complete": raw["complete"],
+        "earliest_published_at": raw["earliest_published_at"],
+        "latest_published_at": raw["latest_published_at"],
+        "sports_relevant_total": raw["sports_relevant_total"],
+        "technique_mentions": dict(techniques.most_common()),
+        "review_policy": "candidate_only_manual_confirmation_required",
+        "recent_sports_posts": list(reversed(sports_posts))[:limit],
+    }

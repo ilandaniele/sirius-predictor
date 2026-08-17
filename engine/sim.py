@@ -6,12 +6,15 @@ import random
 from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
 
 from packages.common.types import ModelMode
+from packages.sirius import build_sirius_assessments
+from packages.sirius.models import SiriusAssessment
 
 from .config import Scenario, load_scenario, load_teams, validate_scenario
 from .domain import SimulationBundle, SimulationManifest, Team, TournamentResult
@@ -21,6 +24,14 @@ from .tournament import ROUND_SEQUENCE, simulate_tournament
 
 STAGES = ("Group", "R32", "R16", "QF", "SF", "F", "Champion")
 STAGE_INDEX = {stage: index for index, stage in enumerate(STAGES)}
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+
+
+def _assessments(
+    teams: list[Team], scenario: Scenario
+) -> tuple[dict[str, SiriusAssessment], dict[str, Any]]:
+    path = PROJECT_ROOT / scenario.models.sirius_observations_file
+    return build_sirius_assessments({team.team_id for team in teams}, path)
 
 
 def _input_hash(teams: list[Team], scenario: Scenario) -> str:
@@ -42,7 +53,10 @@ def _sensitivity_table(
 ) -> pd.DataFrame:
     if pair is None:
         return pd.DataFrame()
-    layer = SiriusExperimentalLayer(scenario.models.max_sirius_elo_adjustment)
+    assessments, _ = _assessments(teams, scenario)
+    layer = SiriusExperimentalLayer(
+        scenario.models.max_sirius_elo_adjustment, assessments=assessments
+    )
     model = FootballMatchModel(teams, layer, mode=mode)
     ratings = {team.team_id: team.projected_elo for team in teams}
     team_map = {team.team_id: team.team for team in teams}
@@ -92,7 +106,10 @@ def run_engine(
     if final_hour not in scenario.final.sensitivity_hours:
         raise ValueError("final_hour must be one of the configured sensitivity hours")
     validate_scenario(scenario, teams)
-    layer = SiriusExperimentalLayer(scenario.models.max_sirius_elo_adjustment)
+    assessments, evidence_audit = _assessments(teams, scenario)
+    layer = SiriusExperimentalLayer(
+        scenario.models.max_sirius_elo_adjustment, assessments=assessments
+    )
     model = FootballMatchModel(teams, layer, mode=mode)
     rng = np.random.default_rng(seed)
     draw_rng = random.Random(seed ^ 0x5F3759DF)
@@ -157,6 +174,13 @@ def run_engine(
                 "Elo proyectado": team.projected_elo,
                 "Índice Sirius": team.sirius_index,
                 "Confianza Sirius": team.sirius_confidence,
+                "Índice Recorrido": assessments[team.team_id].journey_index.value,
+                "Índice Coronación": assessments[team.team_id].coronation_index.value,
+                "Confianza Datos Sirius": assessments[team.team_id].data_confidence,
+                "Evidencias Sirius": (
+                    assessments[team.team_id].journey_index.evidence_count
+                    + assessments[team.team_id].coronation_index.evidence_count
+                ),
             }
         )
     ranking = pd.DataFrame(ranking_rows).sort_values("Campeón %", ascending=False)
@@ -242,6 +266,10 @@ def run_engine(
             signature: int(cluster["count"]) for signature, cluster in clusters.items()
         },
         samples=[item["representative"] for item in top_brackets],
+        sirius_assessments={
+            team_id: assessment.to_dict() for team_id, assessment in assessments.items()
+        },
+        sirius_evidence_audit=evidence_audit,
     )
 
 

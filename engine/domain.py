@@ -104,3 +104,5 @@ class SimulationBundle:
     convergence: Any
     cluster_counts: dict[str, int] = field(default_factory=dict)
     samples: list[TournamentResult] = field(default_factory=list)
+    sirius_assessments: dict[str, dict[str, Any]] = field(default_factory=dict)
+    sirius_evidence_audit: dict[str, Any] = field(default_factory=dict)

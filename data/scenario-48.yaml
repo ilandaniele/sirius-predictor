@@ -1,33 +1,33 @@
-id: mundial-2030-sirius-v1
-name: Mundial 2030 Sirius Engine
-status: hypothetical_scenario
+id: mundial-2030-sirius-48-v1
+name: Mundial 2030 Sirius Engine · alternativa 48
+status: hypothetical_48_team_scenario_using_official_2026_group_structure
 as_of: 2026-08-17
 format:
-  teams: 64
+  teams: 48
   pots: 4
-  pot_size: 16
-  groups: 16
+  pot_size: 12
+  groups: 12
   group_size: 4
   qualifiers_per_group: 2
-  best_third_placed: 0
+  best_third_placed: 8
 hosts:
   pot: 1
   teams: [ESP, POR, MAR, ARG, PAR, UR]
 draw:
-  version: fifa-2026-extrapolation-v1
-  group_names: [A, B, C, D, E, F, G, H, I, J, K, L, M, N, O, P]
+  version: fifa-2026-structure-projection-v1
+  group_names: [A, B, C, D, E, F, G, H, I, J, K, L]
   confederation_limits:
     UEFA: 2
     default: 1
   sampling: randomized_backtracking_with_symmetric_swaps
-  mcmc_swap_steps: 96
+  mcmc_swap_steps: 72
   anchor_groups:
     ARG: A
-    ESP: I
+    ESP: G
 bracket:
-  version: opposite-half-v1
-  description: Ganadores de A-P enfrentan segundos de I-P/A-H; hipótesis hasta regla oficial.
-  opposite_group_offset: 8
+  version: seeded-32-projection-v1
+  description: Clasifican los dos primeros y los ocho mejores terceros; la asignación del R32 es una proyección interna reproducible, no un cuadro oficial de 2030.
+  opposite_group_offset: 6
 final:
   city: Madrid
   local_date: 2030-07-21

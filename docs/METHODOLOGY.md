@@ -30,18 +30,27 @@ Sirius organiza evidencia en cuatro niveles:
 4. partido: kickoff, casas I/VII, regentes, MC, Luna, partes y ventanas críticas.
 
 `SIRIUS_PURIST` acepta sólo reglas públicas explícitas. `SIRIUS_CALIBRATED` admite pesos congelados
-y versionados, pero v0.1.0 no entrena ninguno: usa pesos unitarios y lo advierte. Toda salida conserva
+y versionados, pero v0.2.0 no entrena ninguno: usa pesos unitarios y lo advierte. Toda salida conserva
 testimonios favorables/adversos, contradicciones, robustez horaria y provenance; los índices son
 balances descriptivos, no probabilidades.
 
-Los priors Sirius de `data/teams.csv` son mocks de escenario calidad X. Las señales anual/temporal
-sin dato quedan neutrales, no se inventan. El proxy lunar de kickoff sólo actúa cuando existe hora.
+Los priors Sirius de `data/teams.csv` son mocks de escenario calidad X y se muestran como tales, pero
+ya no entran en las simulaciones de producción. Monte Carlo consume evaluaciones generadas por el
+motor Sirius a partir de observaciones revisadas. Sin evidencia, Recorrido y Coronación quedan en
+`insufficient_evidence` y el ajuste es neutral. La carta de kickoff sólo aporta cuando existe un
+testimonio específico y trazable para ambos competidores.
+
+El archivo público de Sirius se captura completo desde abril de 2014. Los textos detectados se usan
+como corpus de investigación y cola de revisión, nunca como features automáticos. Esto permite
+incorporar aciertos y errores cronológicamente sin seleccionar sólo resultados favorables.
 
 ## Sorteo y Monte Carlo
 
 El primer sorteo se construye con backtracking y luego una cadena de swaps simétricos conserva todas
 las restricciones. La semilla es reproducible y ARG/ESP quedan en grupos A/I como supuesto de
-sectores opuestos. Cada torneo simula 96 partidos de grupo y 31 eliminatorios.
+sectores opuestos. El formato 64 simula 96 partidos de grupo y 31 eliminatorios; el de 48 simula 72
+de grupo y 31 eliminatorios, con ocho mejores terceros. El emparejamiento 48 de 2030 es una
+proyección reproducible y evita revanchas de grupo, no una regla oficial futura.
 
 Una llave completa casi nunca se repite. Las cinco visuales se seleccionan por familia definida por
 campeón, subcampeón y semifinalistas; la densidad se informa y se exporta un representante completo.

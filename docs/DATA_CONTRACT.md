@@ -2,9 +2,11 @@
 
 ## Escenario
 
-`data/scenario.yaml` es la autoridad para el formato hipotético. Debe cumplir:
+`data/scenario.yaml` es la autoridad del formato predeterminado y `data/scenario-48.yaml` de la
+alternativa. Deben cumplir:
 
 - 64 equipos = 4 bombos × 16 = 16 grupos × 4.
+- 48 equipos = 4 bombos × 12 = 12 grupos × 4; 24 clasificados directos y 8 mejores terceros.
 - Un equipo de cada bombo por grupo.
 - Dos clasificados por grupo.
 - Anfitriones `ESP`, `POR`, `MAR`, `ARG`, `PAR` y `UR` en Bombo 1.
@@ -50,3 +52,14 @@ backtests. `ModelVersion`, `PredictionSnapshot`, `SimulationPath` y `BacktestRun
 
 Una hora natal desconocida es `NULL` con `time_known=false`. La restricción de base impide marcarla
 conocida sin hora y zona; el parser impide guardar una hora cuando `time_known=false`.
+
+## Archivo y observaciones Sirius
+
+El collector Blogger recorre todas las páginas del feed y sólo acepta un corpus como completo si el
+total capturado coincide con el total declarado por Blogger. Conserva URL canónica, publicación,
+consulta, calidad B y hash de contenido. Las frases y técnicas detectadas son candidatos inferidos:
+no se integran automáticamente.
+
+`data/sirius_observations.yaml` es el único contrato de observaciones que consume Monte Carlo. Cada
+registro exige fuente, URL, consulta, calidad, IDs de claims y confirmación manual. Una técnica que
+requiere hora real falla si `time_known` no es verdadero; jamás se completa con 12:00.

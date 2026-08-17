@@ -13,6 +13,7 @@ def build_parser() -> argparse.ArgumentParser:
     parser.add_argument("--iterations", type=int, default=100_000)
     parser.add_argument("--seed", type=int, default=2030)
     parser.add_argument("--workers", type=int, default=None)
+    parser.add_argument("--format-size", type=int, choices=(48, 64), default=64)
     parser.add_argument("--final-hour", type=int, choices=(17, 18, 20, 21), default=18)
     parser.add_argument(
         "--modes",
@@ -34,6 +35,7 @@ def main() -> None:
             modes=tuple(ModelMode(mode) for mode in args.modes),
             final_hour=args.final_hour,
             workers=args.workers,
+            format_size=args.format_size,
         )
     )
     print(json.dumps(asdict(execution), ensure_ascii=False, indent=2))

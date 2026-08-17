@@ -16,6 +16,15 @@
   robots_policy: review_before_enable_no_browser_bypass
   use: Regla extrapolada de confederaciones y anfitriones.
   enabled: true
+- id: fifa_format_2026
+  name: FIFA Council — formato Mundial 2026
+  grade: A
+  kind: html
+  url: https://inside.fifa.com/organisation/fifa-council/media-releases/fifa-council-approves-international-match-calendars
+  terms_url: https://www.fifa.com/terms-of-service
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Fuente oficial para 12 grupos de cuatro, dos primeros y ocho mejores terceros en la alternativa de 48.
+  enabled: true
 - id: fifa_ranking
   name: FIFA/Coca-Cola Men's World Ranking
   grade: A
@@ -37,11 +46,11 @@
 - id: sirius_blog
   name: Juan Cruz Sirius — Astrología con rigurosidad
   grade: B
-  kind: html
+  kind: blogger_archive
   url: https://astrologiadeportivaa.blogspot.com/
   terms_url: https://policies.google.com/terms
   robots_policy: review_before_enable_archive_at_low_rate
-  use: Archivo público primario para reconstrucción y congelado de pronósticos previos al evento.
+  use: Archivo público primario paginado desde el primer post; genera candidatos que requieren revisión humana antes de entrar al modelo.
   enabled: true
 - id: federations
   name: Federaciones nacionales

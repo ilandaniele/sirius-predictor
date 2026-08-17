@@ -17,6 +17,12 @@ def test_health_scenario_teams_and_draw_contracts() -> None:
     draw = client.get("/api/v1/draw?seed=11").json()["data"]
     assert len(draw) == 16
     assert all(len(group) == 4 for group in draw.values())
+    scenario_48 = client.get("/api/v1/scenario?format_size=48").json()["data"]
+    assert scenario_48["format"]["teams"] == 48
+    teams_48 = client.get("/api/v1/teams?format_size=48").json()["data"]
+    assert len(teams_48) == 48
+    draw_48 = client.get("/api/v1/draw?seed=11&format_size=48").json()["data"]
+    assert len(draw_48) == 12
     backtest = client.get("/api/v1/backtesting/latest")
     assert backtest.status_code == 200
     payload = backtest.json()
@@ -31,3 +37,4 @@ def test_invalid_query_and_security_headers() -> None:
     response = client.get("/api/v1/draw?seed=-1")
     assert response.status_code == 422
     assert response.headers["x-content-type-options"] == "nosniff"
+    assert client.get("/api/v1/scenario?format_size=32").status_code == 422

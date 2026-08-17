@@ -1,5 +1,16 @@
 # Changelog
 
+## 0.2.0 — 2026-08-17
+
+- Selector 48/64 en API, CLI y dashboard; 64 permanece predeterminado.
+- Alternativa 48 con 12 grupos, ocho mejores terceros y cuadro R32 reproducible.
+- Collector paginado del archivo Sirius completo desde 2014, con hashes y revisión obligatoria.
+- Monte Carlo conectado al motor Sirius estructurado mediante observaciones confirmadas; faltantes
+  neutrales y priors X excluidos de producción.
+- Galería navegable y descargas de las cinco llaves PNG/SVG/PDF.
+- Estado de jobs consultable y polling del botón ACTUALIZAR.
+- Restricción de hora natal compatible con PostgreSQL.
+
 ## 0.1.0 — 2026-08-17
 
 - Monorepo Next.js/FastAPI con PostgreSQL, Alembic, Redis y Celery.

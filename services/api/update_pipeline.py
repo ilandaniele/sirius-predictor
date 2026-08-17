@@ -13,7 +13,8 @@ import yaml
 from collectors.common.base import Collector
 from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
-from engine.config import Scenario, load_scenario, load_teams
+from collectors.sirius_archive import sirius_archive_collector_from_config
+from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
 from packages.common.config import ROOT, Settings, get_settings
 from packages.common.types import ModelMode
 from packages.montecarlo import ParallelSimulationResult, run_parallel
@@ -27,6 +28,7 @@ class UpdateCommand:
     modes: tuple[ModelMode, ...]
     final_hour: int = 18
     workers: int | None = None
+    format_size: int = 64
 
 
 @dataclass(slots=True)
@@ -61,10 +63,19 @@ class PredictionArchive:
         self.predictions = root / "predictions"
         self.latest_path = self.predictions / "latest.json"
 
-    def load_latest(self) -> dict[str, Any] | None:
-        if not self.latest_path.exists():
+    def load_latest(self, format_size: int | None = None) -> dict[str, Any] | None:
+        path = (
+            self.predictions / f"latest-{format_size}.json"
+            if format_size is not None
+            else self.latest_path
+        )
+        if not path.exists() and format_size == 64 and self.latest_path.exists():
+            legacy = json.loads(self.latest_path.read_text(encoding="utf-8"))
+            if legacy.get("format_size", 64) == 64:
+                return legacy
+        if not path.exists():
             return None
-        return json.loads(self.latest_path.read_text(encoding="utf-8"))
+        return json.loads(path.read_text(encoding="utf-8"))
 
     def load(self, snapshot_id: str) -> dict[str, Any] | None:
         path = self.predictions / snapshot_id / "manifest.json"
@@ -84,6 +95,9 @@ class PredictionArchive:
         serialized = json.dumps(manifest, ensure_ascii=False, indent=2)
         self._atomic_write(target, serialized)
         self._atomic_write(self.latest_path, serialized)
+        format_size = manifest.get("format_size")
+        if format_size in {48, 64}:
+            self._atomic_write(self.predictions / f"latest-{format_size}.json", serialized)
         return target
 
     def append_update_event(
@@ -118,17 +132,21 @@ class PredictionArchive:
         paths = sorted(directory.glob("*.json"), reverse=True) if directory.exists() else []
         return json.loads(paths[0].read_text(encoding="utf-8")) if paths else None
 
-    def history(self, limit: int = 100) -> list[dict[str, Any]]:
+    def history(self, limit: int = 100, format_size: int | None = None) -> list[dict[str, Any]]:
         if not self.predictions.exists():
             return []
         manifests = []
         for path in self.predictions.glob("*/manifest.json"):
-            manifests.append(json.loads(path.read_text(encoding="utf-8")))
+            manifest = json.loads(path.read_text(encoding="utf-8"))
+            if format_size is None or manifest.get("format_size", 64) == format_size:
+                manifests.append(manifest)
         return sorted(manifests, key=lambda item: item["created_at"], reverse=True)[:limit]
 
-    def probability_history(self, team_ids: set[str]) -> list[dict[str, Any]]:
+    def probability_history(
+        self, team_ids: set[str], format_size: int | None = None
+    ) -> list[dict[str, Any]]:
         rows = []
-        for manifest in reversed(self.history(limit=10_000)):
+        for manifest in reversed(self.history(limit=10_000, format_size=format_size)):
             for mode, simulation in manifest.get("simulations", {}).items():
                 for team in simulation.get("ranking", []):
                     if team.get("ID") in team_ids:
@@ -149,7 +167,11 @@ class PredictionArchive:
 def build_collectors(settings: Settings) -> list[Collector]:
     raw = yaml.safe_load(settings.sources_path.read_text(encoding="utf-8"))
     return [
-        raw_collector_from_config(record, ROOT)
+        (
+            sirius_archive_collector_from_config(record)
+            if record.get("id") == "sirius_blog"
+            else raw_collector_from_config(record, ROOT)
+        )
         for record in raw
         if record.get("enabled") and record.get("url")
     ]
@@ -282,7 +304,24 @@ def _simulation_summary(result: ParallelSimulationResult) -> dict[str, Any]:
             {key: value for key, value in bracket.items() if key != "representative"}
             for bracket in result.top_brackets
         ],
+        "sirius_evidence_audit": result.sirius_evidence_audit,
     }
+
+
+def _sirius_reasons(result: ParallelSimulationResult) -> dict[str, list[str]]:
+    reasons: dict[str, list[str]] = {}
+    for team_id, assessment in result.sirius_assessments.items():
+        favorable = [
+            f"A favor: {item['description']}" for item in assessment.get("favorable", [])[:2]
+        ]
+        adverse = [
+            f"En contra: {item['description']}" for item in assessment.get("adverse", [])[:2]
+        ]
+        combined = favorable + adverse
+        reasons[team_id] = combined or [
+            "Sin testimonios Sirius revisados; el ajuste aplicado es neutral"
+        ]
+    return reasons
 
 
 def _argentina_probability(simulations: dict[str, dict[str, Any]]) -> float | None:
@@ -308,9 +347,10 @@ class UpdateOrchestrator:
         self.bracket_spec = bracket_spec
 
     def run(self, command: UpdateCommand) -> UpdateExecution:
-        scenario = load_scenario(self.settings.scenario_path)
-        teams = load_teams(self.settings.teams_path)
-        previous = self.archive.load_latest()
+        scenario_path = self.settings.scenario_path_for(command.format_size)
+        scenario = load_scenario(scenario_path)
+        teams = teams_for_scenario(load_teams(self.settings.teams_path), scenario)
+        previous = self.archive.load_latest(command.format_size)
         update = UpdatePipeline(
             self.collectors, self.settings.storage_path / "source_snapshots"
         ).run()
@@ -355,7 +395,7 @@ class UpdateOrchestrator:
         raw_results: dict[ModelMode, ParallelSimulationResult] = {}
         for mode in command.modes:
             result = self.simulator(
-                self.settings.scenario_path,
+                scenario_path,
                 self.settings.teams_path,
                 command.iterations,
                 command.seed,
@@ -424,6 +464,7 @@ class UpdateOrchestrator:
                 hybrid_result.top_brackets,
                 teams,
                 output_dir / "brackets",
+                sirius_reasons=_sirius_reasons(hybrid_result),
                 spec=self.bracket_spec,
             )
             bracket_manifest_path = (output_dir / "brackets" / "manifest.json").as_posix()
@@ -433,6 +474,8 @@ class UpdateOrchestrator:
             "created_at": created_at,
             "git_commit": _git_commit(),
             "model_version": self.settings.model_version,
+            "scenario_id": scenario.scenario_id,
+            "format_size": scenario.format.teams,
             "scenario_sha256": hashlib.sha256(
                 json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
             ).hexdigest(),
@@ -449,6 +492,12 @@ class UpdateOrchestrator:
             "simulations": simulations,
             "affected_charts": affected_charts,
             "sirius_recalculation": "only_affected_entities",
+            "sirius_assessments": (
+                hybrid_result.sirius_assessments if hybrid_result is not None else {}
+            ),
+            "sirius_evidence_audit": (
+                hybrid_result.sirius_evidence_audit if hybrid_result is not None else {}
+            ),
             "quality_pending_review": len(update.pending_review),
             "conflicts": len(update.conflicts),
             "relevant_changes": relevant_changes,

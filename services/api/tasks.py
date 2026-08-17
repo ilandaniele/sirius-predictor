@@ -38,9 +38,10 @@ def run_simulation_task(
     mode: str,
     final_hour: int,
     workers: int | None = None,
+    format_size: int = 64,
 ) -> dict[str, Any]:
     result = run_parallel(
-        ROOT / "data" / "scenario.yaml",
+        settings.scenario_path_for(format_size),
         ROOT / "data" / "teams.csv",
         iterations=iterations,
         seed=seed,
@@ -54,6 +55,7 @@ def run_simulation_task(
         "iterations": result.iterations,
         "seed": result.seed,
         "workers": result.workers,
+        "format_size": format_size,
         "ranking": result.ranking.to_dict(orient="records"),
         "argentina_stages": result.argentina_stages.to_dict(orient="records"),
         "argentina_rivals": {
@@ -79,6 +81,7 @@ def update_world_cup_task(payload: dict[str, Any]) -> dict[str, Any]:
         iterations=int(payload["iterations"]),
         seed=int(payload["seed"]),
         modes=tuple(ModelMode(value) for value in payload["modes"]),
+        format_size=int(payload.get("format_size", 64)),
     )
     result = UpdateOrchestrator().run(command)
     return {
