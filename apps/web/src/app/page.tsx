@@ -14,7 +14,8 @@ import type {
   Provenance,
   Scenario,
   SourceRecord,
-  Team
+  Team,
+  UpdateEvent
 } from "@/lib/types";
 
 const tabs = [
@@ -39,6 +40,7 @@ export default function Home() {
   const [sourceCatalog, setSourceCatalog] = useState<SourceRecord[]>([]);
   const [draw, setDraw] = useState<Draw>({});
   const [backtest, setBacktest] = useState<BacktestResult | null>(null);
+  const [lastUpdate, setLastUpdate] = useState<UpdateEvent | null>(null);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
   const [status, setStatus] = useState("Cargando contratos…");
 
@@ -50,9 +52,11 @@ export default function Home() {
       api.history(),
       api.draw(),
       api.sources(),
-      api.backtest()
+      api.backtest(),
+      api.latestUpdate()
     ])
-      .then(([scenarioResult, teamResult, latest, historical, drawResult, catalog, tested]) => {
+      .then(
+        ([scenarioResult, teamResult, latest, historical, drawResult, catalog, tested, update]) => {
         setScenario(scenarioResult.data);
         setTeams(teamResult.data);
         setPrediction(latest.data);
@@ -60,7 +64,8 @@ export default function Home() {
           ...scenarioResult.provenance,
           ...teamResult.provenance,
           ...latest.provenance,
-          ...tested.provenance
+          ...tested.provenance,
+          ...update.provenance
         ];
         setSources(
           provenanceRows.filter(
@@ -75,8 +80,17 @@ export default function Home() {
         setDraw(drawResult.data);
         setSourceCatalog(catalog.data);
         setBacktest(tested.data);
-        setStatus(latest.data ? `Snapshot ${latest.data.run_id}` : "Sin predicción ejecutada");
-      })
+        setLastUpdate(update.data);
+        const successful = update.data?.sources.filter(
+          (source) => source.fetch_status === "success"
+        ).length;
+        setStatus(
+          latest.data
+            ? `Snapshot ${latest.data.run_id} · fuentes ${successful ?? "—"}/${update.data?.sources.length ?? "—"}`
+            : "Sin predicción ejecutada"
+        );
+        }
+      )
       .catch((error: Error) => setStatus(`API no disponible · ${error.message}`));
   }, []);
 
@@ -186,6 +200,7 @@ export default function Home() {
           <article className="panel provenance-panel">
             <div className="panel-title"><div><p>TRAZABILIDAD</p><h3>Fuentes de esta vista</h3></div></div>
             {sources.length ? sources.map((source, index) => <SourceBadge source={source} key={`${source.source_id}-${index}`} />) : <p className="empty">Sin provenance cargada.</p>}
+            {lastUpdate ? <p className="micro">Última consulta: {new Date(lastUpdate.created_at).toLocaleString("es-UY")} · {lastUpdate.pending_review} pendientes · {lastUpdate.conflicts} conflictos.</p> : null}
             <p className="micro">Cada predicción conserva versión, timestamp, commit, semilla, pesos, supuestos y snapshots de entrada.</p>
           </article>
 

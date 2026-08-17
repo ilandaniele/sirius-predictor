@@ -6,7 +6,8 @@ import type {
   Prediction,
   Scenario,
   SourceRecord,
-  Team
+  Team,
+  UpdateEvent
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
@@ -29,6 +30,7 @@ export const api = {
   draw: (seed = 2030) => request<ApiEnvelope<Draw>>(`/draw?seed=${seed}`),
   sources: () => request<ApiEnvelope<SourceRecord[]>>("/sources"),
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
+  latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
   update: async () => {
     const response = await fetch("/api/update", {
       method: "POST",

@@ -75,6 +75,20 @@ export type BacktestResult = {
   calibration_manifest: Array<Record<string, string | number | number[] | boolean>>;
 };
 
+export type UpdateEvent = {
+  event_id: string;
+  created_at: string;
+  sources: Array<{
+    source_id: string;
+    fetch_status: string;
+    quality: Provenance["quality"];
+    model_input: boolean;
+  }>;
+  accepted_claims: number;
+  pending_review: number;
+  conflicts: number;
+};
+
 export type HistoryPoint = {
   snapshot_id: string;
   created_at: string;

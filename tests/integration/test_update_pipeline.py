@@ -130,6 +130,8 @@ def test_observational_raw_byte_changes_do_not_invalidate_predictions(tmp_path) 
     event = json.loads(Path(second.update_event_path).read_text(encoding="utf-8"))
     assert event["sources"][0]["source_url"] == "https://example.com/static"
     assert event["sources"][0]["quality"] == "B"
+    assert PredictionArchive(settings.storage_path).latest_update_event() == event
+    assert second.summary.endswith("predicción sin cambios")
     manifest = PredictionArchive(settings.storage_path).load(first.snapshot_id)
     assert manifest is not None
     assert manifest["sources"][0]["model_input"] is False

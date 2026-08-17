@@ -21,6 +21,10 @@ def test_health_scenario_teams_and_draw_contracts() -> None:
     assert backtest.status_code == 200
     payload = backtest.json()
     assert payload["data"] is not None or payload["warnings"]
+    update = client.get("/api/v1/updates/latest")
+    assert update.status_code == 200
+    update_payload = update.json()
+    assert update_payload["data"] is not None or update_payload["warnings"]
 
 
 def test_invalid_query_and_security_headers() -> None:

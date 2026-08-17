@@ -113,6 +113,11 @@ class PredictionArchive:
         self._atomic_write(target, json.dumps(payload, ensure_ascii=False, indent=2))
         return target
 
+    def latest_update_event(self) -> dict[str, Any] | None:
+        directory = self.root / "update-events"
+        paths = sorted(directory.glob("*.json"), reverse=True) if directory.exists() else []
+        return json.loads(paths[0].read_text(encoding="utf-8")) if paths else None
+
     def history(self, limit: int = 100) -> list[dict[str, Any]]:
         if not self.predictions.exists():
             return []
@@ -323,12 +328,16 @@ class UpdateOrchestrator:
             existing = previous
         if existing is not None:
             snapshot_id = str(existing["snapshot_id"])
+            successful_sources = sum(outcome.status == "success" for outcome in update.outcomes)
             return UpdateExecution(
                 snapshot_id=snapshot_id,
                 created_at=str(existing["created_at"]),
                 idempotent_replay=True,
-                summary=str(existing["summary"]),
-                relevant_changes=list(existing["relevant_changes"]),
+                summary=(
+                    f"{successful_sources} fuentes actualizadas · "
+                    "0 cambios de inputs · predicción sin cambios"
+                ),
+                relevant_changes=[],
                 manifest_path=(self.archive.predictions / snapshot_id / "manifest.json").as_posix(),
                 report_path=str(existing["report_path"]),
                 bracket_manifest_path=existing.get("bracket_manifest_path"),

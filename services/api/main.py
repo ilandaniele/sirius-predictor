@@ -102,6 +102,16 @@ def create_app() -> FastAPI:
     def sources_view() -> ApiEnvelope:
         return ApiEnvelope(data=list(source_catalog().values()))
 
+    @application.get("/api/v1/updates/latest", response_model=ApiEnvelope)
+    def latest_update() -> ApiEnvelope:
+        event = PredictionArchive(settings.storage_path).latest_update_event()
+        source_rows = manifest_provenance(event.get("sources", [])) if event else []
+        return ApiEnvelope(
+            data=event,
+            provenance=source_rows,
+            warnings=[] if event else ["Todavía no existe un evento de actualización."],
+        )
+
     @application.get("/api/v1/predictions/latest", response_model=ApiEnvelope)
     def latest_prediction() -> ApiEnvelope:
         manifest = PredictionArchive(settings.storage_path).load_latest()
