@@ -1,0 +1,54 @@
+- id: scenario
+  name: Escenario editable del proyecto
+  grade: X
+  kind: local_csv
+  url: data/teams.csv
+  terms_url: docs/DATA_CONTRACT.md
+  robots_policy: local_file_not_applicable
+  use: Proyección de participantes, bombos y priors; no representa clasificación oficial.
+  enabled: true
+- id: fifa_draw_2026
+  name: FIFA — procedimiento de sorteo 2026
+  grade: A
+  kind: html
+  url: https://inside.fifa.com/organisation/media-releases/procedures-final-draw-world-cup-2026-revealed
+  terms_url: https://www.fifa.com/terms-of-service
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Regla extrapolada de confederaciones y anfitriones.
+  enabled: true
+- id: fifa_ranking
+  name: FIFA/Coca-Cola Men's World Ranking
+  grade: A
+  kind: html
+  url: https://inside.fifa.com/fifa-world-ranking/men
+  terms_url: https://www.fifa.com/terms-of-service
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Referencia futura para ratings y bombos; el parser productivo aún requiere contrato estable.
+  enabled: true
+- id: openfootball
+  name: OpenFootball World Cup
+  grade: B
+  kind: repository
+  url: https://raw.githubusercontent.com/openfootball/worldcup/master/README.md
+  terms_url: https://github.com/openfootball/worldcup/blob/master/LICENSE.md
+  robots_policy: raw_repository_endpoint
+  use: Resultados históricos CC0 para backtesting prequential.
+  enabled: true
+- id: sirius_blog
+  name: Juan Cruz Sirius — Astrología con rigurosidad
+  grade: B
+  kind: html
+  url: https://astrologiadeportivaa.blogspot.com/
+  terms_url: https://policies.google.com/terms
+  robots_policy: review_before_enable_archive_at_low_rate
+  use: Archivo público primario para reconstrucción y congelado de pronósticos previos al evento.
+  enabled: true
+- id: federations
+  name: Federaciones nacionales
+  grade: A
+  kind: registry
+  url: null
+  terms_url: null
+  robots_policy: adapter_not_configured
+  use: Entrenadores, capitanes y datos oficiales; se incorpora por adaptadores específicos.
+  enabled: false

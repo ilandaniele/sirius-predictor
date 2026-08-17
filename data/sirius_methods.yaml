@@ -1,0 +1,80 @@
+metadata:
+  version: public-method-proxy-v1
+  status: experimental_not_scientifically_validated
+  primary_archive: https://astrologiadeportivaa.blogspot.com/
+  reconstructed_as_of: 2026-08-17
+  policy: Publicar aciertos y errores; no ajustar pesos después de conocer resultados.
+implemented_proxy:
+  structural_prior:
+    input: sirius_index
+    confidence: sirius_confidence
+    formula: max_elo_adjustment * sirius_index * confidence * modulation
+    warning: Índice hipotético del escenario; no es un dato observado ni un resultado científico.
+  event_time:
+    input: lunar_longitude_at_kickoff
+    provider: Swiss Ephemeris when available; explicit mean-lunar fallback otherwise
+    scope: Sólo final con fecha y hora; otras rondas usan señal estructural sin carta de evento.
+  historical_backtest:
+    input: expanding_team_performance_by_moon_sign
+    leakage_control: Sólo partidos anteriores al pronosticado, con prior bayesiano.
+    max_adjustment_elo: 40
+public_method_registry:
+  structural:
+    - id: coach_cycle
+      label: Ciclo / debut del DT
+      importance: very_high
+      implemented: false
+    - id: wc_debut
+      label: Debut mundialista de la selección
+      importance: very_high
+      implemented: false
+    - id: country_federation
+      label: País / federación
+      importance: high
+      implemented: false
+    - id: captain
+      label: Capitán
+      importance: high
+      implemented: false
+    - id: coach_natal
+      label: Carta natal del DT
+      importance: medium_high
+      implemented: false
+  annual:
+    - solar_return
+    - secondary_progressions
+    - primary_directions_if_reliable_time
+    - proluna
+    - transits
+    - harmonics
+    - dignities_receptions
+    - asc_mc_rulers_almutens
+    - arabic_parts
+    - antiscia_contra_antiscia
+    - fixed_stars
+  competition:
+    - lunar_return
+    - converse_lunar_return
+    - demi_lunar
+    - quarti_lunar
+    - lunations
+    - eclipses
+    - solar_ingresses
+  match:
+    - kickoff_chart
+    - house_I_VII_assignment
+    - moon
+    - rulers_and_dignities
+    - part_of_fortune
+    - part_of_victory
+    - part_of_spirit
+    - fixed_mutable_cardinal_modality
+    - historical_moon_sign_stats
+    - critical_minutes
+rules:
+  unknown_birth_time: marginalize_or_omit_angles
+  madrid: relocalize_not_blind_home_bonus
+  avoid_posthoc: true
+  separate_signal_from_data_confidence: true
+  publish_negative_results: true
+

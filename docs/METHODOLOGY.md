@@ -1,0 +1,65 @@
+# Metodología y protocolo experimental
+
+## Modelos separados
+
+- `FOOTBALL_ONLY`: Elo proyectado, incertidumbre de rating y goles Poisson.
+- `SIRIUS_ONLY`: testimonios Sirius sin incorporar Elo futbolístico.
+- `HYBRID`: combina el baseline con la señal Sirius acotada.
+
+La fuerza del modelo, la incertidumbre Monte Carlo y la confianza de datos son variables distintas.
+No se publica Sirius sin el baseline y el aviso de ausencia de validación científica.
+
+## Baseline futbolístico
+
+Cada torneo sortea una fuerza latente por selección. La diferencia Elo reparte un total esperado de
+2,65 goles y se muestrea con Poisson. En grupos se aplican puntos, diferencia de gol, goles a favor,
+mini-tabla y sorteo reproducible como último recurso. Eliminatorias empatadas incluyen prórroga y
+penales. Las reglas 2030 que FIFA no publicó permanecen configurables y etiquetadas como supuestos.
+
+## Astrología y Sirius
+
+Swiss Ephemeris calcula posiciones y, sólo con hora real, ASC/MC/casas. Si la hora natal se
+desconoce permanece nula; la sensibilidad 00:00–23:59 usa muestras sintéticas explícitas que nunca
+se guardan como hora natal.
+
+Sirius organiza evidencia en cuatro niveles:
+
+1. estructural: ciclo DT, debut mundialista, país/federación, capitán y natal DT;
+2. anual: retornos, progresiones, direcciones guardadas, tránsitos, dignidades y partes;
+3. torneo: retornos lunares, lunaciones, estrellas y antiscias;
+4. partido: kickoff, casas I/VII, regentes, MC, Luna, partes y ventanas críticas.
+
+`SIRIUS_PURIST` acepta sólo reglas públicas explícitas. `SIRIUS_CALIBRATED` admite pesos congelados
+y versionados, pero v0.1.0 no entrena ninguno: usa pesos unitarios y lo advierte. Toda salida conserva
+testimonios favorables/adversos, contradicciones, robustez horaria y provenance; los índices son
+balances descriptivos, no probabilidades.
+
+Los priors Sirius de `data/teams.csv` son mocks de escenario calidad X. Las señales anual/temporal
+sin dato quedan neutrales, no se inventan. El proxy lunar de kickoff sólo actúa cuando existe hora.
+
+## Sorteo y Monte Carlo
+
+El primer sorteo se construye con backtracking y luego una cadena de swaps simétricos conserva todas
+las restricciones. La semilla es reproducible y ARG/ESP quedan en grupos A/I como supuesto de
+sectores opuestos. Cada torneo simula 96 partidos de grupo y 31 eliminatorios.
+
+Una llave completa casi nunca se repite. Las cinco visuales se seleccionan por familia definida por
+campeón, subcampeón y semifinalistas; la densidad se informa y se exporta un representante completo.
+
+## Backtesting
+
+Las ediciones 2010, 2014, 2018, 2022 y 2026 usan predicción prequential: ratings e historia lunar se
+actualizan después de observar cada partido. Para cada edición, `SIRIUS_CALIBRATED` selecciona su
+alpha sólo con ediciones anteriores; nunca usa el Mundial evaluado ni información futura.
+
+Se informan log loss, Brier, accuracy, calibración, ranking del campeón y precisión por ronda. La
+ablación lunar es evaluable; técnicas sin dataset prematch congelado figuran como
+`not_evaluable_missing_pre_match_data`, evitando reconstrucciones retrospectivas favorables.
+
+## Principios de lectura
+
+- No confundir frecuencia Monte Carlo con certeza.
+- No seleccionar sólo aciertos ni ocultar resultados negativos.
+- No modificar pesos luego de conocer el evento.
+- No reemplazar fuentes de mayor calidad automáticamente.
+- No interpretar testimonios astrológicos como causalidad científica.

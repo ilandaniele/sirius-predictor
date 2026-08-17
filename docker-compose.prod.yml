@@ -1,0 +1,39 @@
+services:
+  api:
+    environment:
+      SIRIUS_ENVIRONMENT: production
+      SIRIUS_CORS_ORIGINS: ${SIRIUS_CORS_ORIGINS:?set SIRIUS_CORS_ORIGINS}
+      SIRIUS_API_KEY: ${SIRIUS_API_KEY:?set SIRIUS_API_KEY}
+    ports: !reset []
+    deploy:
+      resources:
+        limits:
+          cpus: "2.0"
+          memory: 2G
+
+  worker:
+    environment:
+      SIRIUS_ENVIRONMENT: production
+      SIRIUS_API_KEY: ${SIRIUS_API_KEY:?set SIRIUS_API_KEY}
+    deploy:
+      resources:
+        limits:
+          cpus: "8.0"
+          memory: 8G
+
+  postgres:
+    ports: !reset []
+
+  redis:
+    ports: !reset []
+
+  web:
+    ports: !reset []
+    deploy:
+      resources:
+        limits:
+          cpus: "1.0"
+          memory: 1G
+
+  backup:
+    profiles: []

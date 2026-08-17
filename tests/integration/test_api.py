@@ -1,0 +1,29 @@
+from fastapi.testclient import TestClient
+
+from services.api.main import create_app
+
+client = TestClient(create_app())
+
+
+def test_health_scenario_teams_and_draw_contracts() -> None:
+    assert client.get("/health").json()["status"] == "ok"
+    scenario = client.get("/api/v1/scenario")
+    assert scenario.status_code == 200
+    assert scenario.json()["data"]["format"]["teams"] == 64
+    assert scenario.json()["provenance"][0]["quality"] == "X"
+    teams = client.get("/api/v1/teams").json()
+    assert len(teams["data"]) == 64
+    assert teams["provenance"]
+    draw = client.get("/api/v1/draw?seed=11").json()["data"]
+    assert len(draw) == 16
+    assert all(len(group) == 4 for group in draw.values())
+    backtest = client.get("/api/v1/backtesting/latest")
+    assert backtest.status_code == 200
+    payload = backtest.json()
+    assert payload["data"] is not None or payload["warnings"]
+
+
+def test_invalid_query_and_security_headers() -> None:
+    response = client.get("/api/v1/draw?seed=-1")
+    assert response.status_code == 422
+    assert response.headers["x-content-type-options"] == "nosniff"

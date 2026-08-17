@@ -1,0 +1,65 @@
+team_id,team,confed,host,pot,projected_elo,rating_uncertainty,sirius_index,sirius_confidence,qualification_status,coach,captain,source_id,as_of
+ARG,Argentina,CONMEBOL,1,1,1960,35,0.24,0.70,host_assumption,Lionel Scaloni,Por definir,scenario,2026-08-17
+ESP,España,UEFA,1,1,1985,30,0.18,0.55,host_assumption,Por definir,Por definir,scenario,2026-08-17
+FRA,Francia,UEFA,0,1,1950,32,0.12,0.45,projected,Por definir,Por definir,scenario,2026-08-17
+ENG,Inglaterra,UEFA,0,1,1925,38,0.06,0.35,projected,Por definir,Por definir,scenario,2026-08-17
+BRA,Brasil,CONMEBOL,0,1,1935,42,0.14,0.40,projected,Por definir,Por definir,scenario,2026-08-17
+GER,Alemania,UEFA,0,1,1885,45,0.04,0.30,projected,Por definir,Por definir,scenario,2026-08-17
+NED,Países Bajos,UEFA,0,1,1880,42,0.03,0.30,projected,Por definir,Por definir,scenario,2026-08-17
+BEL,Bélgica,UEFA,0,1,1810,55,-0.03,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+POR,Portugal,UEFA,1,1,1905,40,0.08,0.35,host_assumption,Por definir,Por definir,scenario,2026-08-17
+MAR,Marruecos,CAF,1,1,1840,45,0.10,0.40,host_assumption,Por definir,Por definir,scenario,2026-08-17
+PAR,Paraguay,CONMEBOL,1,1,1710,65,-0.02,0.25,host_assumption,Por definir,Por definir,scenario,2026-08-17
+UR,Uruguay,CONMEBOL,1,1,1875,42,0.11,0.45,host_assumption,Por definir,Por definir,scenario,2026-08-17
+MEX,México,CONCACAF,0,1,1780,55,0.02,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+USA,Estados Unidos,CONCACAF,0,1,1790,52,0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+JPN,Japón,AFC,0,1,1815,45,0.06,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+SEN,Senegal,CAF,0,1,1785,50,0.03,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+ITA,Italia,UEFA,0,2,1845,48,0.05,0.30,projected,Por definir,Por definir,scenario,2026-08-17
+CRO,Croacia,UEFA,0,2,1815,50,0.05,0.30,projected,Por definir,Por definir,scenario,2026-08-17
+COL,Colombia,CONMEBOL,0,2,1835,45,0.07,0.35,projected,Por definir,Por definir,scenario,2026-08-17
+ECU,Ecuador,CONMEBOL,0,2,1785,45,0.02,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+DEN,Dinamarca,UEFA,0,2,1780,52,0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+SUI,Suiza,UEFA,0,2,1795,48,0.02,0.25,projected,Por definir,Por definir,scenario,2026-08-17
+KOR,Corea del Sur,AFC,0,2,1755,50,0.00,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+IRN,Irán,AFC,0,2,1740,52,-0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+CAN,Canadá,CONCACAF,0,2,1735,58,0.02,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+NGA,Nigeria,CAF,0,2,1745,60,0.03,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+EGY,Egipto,CAF,0,2,1730,55,0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+ALG,Argelia,CAF,0,2,1720,58,0.00,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+AUS,Australia,AFC,0,2,1715,52,-0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+KSA,Arabia Saudita,AFC,0,2,1675,60,-0.03,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+PAN,Panamá,CONCACAF,0,2,1685,58,0.00,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+CIV,Costa de Marfil,CAF,0,2,1735,58,0.02,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+AUT,Austria,UEFA,0,3,1765,50,0.00,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+TUR,Turquía,UEFA,0,3,1745,58,0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+SRB,Serbia,UEFA,0,3,1715,58,-0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+NOR,Noruega,UEFA,0,3,1770,55,0.02,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+UKR,Ucrania,UEFA,0,3,1705,62,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+CHI,Chile,CONMEBOL,0,3,1685,65,-0.02,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+PER,Perú,CONMEBOL,0,3,1640,68,-0.04,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+CRC,Costa Rica,CONCACAF,0,3,1645,65,-0.02,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+JAM,Jamaica,CONCACAF,0,3,1625,68,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+TUN,Túnez,CAF,0,3,1665,60,-0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+CMR,Camerún,CAF,0,3,1710,62,0.01,0.20,projected,Por definir,Por definir,scenario,2026-08-17
+GHA,Ghana,CAF,0,3,1655,65,0.00,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+MLI,Mali,CAF,0,3,1690,62,0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+QAT,Qatar,AFC,0,3,1615,68,-0.02,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+UZB,Uzbekistán,AFC,0,3,1660,62,0.00,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+IRQ,Irak,AFC,0,3,1605,70,-0.02,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+NZL,Nueva Zelanda,OFC,0,4,1575,68,-0.01,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+SWE,Suecia,UEFA,0,4,1695,62,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+POL,Polonia,UEFA,0,4,1675,65,-0.02,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+CZE,Chequia,UEFA,0,4,1680,62,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+GRE,Grecia,UEFA,0,4,1645,65,-0.02,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+HON,Honduras,CONCACAF,0,4,1535,75,-0.04,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+GUA,Guatemala,CONCACAF,0,4,1515,78,-0.04,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+RSA,Sudáfrica,CAF,0,4,1600,68,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+COD,República Democrática del Congo,CAF,0,4,1595,72,-0.01,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+UAE,Emiratos Árabes Unidos,AFC,0,4,1570,70,-0.03,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+CHN,China,AFC,0,4,1510,80,-0.05,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+JOR,Jordania,AFC,0,4,1585,68,-0.01,0.15,projected,Por definir,Por definir,scenario,2026-08-17
+IDN,Indonesia,AFC,0,4,1460,85,-0.05,0.10,projected,Por definir,Por definir,scenario,2026-08-17
+NCL,Nueva Caledonia,OFC,0,4,1390,90,-0.05,0.05,projected,Por definir,Por definir,scenario,2026-08-17
+SOL,Islas Salomón,OFC,0,4,1370,95,-0.05,0.05,projected,Por definir,Por definir,scenario,2026-08-17
+TAH,Tahití,OFC,0,4,1360,95,-0.05,0.05,projected,Por definir,Por definir,scenario,2026-08-17

@@ -1,0 +1,3 @@
+# Compatibilidad para entornos que todavía instalan requirements.txt.
+# pyproject.toml es la fuente autoritativa de dependencias.
+-e .

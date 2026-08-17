@@ -1,0 +1,31 @@
+version: sirius-rules-public-v1
+status: experimental_not_scientifically_validated
+weights_trained: false
+rules:
+  - {id: coach_cycle, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: world_cup_debut, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: country_federation, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: captain, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: coach_natal, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: solar_return, layer: annual, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: progressions, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
+  - {id: primary_directions, layer: annual, explicit_public_rule: true, requires_known_time: true, implementation_status: guarded}
+  - {id: proluna, layer: annual, explicit_public_rule: false, requires_known_time: false, implementation_status: optional_proxy}
+  - {id: transits, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
+  - {id: dignities_receptions, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
+  - {id: solar_lunar_factors, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
+  - {id: arabic_parts, layer: annual, explicit_public_rule: true, requires_known_time: true, implementation_status: guarded}
+  - {id: lunar_return, layer: tournament, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: demi_lunar, layer: tournament, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: quarti_lunar, layer: tournament, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: lunations_eclipses_ingresses, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: partial_eclipse_guarded}
+  - {id: harmonics, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: pending}
+  - {id: fixed_stars, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable_catalog}
+  - {id: antiscia, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
+  - {id: kickoff_chart, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: houses_i_vii, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: guarded}
+  - {id: rulers_mc_moon, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: match_arabic_parts, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
+  - {id: modality, layer: match, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: extra_time_penalties, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: descriptive_only}
+  - {id: critical_minutes, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: sensitivity_only}

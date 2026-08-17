@@ -1,0 +1,15 @@
+.git
+.github
+.mypy_cache
+.pytest_cache
+.ruff_cache
+**/__pycache__
+**/*.pyc
+**/node_modules
+**/.next
+.coverage
+.env
+state
+storage
+tests
+*.egg-info

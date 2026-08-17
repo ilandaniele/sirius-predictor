@@ -1,0 +1,131 @@
+name: mundial-2030-sirius
+
+x-backend: &backend
+  build:
+    context: .
+    dockerfile: Dockerfile
+  env_file:
+    - path: .env
+      required: false
+  environment: &backend-environment
+    SIRIUS_ENVIRONMENT: ${SIRIUS_ENVIRONMENT:-development}
+    SIRIUS_DATABASE_URL: postgresql+psycopg://sirius:${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}@postgres:5432/sirius
+    SIRIUS_REDIS_URL: redis://redis:6379/0
+    SIRIUS_STORAGE_PATH: /app/storage
+    SIRIUS_API_KEY: ${SIRIUS_API_KEY:?set SIRIUS_API_KEY}
+    SIRIUS_CORS_ORIGINS: '["http://localhost:3000"]'
+  volumes:
+    - report_storage:/app/storage
+  restart: unless-stopped
+  logging: &default-logging
+    driver: json-file
+    options:
+      max-size: 10m
+      max-file: "3"
+
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_DB: sirius
+      POSTGRES_USER: sirius
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U sirius -d sirius"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+    restart: unless-stopped
+    logging: *default-logging
+
+  redis:
+    image: redis:7-alpine
+    command: ["redis-server", "--appendonly", "yes", "--maxmemory-policy", "noeviction"]
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 12
+    restart: unless-stopped
+    logging: *default-logging
+
+  migrate:
+    <<: *backend
+    command: ["python", "-m", "alembic", "upgrade", "head"]
+    restart: "no"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  api:
+    <<: *backend
+    ports:
+      - "8000:8000"
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  worker:
+    <<: *backend
+    command: ["celery", "-A", "services.api.tasks:celery_app", "worker", "--loglevel=INFO", "--concurrency=2"]
+    healthcheck:
+      test: ["CMD-SHELL", "celery -A services.api.tasks:celery_app inspect ping -d celery@$$HOSTNAME --timeout=5"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    depends_on:
+      migrate:
+        condition: service_completed_successfully
+      redis:
+        condition: service_healthy
+
+  web:
+    build:
+      context: apps/web
+      dockerfile: Dockerfile
+      args:
+        NEXT_PUBLIC_API_URL: ${NEXT_PUBLIC_API_URL:-http://localhost:8000/api/v1}
+    ports:
+      - "3000:3000"
+    environment:
+      SIRIUS_INTERNAL_API_URL: http://api:8000/api/v1
+      SIRIUS_API_KEY: ${SIRIUS_API_KEY:?set SIRIUS_API_KEY}
+    depends_on:
+      api:
+        condition: service_healthy
+    restart: unless-stopped
+    logging: *default-logging
+
+  backup:
+    image: postgres:17-alpine
+    profiles: ["backup"]
+    environment:
+      PGHOST: postgres
+      PGPORT: 5432
+      PGDATABASE: sirius
+      PGUSER: sirius
+      PGPASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD}
+      BACKUP_RETENTION_DAYS: ${BACKUP_RETENTION_DAYS:-14}
+      BACKUP_INTERVAL_SECONDS: ${BACKUP_INTERVAL_SECONDS:-86400}
+    volumes:
+      - ./ops/backup/backup.sh:/scripts/backup.sh:ro
+      - database_backups:/backups
+    command: ["sh", "/scripts/backup.sh"]
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+    logging: *default-logging
+
+volumes:
+  postgres_data:
+  redis_data:
+  report_storage:
+  database_backups:
