@@ -1,3 +1,4 @@
+import json
 from datetime import datetime
 from pathlib import Path
 
@@ -78,6 +79,9 @@ def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> 
     assert manifest["sources"][0]["source_url"] == "https://example.com/static"
     assert manifest["sources"][0]["quality"] == "B"
     assert first.bracket_manifest_path is not None
+    assert Path(first.update_event_path).exists()
+    assert Path(second.update_event_path).exists()
+    assert first.update_event_path != second.update_event_path
     bracket_directory = Path(first.bracket_manifest_path).parent
     assert len(list(bracket_directory.glob("bracket-*.png"))) == 5
     first_bytes = Path(first.manifest_path).read_bytes()
@@ -123,6 +127,9 @@ def test_observational_raw_byte_changes_do_not_invalidate_predictions(tmp_path) 
     second = orchestrator.run(command)
     assert second.idempotent_replay
     assert second.snapshot_id == first.snapshot_id
+    event = json.loads(Path(second.update_event_path).read_text(encoding="utf-8"))
+    assert event["sources"][0]["source_url"] == "https://example.com/static"
+    assert event["sources"][0]["quality"] == "B"
     manifest = PredictionArchive(settings.storage_path).load(first.snapshot_id)
     assert manifest is not None
     assert manifest["sources"][0]["model_input"] is False

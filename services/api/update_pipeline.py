@@ -39,6 +39,7 @@ class UpdateExecution:
     manifest_path: str
     report_path: str
     bracket_manifest_path: str | None
+    update_event_path: str
 
 
 class Simulator(Protocol):
@@ -83,6 +84,33 @@ class PredictionArchive:
         serialized = json.dumps(manifest, ensure_ascii=False, indent=2)
         self._atomic_write(target, serialized)
         self._atomic_write(self.latest_path, serialized)
+        return target
+
+    def append_update_event(
+        self,
+        sources: list[dict[str, Any]],
+        report: UpdateReport,
+    ) -> Path:
+        created_at = datetime.now(UTC)
+        payload = {
+            "created_at": created_at.isoformat(),
+            "sources": sources,
+            "accepted_claims": len(report.accepted),
+            "pending_review": len(report.pending_review),
+            "conflicts": len(report.conflicts),
+        }
+        event_id = hashlib.sha256(
+            json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest()
+        payload["event_id"] = event_id
+        target = (
+            self.root
+            / "update-events"
+            / f"{created_at.strftime('%Y%m%dT%H%M%S.%fZ')}-{event_id}.json"
+        )
+        if target.exists():
+            raise FileExistsError(f"update event already exists: {event_id}")
+        self._atomic_write(target, json.dumps(payload, ensure_ascii=False, indent=2))
         return target
 
     def history(self, limit: int = 100) -> list[dict[str, Any]]:
@@ -282,6 +310,7 @@ class UpdateOrchestrator:
             self.collectors, self.settings.storage_path / "source_snapshots"
         ).run()
         sources = _source_manifest(update, previous)
+        update_event_path = self.archive.append_update_event(sources, update)
         snapshot_id = _input_hash(command, scenario, sources)
         existing = self.archive.load(snapshot_id)
         if existing is None and _matches_previous_inputs(
@@ -303,6 +332,7 @@ class UpdateOrchestrator:
                 manifest_path=(self.archive.predictions / snapshot_id / "manifest.json").as_posix(),
                 report_path=str(existing["report_path"]),
                 bracket_manifest_path=existing.get("bracket_manifest_path"),
+                update_event_path=update_event_path.as_posix(),
             )
 
         affected_charts = sorted(
@@ -430,4 +460,5 @@ class UpdateOrchestrator:
             manifest_path=manifest_path.as_posix(),
             report_path=report_path.as_posix(),
             bracket_manifest_path=bracket_manifest_path,
+            update_event_path=update_event_path.as_posix(),
         )

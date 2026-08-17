@@ -62,6 +62,8 @@ El hash idempotente excluye timestamps de consulta e incluye hashes efectivos. S
 falla, se conserva el hash válido anterior y no se crea una predicción espuria.
 Los snapshots remotos que todavía no producen claims se conservan como evidencia observacional,
 pero sus bytes dinámicos no invalidan una predicción hasta que un parser integre un dato al modelo.
+Cada consulta genera además un `update-event` append-only con URL, fecha, calidad, hash y estado,
+incluso cuando la predicción resulta ser un replay idempotente.
 
 ## Reproducibilidad
 

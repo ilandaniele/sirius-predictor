@@ -20,7 +20,7 @@
   name: FIFA/Coca-Cola Men's World Ranking
   grade: A
   kind: html
-  url: https://inside.fifa.com/fifa-world-ranking/men
+  url: https://inside.fifa.com/fifa-rankings/world-ranking/men
   terms_url: https://www.fifa.com/terms-of-service
   robots_policy: review_before_enable_no_browser_bypass
   use: Referencia futura para ratings y bombos; el parser productivo aún requiere contrato estable.
