@@ -32,6 +32,13 @@ class StaticCollector(Collector):
         return []
 
 
+class MutableObservationalCollector(StaticCollector):
+    payload = b"first"
+
+    def fetch(self) -> bytes:
+        return self.payload
+
+
 def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> None:
     settings = Settings(
         storage_path=tmp_path / "storage",
@@ -90,3 +97,32 @@ def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> 
         "ARG",
         "ESP",
     }
+
+
+def test_observational_raw_byte_changes_do_not_invalidate_predictions(tmp_path) -> None:
+    settings = Settings(
+        storage_path=tmp_path / "storage",
+        scenario_path=ROOT / "data" / "scenario.yaml",
+        teams_path=ROOT / "data" / "teams.csv",
+        sources_path=ROOT / "data" / "sources.yaml",
+    )
+    collector = MutableObservationalCollector()
+    orchestrator = UpdateOrchestrator(
+        settings=settings,
+        collectors=[collector],
+        bracket_spec=BracketExportSpec(960, 540, 20),
+    )
+    command = UpdateCommand(
+        iterations=15,
+        seed=2030,
+        modes=(ModelMode.FOOTBALL_ONLY,),
+        workers=1,
+    )
+    first = orchestrator.run(command)
+    collector.payload = b"dynamic-html-byte-change"
+    second = orchestrator.run(command)
+    assert second.idempotent_replay
+    assert second.snapshot_id == first.snapshot_id
+    manifest = PredictionArchive(settings.storage_path).load(first.snapshot_id)
+    assert manifest is not None
+    assert manifest["sources"][0]["model_input"] is False

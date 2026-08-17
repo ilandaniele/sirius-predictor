@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 import subprocess
-from dataclasses import dataclass
+from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Protocol
@@ -136,6 +136,7 @@ def _git_commit() -> str:
 
 def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> list[dict[str, Any]]:
     previous_sources = {item["source_id"]: item for item in (previous or {}).get("sources", [])}
+    accepted_sources = {claim.source_id for claim in report.accepted}
     rows = []
     for outcome in report.outcomes:
         effective_hash = outcome.payload_sha256
@@ -143,6 +144,12 @@ def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> l
         if effective_hash is None and outcome.source_id in previous_sources:
             effective_hash = previous_sources[outcome.source_id].get("effective_sha256")
             retained_previous = True
+        previous_source = previous_sources.get(outcome.source_id, {})
+        model_input = (
+            outcome.source_id == "scenario"
+            or outcome.source_id in accepted_sources
+            or bool(previous_source.get("model_input", False))
+        )
         rows.append(
             {
                 "source_id": outcome.source_id,
@@ -152,6 +159,7 @@ def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> l
                 "fetch_status": outcome.status,
                 "effective_sha256": effective_hash,
                 "retained_previous": retained_previous,
+                "model_input": model_input,
                 "snapshot_path": outcome.snapshot_path,
                 "error": outcome.error,
             }
@@ -167,11 +175,14 @@ def _input_hash(
     stable_sources = [
         {"source_id": item["source_id"], "sha256": item["effective_sha256"]}
         for item in sources
-        if item["effective_sha256"]
+        if item["effective_sha256"] and item["model_input"]
     ]
     payload = {
         "scenario_id": scenario.scenario_id,
         "scenario_as_of": scenario.as_of,
+        "scenario_sha256": hashlib.sha256(
+            json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
+        ).hexdigest(),
         "sources": stable_sources,
         "seed": command.seed,
         "iterations": command.iterations,
@@ -182,6 +193,41 @@ def _input_hash(
     return hashlib.sha256(
         json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()
     ).hexdigest()
+
+
+def _matches_previous_inputs(
+    previous: dict[str, Any] | None,
+    command: UpdateCommand,
+    scenario: Scenario,
+    sources: list[dict[str, Any]],
+    model_version: str,
+) -> bool:
+    if previous is None:
+        return False
+    current_sources = {
+        item["source_id"]: item["effective_sha256"]
+        for item in sources
+        if item["model_input"] and item["effective_sha256"]
+    }
+    previous_sources = {
+        item["source_id"]: item.get("effective_sha256")
+        for item in previous.get("sources", [])
+        if item.get("model_input", item.get("source_id") == "scenario")
+        and item.get("effective_sha256")
+    }
+    scenario_hash = hashlib.sha256(
+        json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
+    ).hexdigest()
+    previous_scenario_hash = previous.get("scenario_sha256")
+    return bool(
+        current_sources == previous_sources
+        and previous.get("seed") == command.seed
+        and previous.get("simulations_count") == command.iterations
+        and set(previous.get("simulations", {})) == {mode.value for mode in command.modes}
+        and previous.get("final_hour", 18) == command.final_hour
+        and previous.get("model_version") == model_version
+        and (previous_scenario_hash is None or previous_scenario_hash == scenario_hash)
+    )
 
 
 def _simulation_summary(result: ParallelSimulationResult) -> dict[str, Any]:
@@ -238,7 +284,16 @@ class UpdateOrchestrator:
         sources = _source_manifest(update, previous)
         snapshot_id = _input_hash(command, scenario, sources)
         existing = self.archive.load(snapshot_id)
+        if existing is None and _matches_previous_inputs(
+            previous,
+            command,
+            scenario,
+            sources,
+            self.settings.model_version,
+        ):
+            existing = previous
         if existing is not None:
+            snapshot_id = str(existing["snapshot_id"])
             return UpdateExecution(
                 snapshot_id=snapshot_id,
                 created_at=str(existing["created_at"]),
@@ -339,6 +394,9 @@ class UpdateOrchestrator:
             "created_at": created_at,
             "git_commit": _git_commit(),
             "model_version": self.settings.model_version,
+            "scenario_sha256": hashlib.sha256(
+                json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
+            ).hexdigest(),
             "sources": sources,
             "assumptions": {
                 **scenario.assumptions,
@@ -346,6 +404,7 @@ class UpdateOrchestrator:
                 "bracket": scenario.bracket.description,
             },
             "seed": command.seed,
+            "final_hour": command.final_hour,
             "simulations_count": command.iterations,
             "weights": {},
             "simulations": simulations,
