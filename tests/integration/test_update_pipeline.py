@@ -2,6 +2,8 @@ import json
 from datetime import datetime
 from pathlib import Path
 
+import pytest
+
 from collectors.common.base import Collector, CollectorSpec
 from packages.common.config import Settings
 from packages.common.provenance import DataGrade, SourceClaimInput
@@ -9,6 +11,8 @@ from packages.common.types import ModelMode
 from packages.montecarlo import run_parallel
 from packages.reports import BracketExportSpec
 from services.api.update_pipeline import PredictionArchive, UpdateCommand, UpdateOrchestrator
+
+pytestmark = pytest.mark.integration
 
 ROOT = Path(__file__).resolve().parents[2]
 

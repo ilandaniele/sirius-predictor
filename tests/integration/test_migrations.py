@@ -1,5 +1,6 @@
 from pathlib import Path
 
+import pytest
 from alembic.config import Config
 from sqlalchemy import create_engine, inspect, text
 from sqlalchemy.dialects import postgresql
@@ -7,6 +8,8 @@ from sqlalchemy.schema import CreateTable
 
 from alembic import command
 from db.models import BirthData
+
+pytestmark = pytest.mark.integration
 
 
 def test_initial_migration_creates_complete_schema(tmp_path: Path, monkeypatch) -> None:

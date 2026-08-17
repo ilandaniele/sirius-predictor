@@ -1,8 +1,10 @@
+import pytest
 from fastapi.testclient import TestClient
 
 from services.api.main import create_app
 
 client = TestClient(create_app())
+pytestmark = pytest.mark.integration
 
 
 def test_health_scenario_teams_and_draw_contracts() -> None:

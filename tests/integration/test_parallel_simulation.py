@@ -1,7 +1,11 @@
 from pathlib import Path
 
+import pytest
+
 from packages.common.types import ModelMode
 from packages.montecarlo import run_parallel
+
+pytestmark = pytest.mark.integration
 
 ROOT = Path(__file__).resolve().parents[2]
 

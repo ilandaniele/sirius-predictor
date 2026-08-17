@@ -56,6 +56,19 @@ npm ci
 npm run dev
 ```
 
+Para usar `ACTUALIZAR` sin Docker, Redis debe estar disponible en `localhost:6379`. Iniciar
+además el worker en otra terminal, desde la raíz del repositorio:
+
+```bash
+celery -A services.api.tasks:celery_app worker --loglevel=INFO --pool=solo --concurrency=1
+```
+
+En Windows, Redis puede ejecutarse con Docker sin levantar el resto de los servicios:
+
+```bash
+docker compose up -d redis
+```
+
 API: `http://localhost:8000`; web: `http://localhost:3000`.
 
 El selector `64 CUPOS / 48 CUPOS` está arriba del dashboard. `64` siempre abre primero.
