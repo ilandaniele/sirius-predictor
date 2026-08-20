@@ -153,6 +153,12 @@ cambio crea una carta nueva. El informe y el manifest separan solicitudes, recá
 omisiones y fallos. Una hora sin zona o desconocida nunca dispara este cálculo; debe pasar por el
 análisis explícito de sensibilidad.
 
+El ranking masculino se captura desde el endpoint JSON oficial que utiliza la página pública de
+FIFA. El adapter consulta el calendario, elige exclusivamente la publicación aprobada más reciente,
+rechaza respuestas parciales y guarda las respuestas y sus hashes. Es evidencia observacional:
+los puntos FIFA no se convierten a Elo ni a bombos 2030 hasta definir y validar públicamente esa
+transformación.
+
 ## Contratos y límites
 
 - Cada dato externo guarda fuente, URL, consulta y calidad A/B/C/D/X.

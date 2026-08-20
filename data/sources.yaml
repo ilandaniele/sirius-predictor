@@ -28,11 +28,12 @@
 - id: fifa_ranking
   name: FIFA/Coca-Cola Men's World Ranking
   grade: A
-  kind: html
-  url: https://inside.fifa.com/fifa-rankings/world-ranking/men
+  kind: official_json_api
+  url: https://api.fifa.com/api/v3/fifarankings/rankingschedules/all?type=0&gender=1&language=en
+  page_url: https://inside.fifa.com/fifa-rankings/world-ranking/men
   terms_url: https://www.fifa.com/terms-of-service
-  robots_policy: review_before_enable_no_browser_bypass
-  use: Referencia futura para ratings y bombos; el parser productivo aún requiere contrato estable.
+  robots_policy: official_endpoint_used_by_public_page_low_rate_no_browser_bypass
+  use: Snapshot oficial observacional de la última publicación aprobada; no se convierte a Elo ni a bombos 2030 sin una regla preregistrada.
   enabled: true
 - id: openfootball
   name: OpenFootball World Cup

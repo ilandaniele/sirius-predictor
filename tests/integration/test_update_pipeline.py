@@ -257,6 +257,37 @@ def test_failed_fetch_retains_the_previous_immutable_snapshot_path() -> None:
     assert source["snapshot_path"] == previous_path
 
 
+def test_accepted_observational_claim_is_not_mislabeled_as_model_input() -> None:
+    claim = SourceClaimInput(
+        entity_type="RankingSnapshot",
+        entity_key="ARG",
+        field_name="rank",
+        value=2,
+        source_id="fifa_ranking",
+        source_url="https://api.fifa.com/api/v3/fifarankings/rankings/example",
+        consulted_at=datetime(2026, 8, 20, tzinfo=UTC),
+        grade=DataGrade.A,
+        confidence=1.0,
+        official=True,
+    )
+    report = UpdateReport(
+        outcomes=[
+            CollectorOutcome(
+                source_id="fifa_ranking",
+                source_url="https://api.fifa.com/api/v3/fifarankings/rankings/example",
+                quality=DataGrade.A,
+                consulted_at=claim.consulted_at,
+                status="success",
+                payload_sha256="f" * 64,
+                claims=[claim],
+            )
+        ],
+        accepted=[claim],
+    )
+    source = _source_manifest(report, None)[0]
+    assert source["model_input"] is False
+
+
 def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) -> None:
     database_path = tmp_path / "charts.db"
     database_url = f"sqlite:///{database_path.as_posix()}"

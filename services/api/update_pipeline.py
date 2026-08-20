@@ -14,6 +14,7 @@ from sqlalchemy.orm import Session
 from collectors.common.base import Collector
 from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
+from collectors.fifa import fifa_ranking_collector_from_config
 from collectors.sirius_archive import sirius_archive_collector_from_config
 from db.session import build_engine
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
@@ -176,6 +177,8 @@ def build_collectors(settings: Settings) -> list[Collector]:
         (
             sirius_archive_collector_from_config(record)
             if record.get("id") == "sirius_blog"
+            else fifa_ranking_collector_from_config(record)
+            if record.get("id") == "fifa_ranking"
             else raw_collector_from_config(record, ROOT)
         )
         for record in raw
@@ -231,7 +234,6 @@ def _git_state() -> dict[str, Any]:
 
 def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> list[dict[str, Any]]:
     previous_sources = {item["source_id"]: item for item in (previous or {}).get("sources", [])}
-    accepted_sources = {claim.source_id for claim in report.accepted}
     rows = []
     for outcome in report.outcomes:
         effective_hash = outcome.payload_sha256
@@ -243,11 +245,9 @@ def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> l
         snapshot_path = outcome.snapshot_path
         if snapshot_path is None and retained_previous:
             snapshot_path = previous_source.get("snapshot_path")
-        model_input = (
-            outcome.source_id == "scenario"
-            or outcome.source_id in accepted_sources
-            or bool(previous_source.get("model_input", False))
-        )
+        # Accepted evidence is not automatically a model feature. The simulation currently
+        # consumes the explicit scenario; reviewed Sirius evidence is attached separately.
+        model_input = outcome.source_id == "scenario"
         rows.append(
             {
                 "source_id": outcome.source_id,

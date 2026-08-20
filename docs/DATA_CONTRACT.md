@@ -46,6 +46,12 @@ manualmente y estado activo. Las calidades son A (primaria oficial), B (archivo 
 (secundaria), D (pista) y X (supuesto/proyección). C/D/X no entran automáticamente sin confirmación,
 y A no puede ser sustituida automáticamente por una calidad inferior.
 
+El adapter de ranking FIFA guarda en un único snapshot trazable la respuesta del calendario y la
+tabla seleccionada, sus URL y hashes. Sólo admite una entrada `RankingApproved=true`, fecha con
+zona, códigos/rangos/puntos válidos, al menos 100 selecciones, códigos y puestos únicos y ausencia
+de token de continuación. La tabla permanece observacional porque el modelo no presupone una
+conversión de puntos FIFA a Elo.
+
 PostgreSQL conserva 29 tablas para equipos/formato/sorteo/fixtures, personas y tenures, datos
 natales y fuentes, eventos, cartas/técnicas, versiones, predicciones, simulaciones/caminos y
 backtests. `AstrologyChart`, `AstrologyTechniqueResult`, `ModelVersion`, `PredictionSnapshot`,

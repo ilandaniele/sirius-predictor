@@ -4,6 +4,8 @@
 
 - Caché astrológica persistente y append-only por hash de inputs/efemérides; el pipeline informa
   recálculos, aciertos, omisiones y fallos reales y rechaza horas desconocidas o sin zona.
+- Adapter del ranking FIFA sobre el JSON oficial: selecciona sólo publicaciones aprobadas, conserva
+  respuestas/hashes, rechaza parciales o schema drift y no inventa una conversión a Elo.
 - Cola Sirius persistente y append-only: candidatos separados de decisiones humanas, control de
   concurrencia, guardas de hora desconocida y snapshot revisado conectado al hash de simulación.
 - Dashboard de revisión pendiente/aprobada/rechazada; ninguna coincidencia scraped entra sola al
