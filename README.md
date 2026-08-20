@@ -147,6 +147,12 @@ cola SQL es la vía operativa; ambas exigen `manually_confirmed=true`. Si no hay
 es neutral y el dashboard lo declara. En producción, las decisiones requieren `SIRIUS_API_KEY`; el
 campo del dashboard vive sólo en memoria del navegador y no persiste la clave.
 
+El mismo pipeline recalcula únicamente cartas afectadas por claims aceptados. La caché inmutable
+usa el hash de todos los inputs y de la versión de efemérides: una repetición es un `cache_hit` y un
+cambio crea una carta nueva. El informe y el manifest separan solicitudes, recálculos, aciertos,
+omisiones y fallos. Una hora sin zona o desconocida nunca dispara este cálculo; debe pasar por el
+análisis explícito de sensibilidad.
+
 ## Contratos y límites
 
 - Cada dato externo guarda fuente, URL, consulta y calidad A/B/C/D/X.

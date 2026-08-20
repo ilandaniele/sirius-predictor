@@ -50,7 +50,8 @@ PredictionSnapshot    packages/reports
 1. Ejecutar collectors y escribir bytes por SHA-256.
 2. Normalizar/deduplicar claims y aplicar precedencia conservadora.
 3. Mantener C/D/X o conflictos en revisión.
-4. Recalcular sólo cartas afectadas.
+4. Recalcular sólo cartas con claims aceptados y contrato completo; reutilizar caché por hash para
+   entradas idénticas y registrar omisiones sin imputar datos.
 5. Recalcular testimonios Sirius.
 6. Ejecutar Monte Carlo por modo.
 7. crear `PredictionSnapshot` append-only.

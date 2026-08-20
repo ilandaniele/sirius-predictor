@@ -46,12 +46,26 @@ manualmente y estado activo. Las calidades son A (primaria oficial), B (archivo 
 (secundaria), D (pista) y X (supuesto/proyección). C/D/X no entran automáticamente sin confirmación,
 y A no puede ser sustituida automáticamente por una calidad inferior.
 
-PostgreSQL conserva 27 tablas para equipos/formato/sorteo/fixtures, personas y tenures, datos
+PostgreSQL conserva 29 tablas para equipos/formato/sorteo/fixtures, personas y tenures, datos
 natales y fuentes, eventos, cartas/técnicas, versiones, predicciones, simulaciones/caminos y
-backtests. `ModelVersion`, `PredictionSnapshot`, `SimulationPath` y `BacktestRun` son append-only.
+backtests. `AstrologyChart`, `AstrologyTechniqueResult`, `ModelVersion`, `PredictionSnapshot`,
+`SimulationPath`, `BacktestRun` y la cola de revisión Sirius son append-only.
 
 Una hora natal desconocida es `NULL` con `time_known=false`. La restricción de base impide marcarla
 conocida sin hora y zona; el parser impide guardar una hora cuando `time_known=false`.
+
+## Recálculo y caché de cartas
+
+Cada carta se identifica por un SHA-256 canónico de sujeto, instante UTC, ubicación, conocimiento
+de hora, sistema de casas, cuerpos, orbes, proveedor y versión de efemérides. Una entrada idéntica
+reutiliza el resultado persistido; cualquier parámetro diferente crea otra fila y nunca modifica la
+anterior.
+
+Un claim aceptado de tipo `BirthData`, `Fixture` o `CoachDebutEvent` sólo dispara el cálculo si su
+valor contiene un `chart_request` completo: `moment` ISO con offset, `time_known=true`,
+`house_system`, `location` explícita o nula y, opcionalmente, `bodies`, `orbs` y `label`. Si la hora
+es desconocida, falta la URL o el contrato está incompleto, el manifest registra la omisión. Las
+horas desconocidas se estudian únicamente por el flujo separado de sensibilidad horaria.
 
 ## Archivo y observaciones Sirius
 

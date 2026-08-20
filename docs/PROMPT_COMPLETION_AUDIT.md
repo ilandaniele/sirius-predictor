@@ -10,16 +10,16 @@ presenta como terminado.
 | 0. Auditoría inicial | Completo | `docs/ARCHITECTURE.md`, `docs/IMPROVEMENTS.md`, documentación de límites y riesgos | Mantener esta matriz actualizada |
 | 1. Reglas permanentes | Completo | `AGENTS.md`, tests de provenance y hora desconocida | Ninguno conocido |
 | 2. Arquitectura | Completo | `apps`, `services`, `packages`, `collectors`, `db`, Docker y CI | Retirar la fachada `engine` sólo cuando deje de ser necesaria |
-| 3. Datos y provenance | Completo para v0.2 | 29 tablas SQLAlchemy, dos migraciones Alembic y tests PostgreSQL | Persistir más resultados de collectors cuando existan adaptadores oficiales |
+| 3. Datos y provenance | Completo para v0.2 | 29 tablas SQLAlchemy, tres migraciones Alembic y tests PostgreSQL | Persistir más resultados de collectors cuando existan adaptadores oficiales |
 | 4. Actualización/scraping | Parcial | snapshots inmutables, precedencia, conflictos, tolerancia a fallos, parsers y archivo Sirius | Ranking FIFA aún es snapshot observacional; faltan adaptadores oficiales estables para equipos, DT, capitanes, fixtures, sedes y nacimientos |
-| 5. Astrología | Parcial | Swiss Ephemeris, cartas, casas guardadas, retornos, progresiones, armónicas, dignidades esenciales/accidentales, partes configurables, estrellas, antiscias y sensibilidad | Los eclipses quedan como candidatos nodales hasta confirmación astronómica; ampliar cartas patrón independientes |
+| 5. Astrología | Parcial | Swiss Ephemeris, cartas inmutables por hash de inputs, casas guardadas, retornos, progresiones, armónicas, dignidades esenciales/accidentales, partes configurables, estrellas, antiscias y sensibilidad | Los eclipses quedan como candidatos nodales hasta confirmación astronómica; ampliar cartas patrón independientes |
 | 6. Sirius | Completo para evidencia disponible | cuatro capas, modos purist/calibrated, testimonios, contradicciones, confianza y cola append-only; aprobaciones estructuradas generan snapshots que el motor incluye por hash | La cola parte sin aprobaciones porque no deben inventarse testimonios; su cobertura depende de revisión humana real |
 | 7. Sorteo | Completo | backtracking, restricciones, seeds, análisis y test de 100.000 sorteos | Sustituir reglas proyectadas cuando FIFA publique 2030 |
 | 8. Monte Carlo | Completo para escenarios disponibles | grupos, desempates, eliminatorias, tres modelos, sensibilidad y 100.000 simulaciones | Fechas/rivales específicos por ronda dependen del calendario 2030 oficial |
 | 9. Backtesting | Parcial | 2010–2026, cuatro modelos, métricas, calibración temporal y leakage audit | Sólo la señal lunar histórica tiene datos prematch evaluables; las demás ablaciones siguen correctamente como no evaluables |
 | 10. Dashboard | Completo para datos disponibles | diez tabs, selector 48/64, polling, fuentes, historia, backtest y flujo Sirius pendiente/aprobado/rechazado con control de concurrencia | La autenticación productiva sigue delegada a la API key configurada |
 | 11. Cinco llaves | Completo | exactamente cinco familias; PNG 4K, SVG, PDF y hashes | Ninguno conocido |
-| 12. ACTUALIZAR | Parcial | pipeline idempotente, snapshots, simulación, informe, llaves y evento local | `affected_charts` identifica invalidaciones, pero aún no existe una caché persistente de cartas que recalcule sólo esas entidades |
+| 12. ACTUALIZAR | Completo para inputs disponibles | pipeline idempotente, caché persistente por hash, recálculo selectivo real, snapshots, simulación, informe, llaves y evento local | Claims sin hora zonificada o contrato completo quedan omitidos de forma trazable hasta validación; no se completan automáticamente |
 | 13. Historial | Completo | manifests append-only, commit, versión, timestamp, seed, fuentes, supuestos y resultados | Ninguno conocido |
 | 14. Seguridad/calidad | Completo para v0.2 | allow-list SSRF, límites, API key, auditorías, CI backend/frontend/integration | Revisar periódicamente dependencias y TOS |
 | 15. Deploy | Completo | Compose desarrollo/producción, health checks, migraciones, backups y `.env.example` | Validación en una infraestructura productiva real queda fuera del repositorio |
@@ -42,6 +42,5 @@ podía reconocer a Argentina como campeón 2022 por penales. Ahora:
 1. Completar y probar las técnicas astrológicas faltantes sin conectarlas a un score arbitrario.
 2. Implementar adaptadores oficiales versionados de fútbol a medida que sus contratos sean
    verificables; hasta entonces conservar snapshots observacionales.
-3. Añadir caché de cartas por hash de inputs y recálculo selectivo real.
-4. Ampliar el backtest sólo con predicciones y datos prematch congelados, nunca reconstruidos a
+3. Ampliar el backtest sólo con predicciones y datos prematch congelados, nunca reconstruidos a
    posteriori.

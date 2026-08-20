@@ -248,6 +248,7 @@ class AstrologyChart(Base, IdMixin, TimestampMixin):
 
     subject_type: Mapped[str] = mapped_column(String(60), nullable=False)
     subject_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    input_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     chart_time_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     latitude: Mapped[float | None] = mapped_column(Float)
     longitude: Mapped[float | None] = mapped_column(Float)
@@ -379,6 +380,8 @@ class BacktestRun(Base, IdMixin, TimestampMixin):
 
 
 IMMUTABLE_MODELS = (
+    AstrologyChart,
+    AstrologyTechniqueResult,
     SiriusReviewCandidate,
     SiriusReviewDecision,
     ModelVersion,

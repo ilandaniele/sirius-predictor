@@ -36,6 +36,8 @@ class SourceClaimInput(BaseModel):
 
     @model_validator(mode="after")
     def official_grade_consistency(self) -> SourceClaimInput:
+        if self.consulted_at.tzinfo is None or self.consulted_at.utcoffset() is None:
+            raise ValueError("consulted_at must be timezone-aware")
         if self.official and self.grade not in {DataGrade.A, DataGrade.B}:
             raise ValueError("an official claim must use quality A or B")
         return self

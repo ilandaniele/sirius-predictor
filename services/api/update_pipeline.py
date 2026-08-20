@@ -17,7 +17,9 @@ from collectors.common.raw import raw_collector_from_config
 from collectors.sirius_archive import sirius_archive_collector_from_config
 from db.session import build_engine
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
+from packages.astrology import ChartRecalculationReport, recalculate_accepted_charts
 from packages.common.config import ROOT, Settings, get_settings
+from packages.common.provenance import SourceClaimInput
 from packages.common.types import ModelMode
 from packages.montecarlo import ParallelSimulationResult, run_parallel
 from packages.reports import BracketExportSpec, export_five_brackets
@@ -477,6 +479,23 @@ class UpdateOrchestrator:
         self.archive = PredictionArchive(self.settings.storage_path)
         self.bracket_spec = bracket_spec
 
+    def _recalculate_charts(self, claims: list[SourceClaimInput]) -> ChartRecalculationReport:
+        relevant = [
+            claim
+            for claim in claims
+            if claim.entity_type in {"BirthData", "Fixture", "CoachDebutEvent"}
+        ]
+        if not relevant:
+            return ChartRecalculationReport()
+        chart_engine = build_engine(self.settings.database_url)
+        try:
+            with Session(chart_engine) as chart_session:
+                report = recalculate_accepted_charts(chart_session, relevant)
+                chart_session.commit()
+                return report
+        finally:
+            chart_engine.dispose()
+
     def run(self, command: UpdateCommand) -> UpdateExecution:
         scenario_path = self.settings.scenario_path_for(command.format_size)
         scenario = load_scenario(scenario_path)
@@ -545,13 +564,9 @@ class UpdateOrchestrator:
                 update_event_path=update_event_path.as_posix(),
             )
 
-        affected_charts = sorted(
-            {
-                f"{claim.entity_type}:{claim.entity_key}"
-                for claim in update.accepted
-                if claim.entity_type in {"BirthData", "Fixture", "CoachDebutEvent"}
-            }
-        )
+        chart_recalculation = self._recalculate_charts(update.accepted)
+        chart_recalculation_payload = chart_recalculation.to_dict()
+        affected_charts = chart_recalculation.requested_entities
         simulations: dict[str, dict[str, Any]] = {}
         raw_results: dict[ModelMode, ParallelSimulationResult] = {}
         for mode in command.modes:
@@ -611,7 +626,10 @@ class UpdateOrchestrator:
                     f"- Git dirty: {git_state['git_dirty']}",
                     f"- Working tree SHA-256: {git_state['working_tree_sha256'] or 'clean'}",
                     f"- Resumen: {summary}",
-                    f"- Cartas recalculadas: {len(affected_charts)}",
+                    f"- Cartas afectadas solicitadas: {len(affected_charts)}",
+                    (f"- Cartas recalculadas: {chart_recalculation_payload['recalculated_count']}"),
+                    f"- Aciertos de caché: {chart_recalculation_payload['cache_hit_count']}",
+                    f"- Cartas omitidas: {chart_recalculation_payload['skipped_count']}",
                     f"- Modos: {', '.join(simulations)}",
                     "",
                     "## Cambios",
@@ -658,7 +676,19 @@ class UpdateOrchestrator:
             "weights": {},
             "simulations": simulations,
             "affected_charts": affected_charts,
-            "sirius_recalculation": "only_affected_entities",
+            "chart_recalculation": chart_recalculation_payload,
+            "sirius_recalculation": {
+                "status": "completed",
+                "review_snapshot_sha256": (
+                    review_pointer.get("snapshot_id") if review_pointer is not None else None
+                ),
+                "reviewed_observations": (
+                    int(review_pointer.get("reviewed_observations", 0))
+                    if review_pointer is not None
+                    else 0
+                ),
+                "modes": [mode.value for mode in command.modes],
+            },
             "sirius_assessments": (
                 hybrid_result.sirius_assessments if hybrid_result is not None else {}
             ),

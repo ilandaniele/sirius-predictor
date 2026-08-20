@@ -2,6 +2,8 @@
 
 ## 0.2.1 — 2026-08-20
 
+- Caché astrológica persistente y append-only por hash de inputs/efemérides; el pipeline informa
+  recálculos, aciertos, omisiones y fallos reales y rechaza horas desconocidas o sin zona.
 - Cola Sirius persistente y append-only: candidatos separados de decisiones humanas, control de
   concurrencia, guardas de hora desconocida y snapshot revisado conectado al hash de simulación.
 - Dashboard de revisión pendiente/aprobada/rechazada; ninguna coincidencia scraped entra sola al

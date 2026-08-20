@@ -181,8 +181,7 @@ def chart(
         raise ValueError(f"unsupported bodies: {sorted(unknown)}")
     julian_day = _julian_day(request.moment)
     positions = {name: _position(name, julian_day) for name in bodies}
-    provider = "Swiss Ephemeris" if swe is not None else "explicit mean-motion fallback"
-    version = str(getattr(swe, "version", "fallback-v1"))
+    provider, version = ephemeris_identity()
     return AstrologyChart(
         request=request,
         provider=provider,
@@ -202,6 +201,13 @@ def chart(
 
 def ephemeris_available() -> bool:
     return swe is not None
+
+
+def ephemeris_identity() -> tuple[str, str]:
+    """Return the calculation provider identity used by content-addressed caches."""
+
+    provider = "Swiss Ephemeris" if swe is not None else "explicit mean-motion fallback"
+    return provider, str(getattr(swe, "version", "fallback-v1"))
 
 
 def body_longitude(name: str, moment: datetime) -> float:

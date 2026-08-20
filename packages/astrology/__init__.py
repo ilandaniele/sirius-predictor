@@ -1,6 +1,13 @@
 """Motor astrológico experimental basado en Swiss Ephemeris cuando está disponible."""
 
-from .ephemeris import EphemerisUnavailable, chart, ephemeris_available
+from .cache import (
+    AstrologyChartCache,
+    ChartCacheResult,
+    ChartRecalculationReport,
+    chart_input_hash,
+    recalculate_accepted_charts,
+)
+from .ephemeris import EphemerisUnavailable, chart, ephemeris_available, ephemeris_identity
 from .models import AstrologyChart, ChartRequest, GeoLocation, TechniqueResult
 from .sensitivity import birth_time_sensitivity, kickoff_time_sensitivity
 from .techniques import (
@@ -25,7 +32,10 @@ from .techniques import (
 
 __all__ = [
     "AstrologyChart",
+    "AstrologyChartCache",
+    "ChartCacheResult",
     "ChartRequest",
+    "ChartRecalculationReport",
     "EphemerisUnavailable",
     "GeoLocation",
     "TechniqueResult",
@@ -34,7 +44,9 @@ __all__ = [
     "arabic_parts",
     "birth_time_sensitivity",
     "chart",
+    "chart_input_hash",
     "ephemeris_available",
+    "ephemeris_identity",
     "essential_dignities",
     "fixed_star_contacts",
     "harmonic_chart",
@@ -45,6 +57,7 @@ __all__ = [
     "primary_directions",
     "proluna",
     "receptions",
+    "recalculate_accepted_charts",
     "relocalize",
     "rulers_and_almutens",
     "secondary_progressions",

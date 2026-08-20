@@ -3,9 +3,13 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+from sqlalchemy import create_engine, func, select
+from sqlalchemy.orm import Session
 
 from collectors.common.base import Collector, CollectorOutcome, CollectorSpec
 from collectors.common.pipeline import UpdateReport
+from db.base import Base
+from db.models import AstrologyChart
 from engine.config import load_scenario
 from packages.common.config import Settings
 from packages.common.provenance import DataGrade, SourceClaimInput
@@ -51,6 +55,46 @@ class MutableObservationalCollector(StaticCollector):
 
     def fetch(self) -> bytes:
         return self.payload
+
+
+class OfficialFixtureCollector(StaticCollector):
+    spec = CollectorSpec(
+        source_id="official-fixture-source",
+        url="https://example.com/fixture",
+        grade=DataGrade.A,
+        official=True,
+        allowed_hosts=("example.com",),
+        terms_url="https://example.com/terms",
+        robots_policy="test fixture",
+        priority=1,
+    )
+
+    def parse(self, payload: bytes, consulted_at: datetime) -> list[SourceClaimInput]:
+        del payload
+        return [
+            SourceClaimInput(
+                entity_type="Fixture",
+                entity_key="final-2030",
+                field_name="kickoff",
+                value={
+                    "chart_request": {
+                        "moment": "2030-07-21T18:00:00+02:00",
+                        "time_known": True,
+                        "house_system": "P",
+                        "location": None,
+                        "bodies": ["Sun", "Moon"],
+                        "orbs": {},
+                        "label": "Final Mundial 2030",
+                    }
+                },
+                source_id=self.spec.source_id,
+                source_url=self.spec.url,
+                consulted_at=consulted_at,
+                grade=DataGrade.A,
+                confidence=1.0,
+                official=True,
+            )
+        ]
 
 
 def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> None:
@@ -211,3 +255,50 @@ def test_failed_fetch_retains_the_previous_immutable_snapshot_path() -> None:
     source = _source_manifest(report, previous)[0]
     assert source["retained_previous"] is True
     assert source["snapshot_path"] == previous_path
+
+
+def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) -> None:
+    database_path = tmp_path / "charts.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    engine = create_engine(database_url)
+    Base.metadata.create_all(engine)
+    settings = Settings(
+        storage_path=tmp_path / "storage",
+        database_url=database_url,
+        scenario_path=ROOT / "data" / "scenario.yaml",
+        teams_path=ROOT / "data" / "teams.csv",
+        sources_path=ROOT / "data" / "sources.yaml",
+    )
+    orchestrator = UpdateOrchestrator(
+        settings=settings,
+        collectors=[OfficialFixtureCollector()],
+    )
+    first = orchestrator.run(
+        UpdateCommand(
+            iterations=15,
+            seed=2030,
+            modes=(ModelMode.FOOTBALL_ONLY,),
+            workers=1,
+        )
+    )
+    second = orchestrator.run(
+        UpdateCommand(
+            iterations=15,
+            seed=2031,
+            modes=(ModelMode.FOOTBALL_ONLY,),
+            workers=1,
+        )
+    )
+
+    first_manifest = PredictionArchive(settings.storage_path).load(first.snapshot_id)
+    second_manifest = PredictionArchive(settings.storage_path).load(second.snapshot_id)
+    assert first_manifest is not None
+    assert second_manifest is not None
+    assert first_manifest["affected_charts"] == ["Fixture:final-2030"]
+    assert first_manifest["chart_recalculation"]["recalculated_count"] == 1
+    assert first_manifest["chart_recalculation"]["cache_hit_count"] == 0
+    assert second_manifest["chart_recalculation"]["recalculated_count"] == 0
+    assert second_manifest["chart_recalculation"]["cache_hit_count"] == 1
+    with Session(engine) as session:
+        assert session.scalar(select(func.count()).select_from(AstrologyChart)) == 1
+    engine.dispose()
