@@ -66,7 +66,10 @@ def test_birth_data_check_constraint_is_postgresql_boolean_safe() -> None:
     assert "time_known = 0" not in ddl
 
 
-def test_chart_cache_migration_backfills_an_existing_schema(tmp_path: Path) -> None:
+def test_chart_cache_migration_backfills_an_existing_schema(tmp_path: Path, monkeypatch) -> None:
+    # The CI integration job exports PostgreSQL for the application migration.
+    # This test deliberately targets its own legacy SQLite database.
+    monkeypatch.delenv("SIRIUS_DATABASE_URL", raising=False)
     database_path = tmp_path / "legacy-schema.db"
     database_url = f"sqlite:///{database_path.as_posix()}"
     config = Config("alembic.ini")
@@ -103,7 +106,9 @@ def test_chart_cache_migration_backfills_an_existing_schema(tmp_path: Path) -> N
     migrated.dispose()
 
 
-def test_source_claim_migration_backfills_provenance_snapshot(tmp_path: Path) -> None:
+def test_source_claim_migration_backfills_provenance_snapshot(tmp_path: Path, monkeypatch) -> None:
+    # Keep the isolated Alembic Config authoritative over the CI database URL.
+    monkeypatch.delenv("SIRIUS_DATABASE_URL", raising=False)
     database_path = tmp_path / "legacy-claims.db"
     database_url = f"sqlite:///{database_path.as_posix()}"
     config = Config("alembic.ini")
@@ -155,7 +160,11 @@ def test_source_claim_migration_backfills_provenance_snapshot(tmp_path: Path) ->
     migrated.dispose()
 
 
-def test_prediction_persistence_migration_preserves_legacy_rows(tmp_path: Path) -> None:
+def test_prediction_persistence_migration_preserves_legacy_rows(
+    tmp_path: Path, monkeypatch
+) -> None:
+    # Do not let the integration service URL redirect this legacy-schema test.
+    monkeypatch.delenv("SIRIUS_DATABASE_URL", raising=False)
     database_path = tmp_path / "legacy-predictions.db"
     database_url = f"sqlite:///{database_path.as_posix()}"
     config = Config("alembic.ini")
