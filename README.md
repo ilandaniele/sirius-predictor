@@ -164,6 +164,12 @@ deduplica observaciones idénticas sin usar la nueva hora de consulta; cada fila
 calidad y fecha. El `update-event` informa cuántos claims fueron insertados, deduplicados, elegibles
 o enviados a revisión, sin desactivar evidencia anterior.
 
+Cada manifest de predicción se replica en PostgreSQL/SQLite como un `PredictionSnapshot` y un
+`SimulationRun` por modo. Las claves `(snapshot_id, mode)` y `run_id` hacen el replay idempotente;
+si el archivo existe pero faltan filas SQL, la siguiente ejecución las reconstruye desde el
+manifest inmutable. La versión relacional del modelo combina la versión semántica y el hash del
+estado de código, sin mezclar los resultados de los tres modos.
+
 ## Contratos y límites
 
 - Cada dato externo guarda fuente, URL, consulta y calidad A/B/C/D/X.

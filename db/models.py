@@ -54,9 +54,7 @@ class SourceClaim(Base, IdMixin, TimestampMixin):
     fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), nullable=False)
     source_url: Mapped[str | None] = mapped_column(Text)
-    quality_code: Mapped[str] = mapped_column(
-        ForeignKey("data_qualities.code"), nullable=False
-    )
+    quality_code: Mapped[str] = mapped_column(ForeignKey("data_qualities.code"), nullable=False)
     consulted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
     official: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -334,6 +332,9 @@ class ModelVersion(Base, IdMixin, TimestampMixin):
 class PredictionSnapshot(Base, IdMixin, TimestampMixin):
     __tablename__ = "prediction_snapshots"
 
+    snapshot_key: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    mode: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    format_size: Mapped[int | None] = mapped_column(Integer, nullable=True)
     tournament_id: Mapped[str] = mapped_column(ForeignKey("tournaments.id"), nullable=False)
     model_version_id: Mapped[str] = mapped_column(ForeignKey("model_versions.id"), nullable=False)
     git_commit: Mapped[str] = mapped_column(String(64), nullable=False)
@@ -344,11 +345,19 @@ class PredictionSnapshot(Base, IdMixin, TimestampMixin):
     simulations: Mapped[int] = mapped_column(Integer, nullable=False)
     weights: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     results: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    __table_args__ = (
+        UniqueConstraint("snapshot_key", "mode"),
+        CheckConstraint(
+            "format_size IS NULL OR format_size IN (48,64)",
+            name="valid_prediction_format_size",
+        ),
+    )
 
 
 class SimulationRun(Base, IdMixin, TimestampMixin):
     __tablename__ = "simulation_runs"
 
+    run_id: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     prediction_snapshot_id: Mapped[str] = mapped_column(
         ForeignKey("prediction_snapshots.id"), nullable=False
     )
@@ -392,6 +401,7 @@ IMMUTABLE_MODELS = (
     SiriusReviewDecision,
     ModelVersion,
     PredictionSnapshot,
+    SimulationRun,
     SimulationPath,
     BacktestRun,
 )

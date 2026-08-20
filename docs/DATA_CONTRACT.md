@@ -63,6 +63,11 @@ natales y fuentes, eventos, cartas/técnicas, versiones, predicciones, simulacio
 backtests. `SourceClaim`, `AstrologyChart`, `AstrologyTechniqueResult`, `ModelVersion`,
 `PredictionSnapshot`, `SimulationPath`, `BacktestRun` y la cola de revisión Sirius son append-only.
 
+Un manifest genera un `PredictionSnapshot` y un `SimulationRun` independientes por modo. La clave
+externa del snapshot SHA-256 más el modo y el `run_id` impiden duplicados. `ModelVersion` conserva
+versión semántica, modo, commit y —para árboles no limpios— el hash del working tree dentro de su
+feature schema. Un replay valida igualdad completa y falla si SQL diverge del archivo inmutable.
+
 Una hora natal desconocida es `NULL` con `time_known=false`. La restricción de base impide marcarla
 conocida sin hora y zona; el parser impide guardar una hora cuando `time_known=false`.
 

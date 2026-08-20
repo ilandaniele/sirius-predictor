@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from collectors.common.base import Collector, CollectorOutcome, CollectorSpec
 from collectors.common.pipeline import UpdateReport
 from db.base import Base
-from db.models import AstrologyChart, SourceClaim
+from db.models import AstrologyChart, PredictionSnapshot, SimulationRun, SourceClaim
 from engine.config import load_scenario
 from packages.common.config import Settings
 from packages.common.provenance import DataGrade, SourceClaimInput
@@ -98,8 +98,13 @@ class OfficialFixtureCollector(StaticCollector):
 
 
 def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> None:
+    database_url = f"sqlite:///{(tmp_path / 'full-update.db').as_posix()}"
+    database_engine = create_engine(database_url)
+    Base.metadata.create_all(database_engine)
+    database_engine.dispose()
     settings = Settings(
         storage_path=tmp_path / "storage",
+        database_url=database_url,
         scenario_path=ROOT / "data" / "scenario.yaml",
         teams_path=ROOT / "data" / "teams.csv",
         sources_path=ROOT / "data" / "sources.yaml",
@@ -161,8 +166,13 @@ def test_full_update_is_idempotent_and_never_overwrites_prediction(tmp_path) -> 
 
 
 def test_observational_raw_byte_changes_do_not_invalidate_predictions(tmp_path) -> None:
+    database_url = f"sqlite:///{(tmp_path / 'observational.db').as_posix()}"
+    database_engine = create_engine(database_url)
+    Base.metadata.create_all(database_engine)
+    database_engine.dispose()
     settings = Settings(
         storage_path=tmp_path / "storage",
+        database_url=database_url,
         scenario_path=ROOT / "data" / "scenario.yaml",
         teams_path=ROOT / "data" / "teams.csv",
         sources_path=ROOT / "data" / "sources.yaml",
@@ -344,4 +354,6 @@ def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) ->
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(AstrologyChart)) == 1
         assert session.scalar(select(func.count()).select_from(SourceClaim)) == 1
+        assert session.scalar(select(func.count()).select_from(PredictionSnapshot)) == 2
+        assert session.scalar(select(func.count()).select_from(SimulationRun)) == 2
     engine.dispose()

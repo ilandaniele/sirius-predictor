@@ -55,7 +55,8 @@ PredictionSnapshot    packages/reports
    entradas idénticas y registrar omisiones sin imputar datos.
 5. Recalcular testimonios Sirius.
 6. Ejecutar Monte Carlo por modo.
-7. crear `PredictionSnapshot` append-only.
+7. crear el manifest y persistir `PredictionSnapshot`/`SimulationRun` append-only por modo; un
+   replay repara filas SQL ausentes y rechaza divergencias.
 8. comparar con el snapshot anterior.
 9. generar informe y exactamente cinco llaves.
 10. registrar notificación local.

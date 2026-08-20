@@ -16,6 +16,7 @@ from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
 from collectors.fifa import fifa_ranking_collector_from_config
 from collectors.sirius_archive import sirius_archive_collector_from_config
+from db.predictions import persist_prediction_manifest
 from db.repository import append_claim, sync_source_catalog
 from db.session import build_engine
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
@@ -559,6 +560,21 @@ class UpdateOrchestrator:
             "sources_updated": source_metrics["updated"],
         }
 
+    def _persist_prediction(self, manifest: dict[str, Any], scenario: Scenario) -> dict[str, int]:
+        prediction_engine = build_engine(self.settings.database_url)
+        try:
+            with Session(prediction_engine) as prediction_session:
+                metrics = persist_prediction_manifest(
+                    prediction_session,
+                    manifest,
+                    scenario,
+                    self.settings.model_version,
+                )
+                prediction_session.commit()
+                return metrics
+        finally:
+            prediction_engine.dispose()
+
     def run(self, command: UpdateCommand) -> UpdateExecution:
         scenario_path = self.settings.scenario_path_for(command.format_size)
         scenario = load_scenario(scenario_path)
@@ -615,6 +631,7 @@ class UpdateOrchestrator:
         ):
             existing = previous
         if existing is not None:
+            self._persist_prediction(existing, scenario)
             snapshot_id = str(existing["snapshot_id"])
             successful_sources = sum(outcome.status == "success" for outcome in update.outcomes)
             return UpdateExecution(
@@ -720,6 +737,7 @@ class UpdateOrchestrator:
             bracket_manifest_path = (output_dir / "brackets" / "manifest.json").as_posix()
 
         manifest = {
+            "schema_version": "prediction-manifest-v2",
             "snapshot_id": snapshot_id,
             "created_at": created_at,
             **git_state,
@@ -775,6 +793,7 @@ class UpdateOrchestrator:
             ],
         }
         manifest_path = self.archive.append(snapshot_id, manifest)
+        self._persist_prediction(manifest, scenario)
         return UpdateExecution(
             snapshot_id=snapshot_id,
             created_at=created_at,

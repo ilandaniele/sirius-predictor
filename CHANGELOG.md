@@ -8,6 +8,8 @@
   respuestas/hashes, rechaza parciales o schema drift y no inventa una conversión a Elo.
 - Persistencia append-only de `SourceClaim` con fingerprint, URL/calidad congeladas, deduplicación
   idempotente y métricas de inserción/elegibilidad en cada evento de actualización.
+- Persistencia relacional idempotente de `PredictionSnapshot` y `SimulationRun` por modo, con
+  versión de modelo ligada al estado de código y reparación desde manifests existentes.
 - Cola Sirius persistente y append-only: candidatos separados de decisiones humanas, control de
   concurrencia, guardas de hora desconocida y snapshot revisado conectado al hash de simulación.
 - Dashboard de revisión pendiente/aprobada/rechazada; ninguna coincidencia scraped entra sola al
