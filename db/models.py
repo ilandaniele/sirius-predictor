@@ -51,7 +51,12 @@ class SourceClaim(Base, IdMixin, TimestampMixin):
     entity_key: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
     field_name: Mapped[str] = mapped_column(String(100), nullable=False)
     value: Mapped[Any] = mapped_column(JSON, nullable=False)
+    fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), nullable=False)
+    source_url: Mapped[str | None] = mapped_column(Text)
+    quality_code: Mapped[str] = mapped_column(
+        ForeignKey("data_qualities.code"), nullable=False
+    )
     consulted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
     official: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -380,6 +385,7 @@ class BacktestRun(Base, IdMixin, TimestampMixin):
 
 
 IMMUTABLE_MODELS = (
+    SourceClaim,
     AstrologyChart,
     AstrologyTechniqueResult,
     SiriusReviewCandidate,

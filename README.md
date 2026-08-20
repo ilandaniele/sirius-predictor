@@ -159,6 +159,11 @@ rechaza respuestas parciales y guarda las respuestas y sus hashes. Es evidencia 
 los puntos FIFA no se convierten a Elo ni a bombos 2030 hasta definir y validar públicamente esa
 transformación.
 
+Los claims de los collectors se guardan además en SQL como eventos append-only. Un fingerprint
+deduplica observaciones idénticas sin usar la nueva hora de consulta; cada fila congela URL,
+calidad y fecha. El `update-event` informa cuántos claims fueron insertados, deduplicados, elegibles
+o enviados a revisión, sin desactivar evidencia anterior.
+
 ## Contratos y límites
 
 - Cada dato externo guarda fuente, URL, consulta y calidad A/B/C/D/X.

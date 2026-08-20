@@ -45,6 +45,12 @@ def test_initial_migration_creates_complete_schema(tmp_path: Path, monkeypatch) 
         for constraint in inspect(engine).get_unique_constraints("astrology_charts")
     }
     assert ("input_hash",) in chart_unique_columns
+    claim_columns = {
+        column["name"]: column for column in inspect(engine).get_columns("source_claims")
+    }
+    assert claim_columns["fingerprint"]["nullable"] is False
+    assert claim_columns["quality_code"]["nullable"] is False
+    assert "source_url" in claim_columns
     engine.dispose()
 
 
@@ -77,7 +83,7 @@ def test_chart_cache_migration_backfills_an_existing_schema(tmp_path: Path) -> N
         )
     engine.dispose()
 
-    command.upgrade(config, "head")
+    command.upgrade(config, "20260820_0003")
     migrated = create_engine(database_url)
     with migrated.connect() as connection:
         input_hash = connection.execute(
@@ -88,4 +94,56 @@ def test_chart_cache_migration_backfills_an_existing_schema(tmp_path: Path) -> N
         column["name"]: column for column in inspect(migrated).get_columns("astrology_charts")
     }
     assert columns["input_hash"]["nullable"] is False
+    migrated.dispose()
+
+
+def test_source_claim_migration_backfills_provenance_snapshot(tmp_path: Path) -> None:
+    database_path = tmp_path / "legacy-claims.db"
+    database_url = f"sqlite:///{database_path.as_posix()}"
+    config = Config("alembic.ini")
+    config.set_main_option("sqlalchemy.url", database_url)
+    command.stamp(config, "20260820_0003")
+    engine = create_engine(database_url)
+    with engine.begin() as connection:
+        connection.execute(
+            text("CREATE TABLE data_qualities (code VARCHAR(1) NOT NULL PRIMARY KEY)")
+        )
+        connection.execute(text("INSERT INTO data_qualities (code) VALUES ('A')"))
+        connection.execute(
+            text(
+                "CREATE TABLE sources ("
+                "id VARCHAR NOT NULL PRIMARY KEY, url TEXT, quality_code VARCHAR(1) NOT NULL"
+                ")"
+            )
+        )
+        connection.execute(
+            text(
+                "INSERT INTO sources (id, url, quality_code) "
+                "VALUES ('source-1', 'https://example.com/source', 'A')"
+            )
+        )
+        connection.execute(
+            text(
+                "CREATE TABLE source_claims ("
+                "id VARCHAR NOT NULL PRIMARY KEY, source_id VARCHAR NOT NULL"
+                ")"
+            )
+        )
+        connection.execute(
+            text("INSERT INTO source_claims (id, source_id) VALUES ('claim-1', 'source-1')")
+        )
+    engine.dispose()
+
+    command.upgrade(config, "head")
+    migrated = create_engine(database_url)
+    with migrated.connect() as connection:
+        row = connection.execute(
+            text(
+                "SELECT fingerprint, source_url, quality_code "
+                "FROM source_claims WHERE id = 'claim-1'"
+            )
+        ).one()
+    assert len(row.fingerprint) == 64
+    assert row.source_url == "https://example.com/source"
+    assert row.quality_code == "A"
     migrated.dispose()

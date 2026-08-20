@@ -16,6 +16,7 @@ from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
 from collectors.fifa import fifa_ranking_collector_from_config
 from collectors.sirius_archive import sirius_archive_collector_from_config
+from db.repository import append_claim, sync_source_catalog
 from db.session import build_engine
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
 from packages.astrology import ChartRecalculationReport, recalculate_accepted_charts
@@ -111,6 +112,7 @@ class PredictionArchive:
         self,
         sources: list[dict[str, Any]],
         report: UpdateReport,
+        claim_persistence: dict[str, int] | None = None,
     ) -> Path:
         created_at = datetime.now(UTC)
         payload = {
@@ -119,6 +121,7 @@ class PredictionArchive:
             "accepted_claims": len(report.accepted),
             "pending_review": len(report.pending_review),
             "conflicts": len(report.conflicts),
+            "claim_persistence": claim_persistence or {},
         }
         event_id = hashlib.sha256(
             json.dumps(payload, sort_keys=True, ensure_ascii=False).encode()
@@ -496,6 +499,66 @@ class UpdateOrchestrator:
         finally:
             chart_engine.dispose()
 
+    def _persist_claims(self, report: UpdateReport) -> dict[str, int]:
+        claims = [claim for outcome in report.outcomes for claim in outcome.claims]
+        if not claims:
+            return {
+                "observed": 0,
+                "inserted": 0,
+                "duplicates": 0,
+                "eligible": 0,
+                "pending": 0,
+                "sources_created": 0,
+                "sources_updated": 0,
+            }
+        raw_catalog = yaml.safe_load(self.settings.sources_path.read_text(encoding="utf-8"))
+        if not isinstance(raw_catalog, list):
+            raise ValueError("sources catalog must be a list")
+        catalog = [dict(item) for item in raw_catalog if isinstance(item, dict)]
+        configured_ids = {str(item.get("id")) for item in catalog}
+        for collector in self.collectors:
+            if collector.spec.source_id in configured_ids:
+                continue
+            catalog.append(
+                {
+                    "id": collector.spec.source_id,
+                    "name": collector.spec.source_id,
+                    "grade": collector.spec.grade.value,
+                    "official": collector.spec.official,
+                    "url": collector.spec.url,
+                    "terms_url": collector.spec.terms_url,
+                    "enabled": True,
+                }
+            )
+        claim_engine = build_engine(self.settings.database_url)
+        try:
+            with Session(claim_engine) as claim_session:
+                source_metrics = sync_source_catalog(claim_session, catalog)
+                inserted = 0
+                duplicates = 0
+                eligible = 0
+                pending = 0
+                for claim in claims:
+                    outcome = append_claim(claim_session, claim)
+                    if not outcome.created:
+                        duplicates += 1
+                        continue
+                    inserted += 1
+                    eligible += int(outcome.eligible)
+                    pending += int(not outcome.eligible)
+                claim_session.commit()
+        finally:
+            claim_engine.dispose()
+        return {
+            "observed": len(claims),
+            "inserted": inserted,
+            "duplicates": duplicates,
+            "eligible": eligible,
+            "pending": pending,
+            "sources_created": source_metrics["created"],
+            "sources_updated": source_metrics["updated"],
+        }
+
     def run(self, command: UpdateCommand) -> UpdateExecution:
         scenario_path = self.settings.scenario_path_for(command.format_size)
         scenario = load_scenario(scenario_path)
@@ -504,6 +567,7 @@ class UpdateOrchestrator:
         update = UpdatePipeline(
             self.collectors, self.settings.storage_path / "source_snapshots"
         ).run()
+        claim_persistence = self._persist_claims(update)
         sirius_outcome = next(
             (
                 outcome
@@ -533,7 +597,11 @@ class UpdateOrchestrator:
         sources = _source_manifest(update, previous)
         review_pointer, reviewed_observations_path = _reviewed_snapshot(self.settings)
         _attach_review_snapshot(sources, review_pointer)
-        update_event_path = self.archive.append_update_event(sources, update)
+        update_event_path = self.archive.append_update_event(
+            sources,
+            update,
+            claim_persistence,
+        )
         git_state = _git_state()
         snapshot_id = _input_hash(command, scenario, sources, git_state)
         existing = self.archive.load(snapshot_id)
@@ -696,6 +764,7 @@ class UpdateOrchestrator:
                 hybrid_result.sirius_evidence_audit if hybrid_result is not None else {}
             ),
             "quality_pending_review": len(update.pending_review),
+            "claim_persistence": claim_persistence,
             "conflicts": len(update.conflicts),
             "relevant_changes": relevant_changes,
             "summary": summary,

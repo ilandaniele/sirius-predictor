@@ -46,16 +46,22 @@ manualmente y estado activo. Las calidades son A (primaria oficial), B (archivo 
 (secundaria), D (pista) y X (supuesto/proyección). C/D/X no entran automáticamente sin confirmación,
 y A no puede ser sustituida automáticamente por una calidad inferior.
 
+Cada fila congela también URL y calidad y recibe un fingerprint canónico que excluye únicamente la
+fecha de consulta. Reconsultar el mismo dato genera un duplicado trazado en el `update-event`, no
+otra fila. Un valor o una procedencia distintos crean un nuevo evento; los anteriores son
+inmutables. `active` representa elegibilidad al momento de inserción y no implica que otra evidencia
+haya sido borrada o reescrita.
+
 El adapter de ranking FIFA guarda en un único snapshot trazable la respuesta del calendario y la
 tabla seleccionada, sus URL y hashes. Sólo admite una entrada `RankingApproved=true`, fecha con
-zona, códigos/rangos/puntos válidos, al menos 100 selecciones, códigos y puestos únicos y ausencia
+zona, códigos/rangos/puntos válidos, al menos 100 selecciones, códigos únicos y ausencia
 de token de continuación. La tabla permanece observacional porque el modelo no presupone una
 conversión de puntos FIFA a Elo.
 
 PostgreSQL conserva 29 tablas para equipos/formato/sorteo/fixtures, personas y tenures, datos
 natales y fuentes, eventos, cartas/técnicas, versiones, predicciones, simulaciones/caminos y
-backtests. `AstrologyChart`, `AstrologyTechniqueResult`, `ModelVersion`, `PredictionSnapshot`,
-`SimulationPath`, `BacktestRun` y la cola de revisión Sirius son append-only.
+backtests. `SourceClaim`, `AstrologyChart`, `AstrologyTechniqueResult`, `ModelVersion`,
+`PredictionSnapshot`, `SimulationPath`, `BacktestRun` y la cola de revisión Sirius son append-only.
 
 Una hora natal desconocida es `NULL` con `time_known=false`. La restricción de base impide marcarla
 conocida sin hora y zona; el parser impide guardar una hora cuando `time_known=false`.

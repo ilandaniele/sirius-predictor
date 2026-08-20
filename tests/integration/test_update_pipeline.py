@@ -9,7 +9,7 @@ from sqlalchemy.orm import Session
 from collectors.common.base import Collector, CollectorOutcome, CollectorSpec
 from collectors.common.pipeline import UpdateReport
 from db.base import Base
-from db.models import AstrologyChart
+from db.models import AstrologyChart, SourceClaim
 from engine.config import load_scenario
 from packages.common.config import Settings
 from packages.common.provenance import DataGrade, SourceClaimInput
@@ -328,8 +328,20 @@ def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) ->
     assert first_manifest["affected_charts"] == ["Fixture:final-2030"]
     assert first_manifest["chart_recalculation"]["recalculated_count"] == 1
     assert first_manifest["chart_recalculation"]["cache_hit_count"] == 0
+    assert first_manifest["claim_persistence"] == {
+        "observed": 1,
+        "inserted": 1,
+        "duplicates": 0,
+        "eligible": 1,
+        "pending": 0,
+        "sources_created": 8,
+        "sources_updated": 0,
+    }
     assert second_manifest["chart_recalculation"]["recalculated_count"] == 0
     assert second_manifest["chart_recalculation"]["cache_hit_count"] == 1
+    assert second_manifest["claim_persistence"]["inserted"] == 0
+    assert second_manifest["claim_persistence"]["duplicates"] == 1
     with Session(engine) as session:
         assert session.scalar(select(func.count()).select_from(AstrologyChart)) == 1
+        assert session.scalar(select(func.count()).select_from(SourceClaim)) == 1
     engine.dispose()
