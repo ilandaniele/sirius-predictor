@@ -141,5 +141,6 @@ hay evidencia, el ajuste es neutral y el dashboard lo declara.
 - Técnicas Sirius sin datos prematch se marcan no evaluables en el backtest.
 
 Más información: [arquitectura](docs/ARCHITECTURE.md),
+[auditoría de prompts](docs/PROMPT_COMPLETION_AUDIT.md),
 [contrato de datos](docs/DATA_CONTRACT.md), [metodología](docs/METHODOLOGY.md) y
 [auditoría de seguridad](docs/SECURITY_AUDIT.md).

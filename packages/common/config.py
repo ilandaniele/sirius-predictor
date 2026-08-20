@@ -29,7 +29,7 @@ class Settings(BaseSettings):
     http_max_bytes: int = 5 * 1024 * 1024
     collector_rate_limit_seconds: float = 1.0
     default_simulations: int = 100_000
-    model_version: str = "0.2.0"
+    model_version: str = "0.2.1"
     api_key: SecretStr | None = None
     post_rate_limit_per_minute: int = 10
 

@@ -3,10 +3,10 @@ from __future__ import annotations
 import hashlib
 import math
 import re
-from collections import defaultdict
+from collections import Counter, defaultdict
 from collections.abc import Iterable
-from dataclasses import dataclass
-from datetime import UTC, datetime
+from dataclasses import dataclass, replace
+from datetime import UTC, datetime, timedelta, timezone
 
 import numpy as np
 import pandas as pd
@@ -30,7 +30,36 @@ DATE_RE = re.compile(
     r"(?P<day>\d{1,2})"
 )
 SCORE_RE = re.compile(r"\s(?P<home_goals>\d+)-(?P<away_goals>\d+)(?:\s|$)")
-TIME_RE = re.compile(r"^\s*(?P<hour>\d{1,2}):(?P<minute>\d{2})(?:\s+UTC[+-]\d+)?\s+")
+TIME_RE = re.compile(
+    r"^\s*(?:\((?P<match_number>\d+)\)\s*)?"
+    r"(?P<hour>\d{1,2}):(?P<minute>\d{2})"
+    r"(?:\s+UTC(?P<utc_offset>[+-]\d{1,2}(?::\d{2})?))?\s+"
+)
+EXTRA_TIME_RE = re.compile(r"^a\.e\.t\.?\s*", re.IGNORECASE)
+SCORE_DETAIL_RE = re.compile(r"^\([^)]*\)\s*,?\s*")
+PENALTY_RE = re.compile(
+    r"^(?P<home_penalties>\d+)-(?P<away_penalties>\d+)\s+pen\.?\s*",
+    re.IGNORECASE,
+)
+EXPECTED_EDITION_SHAPES = {
+    2010: (64, 32),
+    2014: (64, 32),
+    2018: (64, 32),
+    2022: (64, 32),
+    2026: (104, 48),
+}
+EXPECTED_STAGE_COUNTS = {
+    32: {"Group": 48, "R16": 8, "QF": 4, "SF": 2, "ThirdPlace": 1, "F": 1},
+    48: {
+        "Group": 72,
+        "R32": 16,
+        "R16": 8,
+        "QF": 4,
+        "SF": 2,
+        "ThirdPlace": 1,
+        "F": 1,
+    },
+}
 MONTHS = {
     "Jan": 1,
     "Feb": 2,
@@ -65,6 +94,24 @@ class HistoricalMatch:
     time_quality: str
     source_url: str
     stage: str = "unknown"
+    match_number: int | None = None
+    penalty_home_goals: int | None = None
+    penalty_away_goals: int | None = None
+    source_sequence: int | None = None
+
+    @property
+    def winner(self) -> str | None:
+        if self.home_goals > self.away_goals:
+            return self.home
+        if self.away_goals > self.home_goals:
+            return self.away
+        if self.penalty_home_goals is None or self.penalty_away_goals is None:
+            return None
+        if self.penalty_home_goals > self.penalty_away_goals:
+            return self.home
+        if self.penalty_away_goals > self.penalty_home_goals:
+            return self.away
+        return None
 
 
 @dataclass(slots=True)
@@ -76,19 +123,50 @@ class BacktestResult:
     data_quality: pd.DataFrame
 
 
+class HistoricalDataValidationError(ValueError):
+    pass
+
+
 def _clean_team(value: str) -> str:
     name = re.sub(r"\s+", " ", value).strip(" ,")
     return ALIASES.get(name, name)
 
 
+def _utc_offset(value: str) -> timezone:
+    sign = -1 if value.startswith("-") else 1
+    hours_text, _, minutes_text = value[1:].partition(":")
+    offset = timedelta(hours=int(hours_text), minutes=int(minutes_text or "0"))
+    return timezone(sign * offset)
+
+
+def _away_and_penalties(value: str) -> tuple[str, int | None, int | None]:
+    remainder = value.strip()
+    remainder = EXTRA_TIME_RE.sub("", remainder, count=1)
+    while True:
+        reduced = SCORE_DETAIL_RE.sub("", remainder, count=1)
+        if reduced == remainder:
+            break
+        remainder = reduced
+    penalty = PENALTY_RE.match(remainder)
+    if penalty is None:
+        return _clean_team(remainder), None, None
+    remainder = remainder[penalty.end() :]
+    return (
+        _clean_team(remainder),
+        int(penalty.group("home_penalties")),
+        int(penalty.group("away_penalties")),
+    )
+
+
 def parse_openfootball(text: str, edition: int, source_url: str) -> list[HistoricalMatch]:
     current_date: tuple[int, int] | None = None
-    last_time: tuple[int, int] | None = None
     current_stage = "unknown"
     matches: list[HistoricalMatch] = []
-    for raw_line in text.splitlines():
+    for source_sequence, raw_line in enumerate(text.splitlines()):
         heading = raw_line.casefold()
-        if "final" in heading and "semi" not in heading and "quarter" not in heading:
+        if "third place" in heading or "third-place" in heading:
+            current_stage = "ThirdPlace"
+        elif "final" in heading and "semi" not in heading and "quarter" not in heading:
             current_stage = "F"
         elif "semi-final" in heading or "semifinal" in heading:
             current_stage = "SF"
@@ -104,7 +182,6 @@ def parse_openfootball(text: str, edition: int, source_url: str) -> list[Histori
         date_match = DATE_RE.match(raw_line)
         if date_match:
             current_date = (MONTHS[date_match.group("month")], int(date_match.group("day")))
-            last_time = None
             match_line = raw_line[date_match.end() :]
         if "@" not in match_line:
             continue
@@ -114,32 +191,35 @@ def parse_openfootball(text: str, edition: int, source_url: str) -> list[Histori
         prefix = match_line[: score_match.start()]
         time_match = TIME_RE.match(prefix)
         if time_match:
-            last_time = (int(time_match.group("hour")), int(time_match.group("minute")))
             home = prefix[time_match.end() :]
-            quality = "listed_local_time_interpreted_as_utc"
+            quality = (
+                "explicit_utc_offset"
+                if time_match.group("utc_offset")
+                else "listed_time_timezone_unknown"
+            )
         else:
             home = prefix
-            quality = "carried_from_same_matchday" if last_time else "date_only"
+            quality = "date_only"
+        penalty_home_goals = None
+        penalty_away_goals = None
         if re.search(r"\s+v\s+", home):
             home, away = re.split(r"\s+v\s+", home, maxsplit=1)
         else:
             before_venue = match_line[score_match.end() :].split("@", 1)[0].strip()
-            away_parts = [
-                part.strip() for part in re.split(r"\s{2,}", before_venue) if part.strip()
-            ]
-            if not away_parts:
+            if not before_venue:
                 continue
-            away = away_parts[-1]
+            away, penalty_home_goals, penalty_away_goals = _away_and_penalties(before_venue)
         kickoff = None
-        if current_date and last_time:
-            kickoff = datetime(
+        if current_date and time_match and time_match.group("utc_offset"):
+            local_kickoff = datetime(
                 edition,
                 current_date[0],
                 current_date[1],
-                last_time[0],
-                last_time[1],
-                tzinfo=UTC,
+                int(time_match.group("hour")),
+                int(time_match.group("minute")),
+                tzinfo=_utc_offset(time_match.group("utc_offset")),
             )
+            kickoff = local_kickoff.astimezone(UTC)
         matches.append(
             HistoricalMatch(
                 edition=edition,
@@ -151,9 +231,53 @@ def parse_openfootball(text: str, edition: int, source_url: str) -> list[Histori
                 time_quality=quality,
                 source_url=source_url,
                 stage=current_stage,
+                match_number=(
+                    int(time_match.group("match_number"))
+                    if time_match and time_match.group("match_number")
+                    else None
+                ),
+                penalty_home_goals=penalty_home_goals,
+                penalty_away_goals=penalty_away_goals,
+                source_sequence=source_sequence,
             )
         )
     return matches
+
+
+def validate_historical_edition(matches: list[HistoricalMatch], edition: int) -> None:
+    expected_matches, expected_teams = EXPECTED_EDITION_SHAPES[edition]
+    teams = {team for match in matches for team in (match.home, match.away)}
+    suspicious = sorted(
+        team
+        for team in teams
+        if not team
+        or team.startswith("(")
+        or "a.e.t" in team.casefold()
+        or " pen." in team.casefold()
+        or re.match(r"^\d{1,3}:\d{2}\b", team)
+    )
+    finals = [match for match in matches if match.stage == "F"]
+    stage_counts = Counter(match.stage for match in matches)
+    if len(matches) != expected_matches:
+        raise HistoricalDataValidationError(
+            f"{edition}: expected {expected_matches} matches, parsed {len(matches)}"
+        )
+    if len(teams) != expected_teams:
+        raise HistoricalDataValidationError(
+            f"{edition}: expected {expected_teams} teams, parsed {len(teams)}"
+        )
+    if suspicious:
+        raise HistoricalDataValidationError(
+            f"{edition}: score or time annotations leaked into team names: {suspicious[:5]}"
+        )
+    if stage_counts != EXPECTED_STAGE_COUNTS[expected_teams]:
+        raise HistoricalDataValidationError(
+            f"{edition}: unexpected stage counts: {dict(stage_counts)}"
+        )
+    if len(finals) != 1 or finals[0].winner is None:
+        raise HistoricalDataValidationError(
+            f"{edition}: expected one final with a decisive winner"
+        )
 
 
 def _download_or_cache(url: str, source_id: str, store: StateStore) -> bytes:
@@ -185,15 +309,21 @@ def load_historical_matches(editions: Iterable[int], store: StateStore) -> list[
         if edition not in EDITION_FOLDERS:
             raise ValueError(f"unsupported edition: {edition}")
         folder = EDITION_FOLDERS[edition]
+        edition_matches: list[HistoricalMatch] = []
         for part in ("cup.txt", "cup_finals.txt"):
             url = f"{RAW_BASE}/{folder}/{part}"
             source_id = f"openfootball_{edition}_{part.replace('.', '_')}"
             payload = _download_or_cache(url, source_id, store)
-            matches.extend(parse_openfootball(payload.decode("utf-8-sig"), edition, url))
-    return sorted(
-        matches,
-        key=lambda match: (match.edition, match.kickoff or datetime.min.replace(tzinfo=UTC)),
-    )
+            edition_matches.extend(
+                parse_openfootball(payload.decode("utf-8-sig"), edition, url)
+            )
+        edition_matches = [
+            replace(match, source_sequence=sequence)
+            for sequence, match in enumerate(edition_matches)
+        ]
+        validate_historical_edition(edition_matches, edition)
+        matches.extend(edition_matches)
+    return matches
 
 
 def _probabilities(home_rating: float, away_rating: float) -> np.ndarray:

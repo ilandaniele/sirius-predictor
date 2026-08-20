@@ -128,8 +128,7 @@ def _champion(matches: list[HistoricalMatch]) -> str | None:
     finals = [match for match in matches if match.stage == "F"]
     if not finals:
         return None
-    actual, _, winner = _actual(finals[-1])
-    return winner if _argmax(actual) != 1 else None
+    return finals[-1].winner
 
 
 def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
@@ -139,6 +138,8 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
         matches,
         key=lambda item: (
             item.edition,
+            item.source_sequence is None,
+            item.source_sequence if item.source_sequence is not None else 0,
             item.kickoff or datetime(item.edition, 1, 1, tzinfo=UTC),
             item.home,
             item.away,
@@ -168,22 +169,31 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                 "same_edition_excluded": True,
             }
         )
-        participants = sorted(
-            {team for match in edition_matches for team in (match.home, match.away)},
-            key=lambda team: ratings[team],
-            reverse=True,
-        )
+        participants = {team for match in edition_matches for team in (match.home, match.away)}
         champion = _champion(edition_matches)
         if champion is not None:
-            rank = participants.index(champion) + 1
+            champion_rating = ratings[champion]
+            rank_min = 1 + sum(ratings[team] > champion_rating for team in participants)
+            rank_max = sum(ratings[team] >= champion_rating for team in participants)
+            unique_rank = rank_min if rank_min == rank_max else None
             for model in BACKTEST_MODELS:
+                rank_evaluable = model in {"FOOTBALL_ONLY", "HYBRID"}
                 champion_rows.append(
                     {
                         "edition": edition,
                         "model": model,
                         "champion": champion,
-                        "rank": rank if model in {"FOOTBALL_ONLY", "HYBRID"} else 1,
+                        "rank": unique_rank if rank_evaluable else None,
+                        "rank_min": rank_min if rank_evaluable else None,
+                        "rank_max": rank_max if rank_evaluable else None,
                         "participants": len(participants),
+                        "status": (
+                            "evaluated_pre_tournament_rating"
+                            if rank_evaluable and unique_rank is not None
+                            else "tied_pre_tournament_rating"
+                            if rank_evaluable
+                            else "not_evaluable_without_pre_tournament_forecast"
+                        ),
                     }
                 )
 

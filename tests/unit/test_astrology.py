@@ -3,14 +3,19 @@ from datetime import UTC, datetime
 import pytest
 
 from packages.astrology import (
+    AstrologyChart,
     ChartRequest,
     GeoLocation,
+    accidental_dignities,
     antiscia,
+    arabic_parts,
     birth_time_sensitivity,
     chart,
     essential_dignities,
+    harmonic_chart,
     primary_directions,
 )
+from packages.astrology.models import HouseAngles
 
 MADRID = GeoLocation(40.4168, -3.7038, "Madrid")
 
@@ -54,3 +59,60 @@ def test_unweighted_techniques_return_testimonies_without_a_score() -> None:
     assert set(dignities.result) == set(result.positions)
     assert 0 <= mirrored.result["Sun"]["antiscia"] < 360
     assert "score" not in dignities.result
+
+
+def _manual_timed_chart() -> AstrologyChart:
+    moment = datetime(2030, 7, 21, 16, tzinfo=UTC)
+    untimed = chart(ChartRequest(moment, None, False))
+    return AstrologyChart(
+        request=ChartRequest(moment, MADRID, True),
+        provider=untimed.provider,
+        ephemeris_version=untimed.ephemeris_version,
+        julian_day_ut=untimed.julian_day_ut,
+        positions=untimed.positions,
+        houses=HouseAngles(
+            cusps=tuple(float(index * 30) for index in range(12)),
+            ascendant=0.0,
+            midheaven=270.0,
+            armc=270.0,
+            vertex=180.0,
+            house_system="P",
+        ),
+        aspects=untimed.aspects,
+        parameters={**untimed.parameters, "time_known": True},
+    )
+
+
+def test_harmonics_are_descriptive_deterministic_and_unweighted() -> None:
+    base = chart(ChartRequest(datetime(2030, 7, 21, 16, tzinfo=UTC), None, False))
+    result = harmonic_chart(base, 5)
+    expected = (base.positions["Sun"].longitude * 5) % 360
+    assert result.result["positions"]["Sun"]["longitude"] == pytest.approx(expected)
+    assert result.parameters["houses_used"] is False
+    assert result.parameters["weighted"] is False
+    with pytest.raises(ValueError, match="positive integer"):
+        harmonic_chart(base, 0)
+
+
+def test_accidental_dignities_and_configurable_parts_require_real_time() -> None:
+    timed = _manual_timed_chart()
+    dignities = accidental_dignities(timed)
+    assert set(dignities.result) == set(timed.positions)
+    assert all("house_class" in row for row in dignities.result.values())
+    parts = arabic_parts(
+        timed,
+        {
+            "custom_mars_venus": {
+                "day": ("Ascendant", "Mars", "Venus"),
+                "night": ("Ascendant", "Venus", "Mars"),
+            }
+        },
+    )
+    assert {"fortune", "spirit", "victory", "custom_mars_venus"} <= set(parts.result)
+    assert parts.parameters["sect"] in {"day", "night"}
+
+    untimed = chart(ChartRequest(datetime(2030, 7, 21, 16, tzinfo=UTC), MADRID, False))
+    with pytest.raises(ValueError, match="real known time"):
+        accidental_dignities(untimed)
+    with pytest.raises(ValueError, match="real known time"):
+        arabic_parts(untimed)

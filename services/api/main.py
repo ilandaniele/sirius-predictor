@@ -43,7 +43,7 @@ def _scenario_inputs(format_size: int = 64) -> tuple[Scenario, list[Team]]:
 def create_app() -> FastAPI:
     application = FastAPI(
         title="Mundial 2030 Sirius Engine API",
-        version="0.2.0",
+        version="0.2.1",
         docs_url="/docs" if settings.environment != "production" else None,
         redoc_url=None,
     )
@@ -71,7 +71,7 @@ def create_app() -> FastAPI:
 
     @application.get("/health")
     def health() -> dict[str, str]:
-        return {"status": "ok", "version": "0.2.0"}
+        return {"status": "ok", "version": "0.2.1"}
 
     @application.get("/api/v1/scenario", response_model=ApiEnvelope)
     def scenario_view(format_size: int = Query(default=64)) -> ApiEnvelope:

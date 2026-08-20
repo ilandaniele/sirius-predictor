@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import argparse
 import json
+from collections import Counter
 from datetime import UTC, datetime
 from pathlib import Path
 from time import perf_counter
@@ -25,7 +26,7 @@ def _records(frame: pd.DataFrame) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run v0.2.0 release acceptance")
+    parser = argparse.ArgumentParser(description="Run v0.2.1 release acceptance")
     parser.add_argument("--iterations", type=int, default=100_000)
     parser.add_argument("--workers", type=int, default=None)
     parser.add_argument("--format-size", type=int, choices=(48, 64), default=64)
@@ -45,6 +46,27 @@ def main() -> None:
 
     historical_matches = load_historical_matches(EDITION_FOLDERS, StateStore(ROOT / "state"))
     historical_editions = sorted({match.edition for match in historical_matches})
+    historical_shapes = {
+        str(edition): {
+            "matches": len(edition_matches),
+            "teams": len(
+                {
+                    team
+                    for match in edition_matches
+                    for team in (match.home, match.away)
+                }
+            ),
+            "stages": dict(Counter(match.stage for match in edition_matches)),
+            "champion": next(
+                (match.winner for match in edition_matches if match.stage == "F"),
+                None,
+            ),
+        }
+        for edition in historical_editions
+        if (edition_matches := [
+            match for match in historical_matches if match.edition == edition
+        ])
+    }
     backtest = run_full_backtest(historical_matches)
     consulted_at = datetime.now(UTC).isoformat()
     backtest_manifest = {
@@ -62,6 +84,7 @@ def main() -> None:
         "available_editions": historical_editions,
         "missing_editions": sorted(set(EDITION_FOLDERS) - set(historical_editions)),
         "matches": len(historical_matches),
+        "edition_shapes": historical_shapes,
         "time_quality": {
             quality: sum(match.time_quality == quality for match in historical_matches)
             for quality in sorted({match.time_quality for match in historical_matches})
@@ -127,8 +150,52 @@ def main() -> None:
         teams,
         output / "brackets-4k",
     )
+    acceptance = {
+        "teams": len(teams) == args.format_size,
+        "legal_draws": draw_analysis.iterations >= 100_000,
+        "simulations_each_mode": all(
+            item["champion_probability_sum"] > 99.999 for item in simulations.values()
+        ),
+        "five_brackets": len(bracket_manifests) == 5,
+        "three_formats": all(len(item["files"]) == 3 for item in bracket_manifests),
+        "sensitivity_12_rows": all(
+            item["sensitivity_rows"] == 12 for item in simulations.values()
+        ),
+        "backtest_four_models": set(backtest.metrics["model"])
+        == {"FOOTBALL_ONLY", "SIRIUS_PURIST", "SIRIUS_CALIBRATED", "HYBRID"},
+        "backtest_no_temporal_leakage": bool(
+            (~backtest.leakage_audit["same_match_used"]).all()
+            and (~backtest.leakage_audit["future_edition_used_for_calibration"]).all()
+        ),
+        "backtest_historical_shapes": all(
+            shape["matches"] == (104 if int(edition) == 2026 else 64)
+            and shape["teams"] == (48 if int(edition) == 2026 else 32)
+            and shape["champion"] is not None
+            for edition, shape in historical_shapes.items()
+        ),
+        "backtest_all_champions_reported": set(backtest.champion_ranking["edition"])
+        == set(EDITION_FOLDERS),
+        "backtest_sirius_ranks_not_invented": bool(
+            backtest.champion_ranking.loc[
+                backtest.champion_ranking["model"].isin(
+                    {"SIRIUS_PURIST", "SIRIUS_CALIBRATED"}
+                ),
+                "rank",
+            ]
+            .isna()
+            .all()
+        ),
+        "backtest_rating_ranks_tie_aware": bool(
+            backtest.champion_ranking.loc[
+                backtest.champion_ranking["status"] == "tied_pre_tournament_rating",
+                "rank",
+            ]
+            .isna()
+            .all()
+        ),
+    }
     manifest = {
-        "release": "0.2.0",
+        "release": "0.2.1",
         "created_at": datetime.now(UTC).isoformat(),
         "scenario": scenario.scenario_id,
         "format_size": args.format_size,
@@ -149,24 +216,7 @@ def main() -> None:
         },
         "simulations": simulations,
         "brackets": bracket_manifests,
-        "acceptance": {
-            "teams": len(teams) == args.format_size,
-            "legal_draws": draw_analysis.iterations >= 100_000,
-            "simulations_each_mode": all(
-                item["champion_probability_sum"] > 99.999 for item in simulations.values()
-            ),
-            "five_brackets": len(bracket_manifests) == 5,
-            "three_formats": all(len(item["files"]) == 3 for item in bracket_manifests),
-            "sensitivity_12_rows": all(
-                item["sensitivity_rows"] == 12 for item in simulations.values()
-            ),
-            "backtest_four_models": set(backtest.metrics["model"])
-            == {"FOOTBALL_ONLY", "SIRIUS_PURIST", "SIRIUS_CALIBRATED", "HYBRID"},
-            "backtest_no_temporal_leakage": bool(
-                (~backtest.leakage_audit["same_match_used"]).all()
-                and (~backtest.leakage_audit["future_edition_used_for_calibration"]).all()
-            ),
-        },
+        "acceptance": acceptance,
     }
     (output / "acceptance.json").write_text(
         json.dumps(manifest, ensure_ascii=False, indent=2), encoding="utf-8"
@@ -176,6 +226,9 @@ def main() -> None:
     latest_backtest.write_text(
         json.dumps(backtest_manifest, ensure_ascii=False, indent=2), encoding="utf-8"
     )
+    if not all(acceptance.values()):
+        failed = sorted(name for name, passed in acceptance.items() if not passed)
+        raise RuntimeError(f"release acceptance failed: {failed}")
     print(json.dumps({"output": output.as_posix(), **manifest["acceptance"]}, indent=2))
 
 

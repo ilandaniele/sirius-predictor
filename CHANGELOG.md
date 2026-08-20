@@ -1,5 +1,18 @@
 # Changelog
 
+## 0.2.1 — 2026-08-20
+
+- Parser histórico estricto: nombres limpios, offsets UTC explícitos, prórrogas, penales, rondas y
+  formas 64/32 o 104/48 validadas antes del backtest.
+- Campeón 2022 reconocido por tanda; rankings pretorneo Sirius no evaluables y empates de rating
+  informados como intervalos en lugar de puestos arbitrarios.
+- Acceptance ampliado para fallar ante corrupción histórica, campeones ausentes o rankings
+  inventados.
+- Armónicas descriptivas, dignidades accidentales y partes arábigas configurables sin pesos Sirius.
+- Lunaciones cercanas a nodos etiquetadas sólo como candidatos de eclipse pendientes de
+  confirmación astronómica.
+- Matriz honesta de cumplimiento y faltantes para todos los prompts.
+
 ## 0.2.0 — 2026-08-17
 
 - Selector 48/64 en API, CLI y dashboard; 64 permanece predeterminado.

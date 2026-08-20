@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mundial-2030-sirius-engine"
-version = "0.2.0"
+version = "0.2.1"
 description = "Motor reproducible y experimental para escenarios Mundial 2030 de 48 o 64 equipos"
 readme = "README.md"
 requires-python = ">=3.11"
