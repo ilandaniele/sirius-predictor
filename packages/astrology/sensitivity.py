@@ -67,6 +67,8 @@ def kickoff_time_sensitivity(
     hour_offsets: tuple[int, ...] = (-60, 0, 120, 180),
     minute_offsets: tuple[int, ...] = (-15, 0, 15),
 ) -> TechniqueResult:
+    if not request.time_known:
+        raise ValueError("kickoff sensitivity requires an actual scheduled base time")
     rows = []
     for hour_offset in hour_offsets:
         for minute_offset in minute_offsets:

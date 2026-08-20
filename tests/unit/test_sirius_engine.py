@@ -1,6 +1,16 @@
+import pytest
+
+from packages.astrology import TechniqueResult
 from packages.common.provenance import DataGrade
 from packages.common.types import SiriusMode
-from packages.sirius import EvidenceLayer, FeatureObservation, Polarity, SiriusEngine
+from packages.sirius import (
+    EvidenceLayer,
+    FeatureObservation,
+    Polarity,
+    SiriusEngine,
+    SiriusRule,
+    observation_from_technique,
+)
 
 
 def observation(
@@ -46,3 +56,36 @@ def test_calibrated_mode_is_available_but_explicitly_untrained() -> None:
     assert assessment.contradictions[0]["feature_id"] == "solar_return"
     assert any("no se entrenaron" in warning for warning in assessment.warnings)
     assert assessment.hour_robustness == 0.9
+
+
+def test_time_dependent_sirius_rule_requires_explicit_true_time_metadata() -> None:
+    rule = SiriusRule(
+        feature_id="solar_return",
+        layer=EvidenceLayer.ANNUAL,
+        explicit_public_rule=True,
+        requires_known_time=True,
+        implementation_status="implemented",
+    )
+    technique = TechniqueResult("solar_return", {}, {})
+    with pytest.raises(ValueError, match="known real time"):
+        observation_from_technique(
+            rule,
+            technique,
+            Polarity.NEUTRAL,
+            0.0,
+            DataGrade.B,
+            0.5,
+            None,
+            ("claim-1",),
+        )
+    with pytest.raises(ValueError, match="at least one source claim"):
+        observation_from_technique(
+            rule,
+            TechniqueResult("solar_return", {}, {"time_known": True}),
+            Polarity.NEUTRAL,
+            0.0,
+            DataGrade.B,
+            0.5,
+            None,
+            (),
+        )

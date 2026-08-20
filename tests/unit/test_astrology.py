@@ -11,9 +11,15 @@ from packages.astrology import (
     arabic_parts,
     birth_time_sensitivity,
     chart,
+    demi_lunar,
     essential_dignities,
+    fixed_star_contacts,
     harmonic_chart,
+    kickoff_time_sensitivity,
+    lunar_return,
     primary_directions,
+    quarti_lunar,
+    solar_return,
 )
 from packages.astrology.models import HouseAngles
 
@@ -59,6 +65,26 @@ def test_unweighted_techniques_return_testimonies_without_a_score() -> None:
     assert set(dignities.result) == set(result.positions)
     assert 0 <= mirrored.result["Sun"]["antiscia"] < 360
     assert "score" not in dignities.result
+    assert all("fall" in row for row in dignities.result.values())
+
+
+def test_time_dependent_returns_never_use_an_unknown_natal_time() -> None:
+    untimed = chart(ChartRequest(datetime(1980, 1, 1, 12, tzinfo=UTC), None, False))
+    event = datetime(2030, 6, 1, tzinfo=UTC)
+    with pytest.raises(ValueError, match="known real natal time"):
+        solar_return(untimed, 2030, MADRID)
+    for technique in (lunar_return, demi_lunar, quarti_lunar):
+        with pytest.raises(ValueError, match="known real natal time"):
+            technique(untimed, event, MADRID)
+
+
+def test_kickoff_sensitivity_and_star_orbs_validate_inputs() -> None:
+    request = ChartRequest(datetime(2030, 7, 21, 16, tzinfo=UTC), MADRID, False)
+    with pytest.raises(ValueError, match="scheduled base time"):
+        kickoff_time_sensitivity(request)
+    base = chart(ChartRequest(request.moment, None, False))
+    with pytest.raises(ValueError, match="between 0 and 10"):
+        fixed_star_contacts(base, [], orb=-1)
 
 
 def _manual_timed_chart() -> AstrologyChart:

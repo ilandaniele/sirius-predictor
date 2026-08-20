@@ -10,6 +10,8 @@
   idempotente y métricas de inserción/elegibilidad en cada evento de actualización.
 - Persistencia relacional idempotente de `PredictionSnapshot` y `SimulationRun` por modo, con
   versión de modelo ligada al estado de código y reparación desde manifests existentes.
+- Guardas estrictas de hora y provenance en técnicas Sirius; retornos solar/lunar/demi/cuartilunar
+  rechazan cartas natales sin hora real y la sensibilidad de kickoff exige horario programado.
 - Cola Sirius persistente y append-only: candidatos separados de decisiones humanas, control de
   concurrencia, guardas de hora desconocida y snapshot revisado conectado al hash de simulación.
 - Dashboard de revisión pendiente/aprobada/rechazada; ninguna coincidencia scraped entra sola al

@@ -44,7 +44,9 @@ def observation_from_technique(
     hour_robustness: float | None,
     source_claim_ids: tuple[str, ...],
 ) -> FeatureObservation:
-    if rule.requires_known_time and technique.parameters.get("time_known") is False:
+    if not source_claim_ids:
+        raise ValueError(f"{rule.feature_id} requires at least one source claim")
+    if rule.requires_known_time and technique.parameters.get("time_known") is not True:
         raise ValueError(f"{rule.feature_id} requires a known real time")
     return FeatureObservation(
         feature_id=rule.feature_id,

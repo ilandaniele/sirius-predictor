@@ -70,6 +70,9 @@ feature schema. Un replay valida igualdad completa y falla si SQL diverge del ar
 
 Una hora natal desconocida es `NULL` con `time_known=false`. La restricción de base impide marcarla
 conocida sin hora y zona; el parser impide guardar una hora cuando `time_known=false`.
+Retornos solar/lunar/demi/cuartilunar y cualquier regla Sirius dependiente de hora exigen ahora
+`time_known=true` explícito; la ausencia del campo también falla. La conversión de una técnica a
+observación Sirius exige al menos un `source_claim_id`.
 
 ## Recálculo y caché de cartas
 

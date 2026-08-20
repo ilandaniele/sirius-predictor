@@ -136,6 +136,8 @@ def _find_return(
 
 
 def solar_return(natal: AstrologyChart, year: int, location: GeoLocation) -> TechniqueResult:
+    if not natal.request.time_known:
+        raise ValueError("solar return requires a known real natal time or time sensitivity")
     target = natal.positions["Sun"].longitude
     after = natal.request.moment.replace(year=year) - timedelta(days=2)
     moment = _find_return("Sun", target, after, 365.256)
@@ -143,7 +145,7 @@ def solar_return(natal: AstrologyChart, year: int, location: GeoLocation) -> Tec
     return TechniqueResult(
         technique="solar_return",
         result={"exact_moment": moment.isoformat(), "chart": result_chart.to_dict()},
-        parameters={"target_longitude": target, "year": year},
+        parameters={"target_longitude": target, "year": year, "time_known": True},
     )
 
 
@@ -153,6 +155,8 @@ def lunar_return(
     location: GeoLocation,
     fraction: float = 1.0,
 ) -> TechniqueResult:
+    if not natal.request.time_known:
+        raise ValueError("lunar returns require a known real natal time or time sensitivity")
     labels = {1.0: "lunar_return", 0.5: "demi_lunar", 0.25: "quarti_lunar"}
     if fraction not in labels:
         raise ValueError("fraction must be 1, 0.5 or 0.25")
@@ -162,8 +166,24 @@ def lunar_return(
     return TechniqueResult(
         technique=labels[fraction],
         result={"exact_moment": moment.isoformat(), "chart": result_chart.to_dict()},
-        parameters={"target_longitude": target, "fraction": fraction},
+        parameters={"target_longitude": target, "fraction": fraction, "time_known": True},
     )
+
+
+def demi_lunar(
+    natal: AstrologyChart,
+    after: datetime,
+    location: GeoLocation,
+) -> TechniqueResult:
+    return lunar_return(natal, after, location, fraction=0.5)
+
+
+def quarti_lunar(
+    natal: AstrologyChart,
+    after: datetime,
+    location: GeoLocation,
+) -> TechniqueResult:
+    return lunar_return(natal, after, location, fraction=0.25)
 
 
 def secondary_progressions(natal: AstrologyChart, event_moment: datetime) -> TechniqueResult:
@@ -182,7 +202,11 @@ def secondary_progressions(natal: AstrologyChart, event_moment: datetime) -> Tec
     return TechniqueResult(
         technique="secondary_progressions",
         result={"progressed_moment": progressed_moment.isoformat(), "chart": progressed.to_dict()},
-        parameters={"key": "one day per tropical year", "age_years": tropical_years},
+        parameters={
+            "key": "one day per tropical year",
+            "age_years": tropical_years,
+            "time_known": natal.request.time_known,
+        },
     )
 
 
@@ -198,7 +222,12 @@ def primary_directions(natal: AstrologyChart, event_moment: datetime) -> Techniq
     return TechniqueResult(
         technique="primary_directions",
         result=directed,
-        parameters={"key": "Naibod mean solar arc", "years": years, "arc": arc},
+        parameters={
+            "key": "Naibod mean solar arc",
+            "years": years,
+            "arc": arc,
+            "time_known": True,
+        },
         warnings=("Research approximation; direction variant must be preregistered.",),
     )
 
@@ -223,6 +252,7 @@ def essential_dignities(astrology_chart: AstrologyChart) -> TechniqueResult:
             "sign": sign,
             "domicile": domicile,
             "exaltation": exalted,
+            "fall": EXALTATIONS.get(body) == SIGNS[(SIGNS.index(sign) + 6) % 12],
             "detriment": RULERS[SIGNS[(SIGNS.index(sign) + 6) % 12]] == body,
         }
     return TechniqueResult(
@@ -278,6 +308,7 @@ def accidental_dignities(astrology_chart: AstrologyChart) -> TechniqueResult:
             "succedent_houses": [2, 5, 8, 11],
             "cadent_houses": [3, 6, 9, 12],
             "weighted": False,
+            "time_known": True,
         },
     )
 
@@ -309,7 +340,7 @@ def rulers_and_almutens(astrology_chart: AstrologyChart) -> TechniqueResult:
     return TechniqueResult(
         technique="rulers_almutens",
         result={"house_rulers": rulers, "almuten_variant": "domicile-only"},
-        parameters={"rulership": "traditional"},
+        parameters={"rulership": "traditional", "time_known": True},
         warnings=("Full almuten scoring remains configurable and unweighted.",),
     )
 
@@ -362,6 +393,7 @@ def arabic_parts(
             "sun_house": sun_house,
             "formulas": used_formulas,
             "formula_set": "configurable-v2",
+            "time_known": True,
         },
     )
 
@@ -385,6 +417,8 @@ def fixed_star_contacts(
     stars: Iterable[dict[str, float | str]],
     orb: float = 1.0,
 ) -> TechniqueResult:
+    if not 0 <= orb <= 10:
+        raise ValueError("fixed-star orb must be between 0 and 10 degrees")
     contacts = []
     catalog = list(stars)
     for star in catalog:
