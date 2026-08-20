@@ -29,13 +29,14 @@ apps/web          Next.js + TypeScript
 services/api      FastAPI + Celery
 packages          football / astrology / sirius / montecarlo / reports / common
 collectors        FIFA / federaciones / históricos / natal / archivo Sirius
-db                SQLAlchemy (27 tablas)
+db                SQLAlchemy (29 tablas)
 alembic           migraciones controladas
 storage           snapshots, predicciones, informes y llaves (fuera de Git)
 ```
 
 PostgreSQL es la persistencia de producción, Redis coordina jobs y el almacenamiento append-only
-conserva cada predicción junto a hashes, fuentes, commit, versión, timestamp, semilla y pesos.
+conserva cada predicción junto a hashes, fuentes, commit, estado/digest del árbol de trabajo,
+versión, timestamp, semilla y pesos.
 
 ## Desarrollo sin Docker
 
@@ -128,8 +129,23 @@ python scripts/update_world_cup.py --format-size 64 --iterations 1000 --workers 
 
 `ACTUALIZAR` captura el feed paginado completo de Juan Cruz Sirius desde la primera publicación
 disponible, conserva hashes y provenance, detecta menciones técnicas y manda toda interpretación a
-revisión. Sólo observaciones confirmadas en `data/sirius_observations.yaml` afectan a Sirius; si no
-hay evidencia, el ajuste es neutral y el dashboard lo declara.
+revisión. El tab **Sirius** permite sincronizar la cola y agregar decisiones humanas append-only.
+Una aprobación exige equipo, técnica detectada, polaridad, fuerza descriptiva, confianza del dato y
+control de hora real. Las observaciones aprobadas se exportan a snapshots inmutables bajo
+`storage/sirius-review/` y entran al motor recién en el siguiente `ACTUALIZAR`; rechazar o revertir
+una aprobación crea otra decisión, nunca reescribe la anterior.
+
+Para poblar la cola desde el último archivo ya capturado sin volver a consultar Internet:
+
+```bash
+python -m alembic upgrade head
+python scripts/sync_sirius_review.py
+```
+
+`data/sirius_observations.yaml` sigue disponible para evidencia revisada y versionada en Git. La
+cola SQL es la vía operativa; ambas exigen `manually_confirmed=true`. Si no hay evidencia, el ajuste
+es neutral y el dashboard lo declara. En producción, las decisiones requieren `SIRIUS_API_KEY`; el
+campo del dashboard vive sólo en memoria del navegador y no persiste la clave.
 
 ## Contratos y límites
 

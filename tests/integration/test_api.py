@@ -1,6 +1,19 @@
+import json
+from collections.abc import Generator
+from datetime import UTC, datetime
+from pathlib import Path
+
 import pytest
 from fastapi.testclient import TestClient
+from sqlalchemy import create_engine
+from sqlalchemy.orm import Session, sessionmaker
 
+from collectors.sirius_archive import build_archive_index
+from db.base import Base
+from db.models import DataQuality
+from db.session import get_session
+from packages.sirius import SiriusReviewQueue
+from services.api import main as api_main
 from services.api.main import create_app
 
 client = TestClient(create_app())
@@ -40,3 +53,127 @@ def test_invalid_query_and_security_headers() -> None:
     assert response.status_code == 422
     assert response.headers["x-content-type-options"] == "nosniff"
     assert client.get("/api/v1/scenario?format_size=32").status_code == 422
+    preflight = client.options(
+        "/api/v1/sirius/review-candidates/sync",
+        headers={
+            "Origin": "http://localhost:3000",
+            "Access-Control-Request-Method": "POST",
+            "Access-Control-Request-Headers": "x-api-key,content-type",
+        },
+    )
+    assert preflight.status_code == 200
+    assert "x-api-key" in preflight.headers["access-control-allow-headers"].lower()
+
+
+def _review_archive_payload() -> bytes:
+    entry = {
+        "id": {"$t": "tag:blogger.com,1999:blog-1.post-99"},
+        "published": {"$t": "2014-04-30T15:01:00-03:00"},
+        "updated": {"$t": "2014-04-30T15:02:00-03:00"},
+        "title": {"$t": "Mundial"},
+        "content": {"$t": "Pronostico que Argentina llegara a la final. RS favorable."},
+        "link": [
+            {
+                "rel": "alternate",
+                "href": "https://astrologiadeportivaa.blogspot.com/post-99.html",
+            }
+        ],
+    }
+    return build_archive_index(
+        [
+            json.dumps(
+                {
+                    "feed": {
+                        "openSearch$totalResults": {"$t": "1"},
+                        "entry": [entry],
+                    }
+                }
+            ).encode()
+        ],
+        datetime(2026, 8, 20, tzinfo=UTC),
+    )
+
+
+def test_sirius_review_api_is_manual_append_only_and_conflict_safe(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = create_engine(f"sqlite:///{(tmp_path / 'api-review.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    factory = sessionmaker(bind=engine, expire_on_commit=False)
+    with factory() as session:
+        session.add(
+            DataQuality(
+                code="B",
+                label="Archivo confiable",
+                precedence=4,
+                requires_manual_review=False,
+            )
+        )
+        session.commit()
+        queue = SiriusReviewQueue(
+            session,
+            rules_path=api_main.ROOT / "data" / "sirius_rules.yaml",
+            teams_path=api_main.settings.teams_path,
+        )
+        queue.sync_archive(_review_archive_payload())
+        session.commit()
+
+    def test_session() -> Generator[Session]:
+        with factory() as session:
+            yield session
+
+    monkeypatch.setattr(api_main.settings, "storage_path", tmp_path / "storage")
+    application = create_app()
+    application.dependency_overrides[get_session] = test_session
+    review_client = TestClient(application)
+
+    pending = review_client.get("/api/v1/sirius/review-candidates").json()["data"]
+    assert pending["counts"]["pending"] == 1
+    candidate_id = pending["items"][0]["id"]
+    request = {
+        "action": "approved",
+        "reviewer": "Ilan",
+        "reason": "Contraste manual contra la publicaciÃ³n",
+        "approval": {
+            "team_id": "ARG",
+            "feature_id": "solar_return",
+            "polarity": "favorable",
+            "strength": 0.8,
+            "data_confidence": 0.7,
+            "hour_robustness": 0.9,
+            "description": "Testimonio revisado manualmente",
+            "time_known": True,
+            "time_source_url": "https://example.com/verified-time",
+            "time_consulted_at": "2026-08-20T18:00:00-03:00",
+            "time_data_grade": "B",
+            "time_source_note": "Hora contrastada con la fuente",
+        },
+    }
+    approved = review_client.post(
+        f"/api/v1/sirius/review-candidates/{candidate_id}/decisions", json=request
+    )
+    assert approved.status_code == 200
+    decision_id = approved.json()["data"]["decision"]["id"]
+    assert approved.json()["data"]["review_snapshot"]["reviewed_observations"] == 1
+
+    stale = review_client.post(
+        f"/api/v1/sirius/review-candidates/{candidate_id}/decisions",
+        json={
+            "action": "rejected",
+            "reviewer": "Ilan",
+            "reason": "Segunda lectura del texto fuente",
+        },
+    )
+    assert stale.status_code == 409
+    rejected = review_client.post(
+        f"/api/v1/sirius/review-candidates/{candidate_id}/decisions",
+        json={
+            "action": "rejected",
+            "reviewer": "Ilan",
+            "reason": "Segunda lectura del texto fuente",
+            "expected_decision_id": decision_id,
+        },
+    )
+    assert rejected.status_code == 200
+    assert rejected.json()["data"]["review_snapshot"]["reviewed_observations"] == 0
+    engine.dispose()

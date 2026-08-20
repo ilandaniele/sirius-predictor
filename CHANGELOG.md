@@ -2,6 +2,12 @@
 
 ## 0.2.1 — 2026-08-20
 
+- Cola Sirius persistente y append-only: candidatos separados de decisiones humanas, control de
+  concurrencia, guardas de hora desconocida y snapshot revisado conectado al hash de simulación.
+- Dashboard de revisión pendiente/aprobada/rechazada; ninguna coincidencia scraped entra sola al
+  modelo y toda reversión conserva la decisión anterior.
+- Técnicas dependientes de hora exigen provenance horario independiente; manifests y run IDs
+  incorporan hashes de ambas fuentes Sirius y el digest del árbol Git si está sucio.
 - Parser histórico estricto: nombres limpios, offsets UTC explícitos, prórrogas, penales, rondas y
   formas 64/32 o 104/48 validadas antes del backtest.
 - Campeón 2022 reconocido por tanda; rankings pretorneo Sirius no evaluables y empates de rating

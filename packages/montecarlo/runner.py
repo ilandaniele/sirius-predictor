@@ -36,8 +36,8 @@ class ParallelSimulationResult:
     sirius_evidence_audit: dict[str, Any]
 
 
-def _chunk_job(arguments: tuple[str, str, int, int, str, int]) -> SimulationBundle:
-    scenario_path, teams_path, count, seed, mode, final_hour = arguments
+def _chunk_job(arguments: tuple[str, str, int, int, str, int, str | None]) -> SimulationBundle:
+    scenario_path, teams_path, count, seed, mode, final_hour, reviewed_path = arguments
     scenario = load_scenario(scenario_path)
     teams = teams_for_scenario(load_teams(teams_path), scenario)
     return run_engine(
@@ -48,6 +48,7 @@ def _chunk_job(arguments: tuple[str, str, int, int, str, int]) -> SimulationBund
         mode,
         final_hour,
         top_bracket_limit=100,
+        reviewed_observations_path=reviewed_path,
     )
 
 
@@ -103,6 +104,7 @@ def run_parallel(
     mode: ModelMode = ModelMode.HYBRID,
     final_hour: int = 18,
     workers: int | None = None,
+    reviewed_observations_path: str | Path | None = None,
 ) -> ParallelSimulationResult:
     if iterations <= 0:
         raise ValueError("iterations must be positive")
@@ -113,7 +115,15 @@ def run_parallel(
     counts = [base + int(index < remainder) for index in range(worker_count)]
     seeds = [seed + 1_000_003 * index for index in range(worker_count)]
     jobs = [
-        (str(scenario_path), str(teams_path), count, chunk_seed, mode.value, final_hour)
+        (
+            str(scenario_path),
+            str(teams_path),
+            count,
+            chunk_seed,
+            mode.value,
+            final_hour,
+            str(reviewed_observations_path) if reviewed_observations_path else None,
+        )
         for count, chunk_seed in zip(counts, seeds, strict=True)
     ]
     if worker_count == 1:
@@ -182,7 +192,7 @@ def run_parallel(
             name_to_id[str(leading_final["Finalista A"])],
             name_to_id[str(leading_final["Finalista B"])],
         )
-        sensitivity = _sensitivity_table(pair, teams, scenario, mode)
+        sensitivity = _sensitivity_table(pair, teams, scenario, mode, reviewed_observations_path)
     cluster_counts: Counter[str] = Counter()
     representatives: dict[str, dict[str, Any]] = {}
     for chunk in chunks:
@@ -199,7 +209,10 @@ def run_parallel(
         bracket["count"] = cluster_counts[str(bracket["signature"])]
         bracket["density_percent"] = 100 * int(bracket["count"]) / iterations
     run_id = hashlib.sha256(
-        f"{scenario.scenario_id}:{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}".encode()
+        (
+            f"{scenario.scenario_id}:{chunks[0].manifest.input_sha256}:"
+            f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}"
+        ).encode()
     ).hexdigest()[:16]
     if not math.isclose(float(ranking["Campeón %"].sum()), 100.0, abs_tol=1e-9):
         raise RuntimeError("parallel aggregation lost champion probability mass")

@@ -3,7 +3,7 @@ from __future__ import annotations
 import random
 from dataclasses import asdict
 from pathlib import Path
-from typing import Annotated
+from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
 from fastapi.middleware.cors import CORSMiddleware
@@ -14,7 +14,8 @@ from db.session import get_session
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario, validate_scenario
 from engine.domain import Team
 from engine.draw import draw_groups
-from packages.common.config import get_settings
+from packages.common.config import ROOT, get_settings
+from packages.sirius import ReviewConflictError, SiriusReviewQueue
 
 from .catalog import (
     latest_backtest,
@@ -24,7 +25,13 @@ from .catalog import (
     provenance,
     source_catalog,
 )
-from .schemas import ApiEnvelope, JobAccepted, SimulationRequest, UpdateRequest
+from .schemas import (
+    ApiEnvelope,
+    JobAccepted,
+    SimulationRequest,
+    SiriusReviewDecisionRequest,
+    UpdateRequest,
+)
 from .security import InProcessRateLimiter, require_api_key
 from .tasks import celery_app, run_simulation_task, update_world_cup_task
 from .update_pipeline import PredictionArchive
@@ -40,6 +47,33 @@ def _scenario_inputs(format_size: int = 64) -> tuple[Scenario, list[Team]]:
     return scenario, teams
 
 
+def _review_queue(session: Session) -> SiriusReviewQueue:
+    return SiriusReviewQueue(
+        session,
+        rules_path=ROOT / "data" / "sirius_rules.yaml",
+        teams_path=settings.teams_path,
+    )
+
+
+def _latest_sirius_snapshot_path() -> Path | None:
+    event = PredictionArchive(settings.storage_path).latest_update_event()
+    source = next(
+        (
+            item
+            for item in (event or {}).get("sources", [])
+            if item.get("source_id") == "sirius_blog" and item.get("snapshot_path")
+        ),
+        None,
+    )
+    if source is None:
+        return None
+    root = (settings.storage_path / "source_snapshots" / "sirius_blog").resolve()
+    target = Path(str(source["snapshot_path"])).resolve()
+    if root not in target.parents or not target.is_file():
+        return None
+    return target
+
+
 def create_app() -> FastAPI:
     application = FastAPI(
         title="Mundial 2030 Sirius Engine API",
@@ -52,7 +86,7 @@ def create_app() -> FastAPI:
         allow_origins=settings.cors_origins,
         allow_credentials=False,
         allow_methods=["GET", "POST"],
-        allow_headers=["Content-Type", "Authorization"],
+        allow_headers=["Content-Type", "Authorization", "X-API-Key"],
     )
     application.middleware("http")(InProcessRateLimiter(settings.post_rate_limit_per_minute))
 
@@ -163,7 +197,9 @@ def create_app() -> FastAPI:
                             "pdf": f"/predictions/{manifest['snapshot_id']}/brackets/{rank}.pdf",
                         }
                         for rank in range(1, 6)
-                    ] if manifest.get("bracket_manifest_path") else [],
+                    ]
+                    if manifest.get("bracket_manifest_path")
+                    else [],
                     "sirius_assessments": manifest.get("sirius_assessments", {}),
                     "sirius_evidence_audit": manifest.get("sirius_evidence_audit", {}),
                 }
@@ -190,14 +226,105 @@ def create_app() -> FastAPI:
         result = latest_sirius_archive(settings.storage_path)
         return ApiEnvelope(
             data=result,
-            provenance=(
-                [provenance("sirius_blog", str(result["consulted_at"]))] if result else []
-            ),
+            provenance=([provenance("sirius_blog", str(result["consulted_at"]))] if result else []),
             warnings=(
                 []
                 if result
                 else ["El archivo histórico de Sirius todavía no fue capturado por ACTUALIZAR."]
             ),
+        )
+
+    @application.get("/api/v1/sirius/review-candidates", response_model=ApiEnvelope)
+    def sirius_review_candidates(
+        session: SessionDependency,
+        status: Literal["pending", "approved", "rejected", "all"] = Query(default="pending"),
+        limit: int = Query(default=50, ge=1, le=200),
+        offset: int = Query(default=0, ge=0),
+    ) -> ApiEnvelope:
+        result = _review_queue(session).list_candidates(
+            status=status,
+            limit=limit,
+            offset=offset,
+        )
+        consulted = next(
+            (item["consulted_at"] for item in result["items"] if item.get("consulted_at")),
+            None,
+        )
+        return ApiEnvelope(
+            data=result,
+            provenance=[provenance("sirius_blog", consulted)] if consulted else [],
+            warnings=(
+                []
+                if result["counts"]["total"]
+                else ["La cola está vacía; sincronizá el último archivo Sirius primero."]
+            ),
+        )
+
+    @application.post(
+        "/api/v1/sirius/review-candidates/sync",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    def sync_sirius_review_candidates(session: SessionDependency) -> ApiEnvelope:
+        snapshot_path = _latest_sirius_snapshot_path()
+        if snapshot_path is None:
+            raise HTTPException(status_code=404, detail="Sirius archive snapshot not found")
+        queue = _review_queue(session)
+        result = queue.sync_archive(snapshot_path.read_bytes())
+        session.commit()
+        result["review_snapshot"] = queue.export_reviewed_snapshot(
+            settings.storage_path / "sirius-review"
+        )
+        archive = latest_sirius_archive(settings.storage_path)
+        return ApiEnvelope(
+            data=result,
+            provenance=(
+                [provenance("sirius_blog", str(archive["consulted_at"]))] if archive else []
+            ),
+            assumptions=[
+                "Las frases detectadas siguen pendientes; la sincronización no aprueba evidencia."
+            ],
+        )
+
+    @application.post(
+        "/api/v1/sirius/review-candidates/{candidate_id}/decisions",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    def decide_sirius_review_candidate(
+        candidate_id: str,
+        payload: SiriusReviewDecisionRequest,
+        session: SessionDependency,
+    ) -> ApiEnvelope:
+        if len(candidate_id) > 64:
+            raise ValueError("invalid candidate_id")
+        queue = _review_queue(session)
+        try:
+            decision = queue.decide(
+                candidate_id,
+                action=payload.action,
+                reviewer=payload.reviewer,
+                reason=payload.reason,
+                expected_decision_id=payload.expected_decision_id,
+                approval=(payload.approval.model_dump() if payload.approval is not None else None),
+            )
+        except LookupError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except ReviewConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        session.commit()
+        review_snapshot = queue.export_reviewed_snapshot(settings.storage_path / "sirius-review")
+        return ApiEnvelope(
+            data={
+                "decision": queue.decision_view(decision),
+                "review_snapshot": review_snapshot,
+            },
+            provenance=(
+                [provenance("sirius_blog", str(decision.observation.get("consulted_at")))]
+                if decision.observation
+                else []
+            ),
+            warnings=["Sirius es un modelo experimental sin validez científica demostrada."],
         )
 
     @application.get("/api/v1/predictions/history", response_model=ApiEnvelope)

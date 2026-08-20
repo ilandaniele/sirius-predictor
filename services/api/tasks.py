@@ -10,7 +10,7 @@ from packages.common.config import ROOT, get_settings
 from packages.common.types import ModelMode
 from packages.montecarlo import run_parallel
 
-from .update_pipeline import UpdateCommand, UpdateOrchestrator
+from .update_pipeline import UpdateCommand, UpdateOrchestrator, _reviewed_snapshot
 
 settings = get_settings()
 celery_app = Celery("sirius", broker=settings.redis_url, backend=settings.redis_url)
@@ -40,6 +40,7 @@ def run_simulation_task(
     workers: int | None = None,
     format_size: int = 64,
 ) -> dict[str, Any]:
+    _review_pointer, reviewed_path = _reviewed_snapshot(settings)
     result = run_parallel(
         settings.scenario_path_for(format_size),
         ROOT / "data" / "teams.csv",
@@ -48,6 +49,7 @@ def run_simulation_task(
         mode=ModelMode(mode),
         final_hour=final_hour,
         workers=workers,
+        reviewed_observations_path=reviewed_path,
     )
     summary = {
         "run_id": result.run_id,
@@ -68,6 +70,7 @@ def run_simulation_task(
             {key: value for key, value in bracket.items() if key != "representative"}
             for bracket in result.top_brackets
         ],
+        "sirius_evidence_audit": result.sirius_evidence_audit,
     }
     run_path = settings.storage_path / "runs" / result.run_id / "summary.json"
     _atomic_json_write(run_path, summary)

@@ -28,17 +28,36 @@ PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 
 def _assessments(
-    teams: list[Team], scenario: Scenario
+    teams: list[Team],
+    scenario: Scenario,
+    reviewed_observations_path: str | Path | None = None,
 ) -> tuple[dict[str, SiriusAssessment], dict[str, Any]]:
     path = PROJECT_ROOT / scenario.models.sirius_observations_file
-    return build_sirius_assessments({team.team_id for team in teams}, path)
+    return build_sirius_assessments(
+        {team.team_id for team in teams},
+        path,
+        additional_observations_path=reviewed_observations_path,
+    )
 
 
-def _input_hash(teams: list[Team], scenario: Scenario) -> str:
+def _input_hash(
+    teams: list[Team],
+    scenario: Scenario,
+    reviewed_observations_path: str | Path | None = None,
+) -> str:
+    static_observations_path = PROJECT_ROOT / scenario.models.sirius_observations_file
     payload = {
         "scenario": scenario.scenario_id,
         "as_of": scenario.as_of,
         "teams": [team.to_dict() for team in teams],
+        "sirius_observations_sha256": hashlib.sha256(
+            static_observations_path.read_bytes()
+        ).hexdigest(),
+        "reviewed_sirius_sha256": (
+            hashlib.sha256(Path(reviewed_observations_path).read_bytes()).hexdigest()
+            if reviewed_observations_path is not None
+            else None
+        ),
     }
     return hashlib.sha256(
         json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -50,10 +69,11 @@ def _sensitivity_table(
     teams: list[Team],
     scenario: Scenario,
     mode: str | ModelMode,
+    reviewed_observations_path: str | Path | None = None,
 ) -> pd.DataFrame:
     if pair is None:
         return pd.DataFrame()
-    assessments, _ = _assessments(teams, scenario)
+    assessments, _ = _assessments(teams, scenario, reviewed_observations_path)
     layer = SiriusExperimentalLayer(
         scenario.models.max_sirius_elo_adjustment, assessments=assessments
     )
@@ -100,13 +120,16 @@ def run_engine(
     final_hour: int = 18,
     progress=None,
     top_bracket_limit: int = 5,
+    reviewed_observations_path: str | Path | None = None,
 ) -> SimulationBundle:
     if n <= 0:
         raise ValueError("n must be positive")
     if final_hour not in scenario.final.sensitivity_hours:
         raise ValueError("final_hour must be one of the configured sensitivity hours")
     validate_scenario(scenario, teams)
-    assessments, evidence_audit = _assessments(teams, scenario)
+    assessments, evidence_audit = _assessments(
+        teams, scenario, reviewed_observations_path
+    )
     layer = SiriusExperimentalLayer(
         scenario.models.max_sirius_elo_adjustment, assessments=assessments
     )
@@ -236,7 +259,7 @@ def run_engine(
             }
         )
     most_common_pair = final_pairs.most_common(1)[0][0] if final_pairs else None
-    digest = _input_hash(teams, scenario)
+    digest = _input_hash(teams, scenario, reviewed_observations_path)
     run_id = hashlib.sha256(
         f"{digest}:{n}:{seed}:{model.mode.value}:{final_hour}".encode()
     ).hexdigest()[:16]
@@ -260,7 +283,13 @@ def run_engine(
         argentina_groups=argentina_group_frame,
         final_pairs=final_pair_frame,
         top_brackets=top_brackets,
-        sensitivity=_sensitivity_table(most_common_pair, teams, scenario, mode),
+        sensitivity=_sensitivity_table(
+            most_common_pair,
+            teams,
+            scenario,
+            mode,
+            reviewed_observations_path,
+        ),
         convergence=pd.DataFrame(convergence_rows),
         cluster_counts={
             signature: int(cluster["count"]) for signature, cluster in clusters.items()

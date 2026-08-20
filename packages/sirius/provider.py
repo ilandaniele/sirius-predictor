@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 from pathlib import Path
 from typing import Any
 
@@ -16,7 +17,8 @@ def load_reviewed_observations(
     path: str | Path,
     team_ids: set[str],
 ) -> tuple[dict[str, list[FeatureObservation]], dict[str, Any]]:
-    raw = yaml.safe_load(Path(path).read_text(encoding="utf-8"))
+    payload = Path(path).read_bytes()
+    raw = yaml.safe_load(payload.decode("utf-8"))
     if raw.get("schema_version") != "sirius-observations-v1":
         raise ValueError("unsupported Sirius observations schema")
     selected: dict[str, list[FeatureObservation]] = {team_id: [] for team_id in team_ids}
@@ -76,6 +78,7 @@ def load_reviewed_observations(
         "reviewed_observations": sum(len(items) for items in selected.values()),
         "pending_observations": pending,
         "teams_with_evidence": sum(bool(items) for items in selected.values()),
+        "snapshot_sha256": hashlib.sha256(payload).hexdigest(),
     }
     return selected, audit
 
@@ -84,8 +87,30 @@ def build_sirius_assessments(
     team_ids: set[str],
     observations_path: str | Path,
     mode: SiriusMode = SiriusMode.PURIST,
+    additional_observations_path: str | Path | None = None,
 ) -> tuple[dict[str, SiriusAssessment], dict[str, Any]]:
     observations, audit = load_reviewed_observations(observations_path, team_ids)
+    if additional_observations_path is not None:
+        additional, additional_audit = load_reviewed_observations(
+            additional_observations_path, team_ids
+        )
+        for team_id, items in additional.items():
+            observations[team_id].extend(items)
+        audit = {
+            "schema_version": audit["schema_version"],
+            "reviewed_observations": (
+                audit["reviewed_observations"] + additional_audit["reviewed_observations"]
+            ),
+            "pending_observations": (
+                audit["pending_observations"] + additional_audit["pending_observations"]
+            ),
+            "teams_with_evidence": sum(bool(items) for items in observations.values()),
+            "observation_files": 2,
+            "observation_snapshots": [
+                audit["snapshot_sha256"],
+                additional_audit["snapshot_sha256"],
+            ],
+        }
     engine = SiriusEngine()
     return (
         {

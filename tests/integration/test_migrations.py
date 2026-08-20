@@ -27,6 +27,8 @@ def test_initial_migration_creates_complete_schema(tmp_path: Path, monkeypatch) 
         "source_claims",
         "birth_data",
         "astrology_charts",
+        "sirius_review_candidates",
+        "sirius_review_decisions",
         "prediction_snapshots",
         "simulation_paths",
         "backtest_runs",

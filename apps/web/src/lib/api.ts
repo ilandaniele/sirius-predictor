@@ -6,6 +6,9 @@ import type {
   Prediction,
   Scenario,
   SiriusArchive,
+  SiriusReviewDecisionInput,
+  SiriusReviewQueue,
+  SiriusReviewStatus,
   SourceRecord,
   Team,
   UpdateEvent,
@@ -39,6 +42,28 @@ export const api = {
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
   siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),
+  siriusReviewCandidates: (status: SiriusReviewStatus = "pending", offset = 0) =>
+    request<ApiEnvelope<SiriusReviewQueue>>(
+      `/sirius/review-candidates?status=${status}&limit=200&offset=${offset}`
+    ),
+  syncSiriusReviewCandidates: (apiKey: string) =>
+    request<ApiEnvelope<Record<string, unknown>>>("/sirius/review-candidates/sync", {
+      method: "POST",
+      headers: apiKey ? { "X-API-Key": apiKey } : undefined
+    }),
+  decideSiriusReviewCandidate: (
+    candidateId: string,
+    payload: SiriusReviewDecisionInput,
+    apiKey: string
+  ) =>
+    request<ApiEnvelope<Record<string, unknown>>>(
+      `/sirius/review-candidates/${candidateId}/decisions`,
+      {
+        method: "POST",
+        headers: apiKey ? { "X-API-Key": apiKey } : undefined,
+        body: JSON.stringify(payload)
+      }
+    ),
   job: (jobId: string) => request<ApiEnvelope<JobStatus>>(`/jobs/${jobId}`),
   asset: (path: string) => `${API_URL}${path}`,
   update: async (formatSize: 48 | 64 = 64) => {

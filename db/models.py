@@ -267,6 +267,51 @@ class AstrologyTechniqueResult(Base, IdMixin, TimestampMixin):
     data_confidence: Mapped[float] = mapped_column(Float, nullable=False)
 
 
+class SiriusReviewCandidate(Base, IdMixin, TimestampMixin):
+    """Immutable sentence extracted from the public Sirius archive for human review."""
+
+    __tablename__ = "sirius_review_candidates"
+
+    fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    post_id: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
+    claim_index: Mapped[int] = mapped_column(Integer, nullable=False)
+    claim_text: Mapped[str] = mapped_column(Text, nullable=False)
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    source_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    source_url: Mapped[str] = mapped_column(Text, nullable=False)
+    consulted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    quality_code: Mapped[str] = mapped_column(ForeignKey("data_qualities.code"), nullable=False)
+    content_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    technique_mentions: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
+    inferred: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    __table_args__ = (
+        UniqueConstraint("post_id", "content_sha256", "claim_index"),
+        CheckConstraint("claim_index >= 0", name="non_negative_claim_index"),
+    )
+
+
+class SiriusReviewDecision(Base, IdMixin, TimestampMixin):
+    """Append-only human decision; the latest decision determines effective status."""
+
+    __tablename__ = "sirius_review_decisions"
+
+    candidate_id: Mapped[str] = mapped_column(
+        ForeignKey("sirius_review_candidates.id"), nullable=False, index=True
+    )
+    action: Mapped[str] = mapped_column(String(16), nullable=False)
+    reviewer: Mapped[str] = mapped_column(String(160), nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    decided_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    supersedes_decision_id: Mapped[str | None] = mapped_column(
+        ForeignKey("sirius_review_decisions.id")
+    )
+    observation: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    __table_args__ = (
+        CheckConstraint("action IN ('approved','rejected')", name="valid_review_action"),
+    )
+
+
 class ModelVersion(Base, IdMixin, TimestampMixin):
     __tablename__ = "model_versions"
 
@@ -333,7 +378,14 @@ class BacktestRun(Base, IdMixin, TimestampMixin):
     inputs_hash: Mapped[str] = mapped_column(String(64), nullable=False)
 
 
-IMMUTABLE_MODELS = (ModelVersion, PredictionSnapshot, SimulationPath, BacktestRun)
+IMMUTABLE_MODELS = (
+    SiriusReviewCandidate,
+    SiriusReviewDecision,
+    ModelVersion,
+    PredictionSnapshot,
+    SimulationPath,
+    BacktestRun,
+)
 
 
 def _prevent_mutation(_mapper: object, _connection: object, target: object) -> None:

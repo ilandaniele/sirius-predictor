@@ -103,6 +103,66 @@ export type SiriusArchive = {
   }>;
 };
 
+export type SiriusReviewStatus = "pending" | "approved" | "rejected" | "all";
+
+export type SiriusReviewDecision = {
+  id: string;
+  action: "approved" | "rejected";
+  reviewer: string;
+  reason: string;
+  decided_at: string;
+  supersedes_decision_id: string | null;
+  observation: Record<string, unknown> | null;
+};
+
+export type SiriusReviewCandidate = {
+  id: string;
+  fingerprint: string;
+  post_id: string;
+  claim_index: number;
+  claim_text: string;
+  title: string;
+  published_at: string;
+  source_id: "sirius_blog";
+  source_url: string;
+  consulted_at: string;
+  quality: "B";
+  content_sha256: string;
+  technique_mentions: string[];
+  inferred: true;
+  status: Exclude<SiriusReviewStatus, "all">;
+  latest_decision: SiriusReviewDecision | null;
+};
+
+export type SiriusReviewQueue = {
+  counts: { pending: number; approved: number; rejected: number; total: number };
+  status: SiriusReviewStatus;
+  offset: number;
+  limit: number;
+  items: SiriusReviewCandidate[];
+};
+
+export type SiriusReviewDecisionInput = {
+  action: "approved" | "rejected";
+  reviewer: string;
+  reason: string;
+  expected_decision_id: string | null;
+  approval?: {
+    team_id: string;
+    feature_id: string;
+    polarity: "favorable" | "adverse" | "neutral";
+    strength: number;
+    data_confidence: number;
+    hour_robustness: number | null;
+    description: string;
+    time_known: boolean;
+    time_source_url: string | null;
+    time_consulted_at: string | null;
+    time_data_grade: Provenance["quality"] | null;
+    time_source_note: string | null;
+  };
+};
+
 export type JobStatus = {
   job_id: string;
   status: string;
