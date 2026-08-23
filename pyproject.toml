@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "mundial-2030-sirius-engine"
-version = "0.2.1"
+version = "0.3.0"
 description = "Motor reproducible y experimental para escenarios Mundial 2030 de 48 o 64 equipos"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -22,14 +22,14 @@ dependencies = [
   "reportlab>=4.2,<5",
   "requests>=2.32,<3",
   "beautifulsoup4>=4.12,<5",
-  "pyswisseph>=2.10,<3; python_version < '3.14'",
+  "pysweph>=2.10.3.6,<3; python_version < '3.14'",
   "pyyaml>=6,<7",
   "sqlalchemy>=2.0,<3",
   "uvicorn[standard]>=0.34,<1",
 ]
 
 [project.optional-dependencies]
-astro = ["pyswisseph>=2.10,<3; python_version < '3.14'"]
+astro = ["pysweph>=2.10.3.6,<3; python_version < '3.14'"]
 legacy = ["plotly>=5.24,<7", "streamlit>=1.38,<2"]
 dev = [
   "mypy>=1.14,<2",

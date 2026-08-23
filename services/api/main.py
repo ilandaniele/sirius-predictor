@@ -1,11 +1,15 @@
 from __future__ import annotations
 
+import hashlib
 import random
+import re
+import tempfile
 from dataclasses import asdict
 from pathlib import Path
 from typing import Annotated, Literal
 
 from fastapi import Depends, FastAPI, HTTPException, Query, Request
+from fastapi.concurrency import run_in_threadpool
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.orm import Session
@@ -15,6 +19,7 @@ from engine.config import Scenario, load_scenario, load_teams, teams_for_scenari
 from engine.domain import Team
 from engine.draw import draw_groups
 from packages.common.config import ROOT, get_settings
+from packages.common.types import ModelMode
 from packages.sirius import ReviewConflictError, SiriusReviewQueue
 
 from .catalog import (
@@ -25,16 +30,18 @@ from .catalog import (
     provenance,
     source_catalog,
 )
+from .local_compute import LocalComputeConflict, import_local_result, prepare_local_simulation
 from .schemas import (
     ApiEnvelope,
     JobAccepted,
+    LocalSimulationInputRequest,
     SimulationRequest,
     SiriusReviewDecisionRequest,
     UpdateRequest,
 )
-from .security import InProcessRateLimiter, require_api_key
+from .security import InProcessRateLimiter, require_api_key, require_remote_compute_enabled
 from .tasks import celery_app, run_simulation_task, update_world_cup_task
-from .update_pipeline import PredictionArchive
+from .update_pipeline import PredictionArchive, UpdateCommand
 
 settings = get_settings()
 SessionDependency = Annotated[Session, Depends(get_session)]
@@ -74,10 +81,13 @@ def _latest_sirius_snapshot_path() -> Path | None:
     return target
 
 
+_EMBEDDABLE_BRACKET_SVG_RE = re.compile(r"^/api/v1/predictions/[0-9a-f]{64}/brackets/[1-5]\.svg$")
+
+
 def create_app() -> FastAPI:
     application = FastAPI(
         title="Mundial 2030 Sirius Engine API",
-        version="0.2.1",
+        version=settings.model_version,
         docs_url="/docs" if settings.environment != "production" else None,
         redoc_url=None,
     )
@@ -94,7 +104,9 @@ def create_app() -> FastAPI:
     async def security_headers(request: Request, call_next):  # type: ignore[no-untyped-def]
         response = await call_next(request)
         response.headers["X-Content-Type-Options"] = "nosniff"
-        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["X-Frame-Options"] = (
+            "SAMEORIGIN" if _EMBEDDABLE_BRACKET_SVG_RE.match(request.url.path) else "DENY"
+        )
         response.headers["Referrer-Policy"] = "no-referrer"
         response.headers["Cache-Control"] = "no-store" if request.method == "POST" else "no-cache"
         return response
@@ -105,7 +117,7 @@ def create_app() -> FastAPI:
 
     @application.get("/health")
     def health() -> dict[str, str]:
-        return {"status": "ok", "version": "0.2.1"}
+        return {"status": "ok", "version": settings.model_version}
 
     @application.get("/api/v1/scenario", response_model=ApiEnvelope)
     def scenario_view(format_size: int = Query(default=64)) -> ApiEnvelope:
@@ -202,6 +214,7 @@ def create_app() -> FastAPI:
                     else [],
                     "sirius_assessments": manifest.get("sirius_assessments", {}),
                     "sirius_evidence_audit": manifest.get("sirius_evidence_audit", {}),
+                    "sirius_application": manifest.get("sirius_application", {}),
                 }
         if summary is None and format_size == 64:
             summary = latest_run_summary(settings.storage_path)
@@ -380,13 +393,82 @@ def create_app() -> FastAPI:
             Path(target),
             media_type=media_types[extension],
             filename=f"mundial-2030-{snapshot_id[:8]}-llave-{rank}.{extension}",
+            content_disposition_type="inline",
         )
+
+    @application.post(
+        "/api/v1/local-simulation-inputs",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    def local_simulation_input(payload: LocalSimulationInputRequest) -> ApiEnvelope:
+        result = prepare_local_simulation(
+            settings,
+            UpdateCommand(
+                iterations=payload.iterations,
+                seed=payload.seed,
+                modes=tuple(ModelMode),
+                final_hour=payload.final_hour,
+                workers=payload.workers,
+                format_size=payload.format_size,
+            ),
+        )
+        return ApiEnvelope(
+            data=result,
+            assumptions=[
+                "El servidor congela inputs; Monte Carlo y llaves se calculan localmente."
+            ],
+            warnings=["La astrología se mantiene como modelo experimental separado."],
+        )
+
+    @application.post(
+        "/api/v1/local-simulation-results",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    async def local_simulation_result(request: Request) -> ApiEnvelope:
+        if request.headers.get("content-type", "").split(";", 1)[0] != "application/zip":
+            raise HTTPException(status_code=415, detail="Content-Type must be application/zip")
+        incoming = settings.storage_path / "local-compute" / "incoming"
+        incoming.mkdir(parents=True, exist_ok=True)
+        temporary_path: Path | None = None
+        digest = hashlib.sha256()
+        total = 0
+        try:
+            with tempfile.NamedTemporaryFile(
+                prefix="result-",
+                suffix=".zip",
+                dir=incoming,
+                delete=False,
+            ) as handle:
+                temporary_path = Path(handle.name)
+                async for chunk in request.stream():
+                    total += len(chunk)
+                    if total > settings.local_result_max_bytes:
+                        raise HTTPException(status_code=413, detail="result bundle is too large")
+                    digest.update(chunk)
+                    handle.write(chunk)
+            try:
+                result = await run_in_threadpool(
+                    import_local_result, settings, temporary_path, digest.hexdigest()
+                )
+            except FileNotFoundError as exc:
+                raise HTTPException(status_code=404, detail=str(exc)) from exc
+            except LocalComputeConflict as exc:
+                raise HTTPException(status_code=409, detail=str(exc)) from exc
+            return ApiEnvelope(
+                data=result,
+                assumptions=["Los resultados se calcularon localmente sobre inputs congelados."],
+            )
+        finally:
+            if temporary_path is not None:
+                temporary_path.unlink(missing_ok=True)
 
     @application.post(
         "/api/v1/simulation-jobs",
         response_model=JobAccepted,
         status_code=202,
-        dependencies=[Depends(require_api_key)],
+        dependencies=[Depends(require_api_key), Depends(require_remote_compute_enabled)],
     )
     def simulation_job(payload: SimulationRequest) -> JobAccepted:
         task = run_simulation_task.delay(
@@ -407,7 +489,7 @@ def create_app() -> FastAPI:
         "/api/v1/update-jobs",
         response_model=JobAccepted,
         status_code=202,
-        dependencies=[Depends(require_api_key)],
+        dependencies=[Depends(require_api_key), Depends(require_remote_compute_enabled)],
     )
     def update_job(payload: UpdateRequest) -> JobAccepted:
         task = update_world_cup_task.delay(payload.model_dump(mode="json"))

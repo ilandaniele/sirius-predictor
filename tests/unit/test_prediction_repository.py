@@ -84,6 +84,43 @@ def test_prediction_manifest_persists_one_immutable_row_per_mode(tmp_path: Path)
     engine.dispose()
 
 
+def test_identical_run_id_is_reused_across_a_refreshed_snapshot(tmp_path: Path) -> None:
+    """A re-sync that only refreshes source consulted_at freezes a new snapshot_id, but the
+    Monte Carlo run_id (scoped to scenario/teams/observations/seed/model, not source freshness)
+    stays the same. Reusing an identical run under a new snapshot must not be treated as drift.
+    """
+    engine = create_engine(f"sqlite:///{(tmp_path / 'reuse.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    scenario = load_scenario(ROOT / "data" / "scenario.yaml")
+    first_manifest = _manifest()
+    with Session(engine) as session:
+        persist_prediction_manifest(session, first_manifest, scenario, "0.2.1")
+        session.commit()
+
+    refreshed_manifest = _manifest()
+    refreshed_manifest["snapshot_id"] = "f" * 64
+    with Session(engine) as session:
+        result = persist_prediction_manifest(session, refreshed_manifest, scenario, "0.2.1")
+        session.commit()
+        assert result == {
+            "snapshots_created": 3,
+            "snapshots_existing": 0,
+            "runs_created": 0,
+            "runs_existing": 3,
+        }
+        run = session.scalar(select(SimulationRun).where(SimulationRun.mode == "HYBRID"))
+        assert run is not None
+        first_snapshot = session.scalar(
+            select(PredictionSnapshot).where(
+                PredictionSnapshot.snapshot_key == "d" * 64,
+                PredictionSnapshot.mode == "HYBRID",
+            )
+        )
+        assert first_snapshot is not None
+        assert run.prediction_snapshot_id == first_snapshot.id
+    engine.dispose()
+
+
 def test_prediction_replay_detects_relational_divergence(tmp_path: Path) -> None:
     engine = create_engine(f"sqlite:///{(tmp_path / 'divergence.db').as_posix()}")
     Base.metadata.create_all(engine)
@@ -97,4 +134,21 @@ def test_prediction_replay_detects_relational_divergence(tmp_path: Path) -> None
     changed["seed"] = 2031
     with Session(engine) as session, pytest.raises(ValueError, match="stored prediction differs"):
         persist_prediction_manifest(session, changed, scenario, "0.2.1")
+    engine.dispose()
+
+
+def test_48_team_scenario_status_fits_prediction_schema(tmp_path: Path) -> None:
+    engine = create_engine(f"sqlite:///{(tmp_path / 'predictions-48.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    scenario = load_scenario(ROOT / "data" / "scenario-48.yaml")
+    manifest = _manifest()
+    manifest["format_size"] = 48
+
+    with Session(engine) as session:
+        persist_prediction_manifest(session, manifest, scenario, "0.2.1")
+        session.commit()
+        tournament = session.scalar(select(Tournament))
+        assert tournament is not None
+        assert tournament.status == scenario.status
+
     engine.dispose()

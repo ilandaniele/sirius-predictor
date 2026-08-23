@@ -52,8 +52,21 @@ sectores opuestos. El formato 64 simula 96 partidos de grupo y 31 eliminatorios;
 de grupo y 31 eliminatorios, con ocho mejores terceros. El emparejamiento 48 de 2030 es una
 proyección reproducible y evita revanchas de grupo, no una regla oficial futura.
 
-Una llave completa casi nunca se repite. Las cinco visuales se seleccionan por familia definida por
-campeón, subcampeón y semifinalistas; la densidad se informa y se exporta un representante completo.
+Una llave completa casi nunca se repite, así que las cinco visuales se seleccionan con una firma
+decisiva coherente: las dos semifinales, sus ganadores, la final y el campeón. La densidad
+exportada es la frecuencia conjunta de esa configuración exacta dentro del Monte Carlo, no la
+probabilidad de una llave completa ni una suma de probabilidades marginales; sólo esos cruces
+decisivos representan un ranking estadístico real.
+
+Cada imagen dibuja además dieciseisavos, octavos y cuartos de un representante de esa misma
+familia para dar contexto visual completo. Esa parte del cuadro queda marcada como "camino
+representativo" y con menor énfasis (recuadros compactos, sin nota de probabilidad por partido):
+es un ejemplo consistente con la firma decisiva, no una predicción ronda por ronda, y no debe
+leerse como si cada cruce temprano individual tuviera la misma densidad que semifinales/final.
+
+Cada visual declara además si Sirius produjo un ajuste diferencial usando observaciones revisadas.
+Con evidencia ausente o neutral, `HYBRID` queda explícitamente neutral y no se presenta como una
+predicción astrológica activa.
 
 ## Backtesting
 

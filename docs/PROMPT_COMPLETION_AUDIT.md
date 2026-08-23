@@ -18,11 +18,11 @@ presenta como terminado.
 | 8. Monte Carlo | Completo para escenarios disponibles | grupos, desempates, eliminatorias, tres modelos, sensibilidad y 100.000 simulaciones | Fechas/rivales específicos por ronda dependen del calendario 2030 oficial |
 | 9. Backtesting | Parcial | 2010–2026, cuatro modelos, métricas, calibración temporal y leakage audit | Sólo la señal lunar histórica tiene datos prematch evaluables; las demás ablaciones siguen correctamente como no evaluables |
 | 10. Dashboard | Completo para datos disponibles | diez tabs, selector 48/64, polling, fuentes, historia, backtest y flujo Sirius pendiente/aprobado/rechazado con control de concurrencia | La autenticación productiva sigue delegada a la API key configurada |
-| 11. Cinco llaves | Completo | exactamente cinco familias; PNG 4K, SVG, PDF y hashes | Ninguno conocido |
-| 12. ACTUALIZAR | Completo para inputs disponibles | pipeline idempotente, caché por hash, recálculo selectivo, manifest y `PredictionSnapshot`/`SimulationRun` SQL por modo, informe, llaves y evento local | Claims sin hora zonificada o contrato completo quedan omitidos de forma trazable hasta validación; no se completan automáticamente |
+| 11. Cinco llaves | Completo | exactamente cinco familias; cuadro completo 16vos→campeón en PNG 4K, SVG y PDF (16vos/8vos/cuartos como camino representativo con menor énfasis; semifinales/final/campeón con la densidad Monte Carlo real) y hashes | Ninguno conocido |
+| 12. ACTUALIZAR | Completo para inputs disponibles | El botón que encolaba un job Celery fue reemplazado por un flujo de cómputo local verificado: `POST /api/v1/local-simulation-inputs` congela fuentes/inputs en Fly, `scripts/simulate_local_and_publish.py` corre Monte Carlo/llaves/backtest en la PC del operador, y `POST /api/v1/local-simulation-results` (`services/api/local_compute.py`) valida checksums, provenance, leakage y probabilidades antes de publicar en volumen y PostgreSQL. Idempotente y append-only; rechaza bundles alterados, inputs vencidos, código distinto y downgrade automático de fuente A a C/D | Claims sin hora zonificada o contrato completo quedan omitidos de forma trazable hasta validación; no se completan automáticamente |
 | 13. Historial | Completo | manifests append-only, commit, versión, timestamp, seed, fuentes, supuestos y resultados | Ninguno conocido |
 | 14. Seguridad/calidad | Completo para v0.2 | allow-list SSRF, límites, API key, auditorías, CI backend/frontend/integration | Revisar periódicamente dependencias y TOS |
-| 15. Deploy | Completo | Compose desarrollo/producción, health checks, migraciones, backups y `.env.example` | Validación en una infraestructura productiva real queda fuera del repositorio |
+| 15. Deploy | Completo | Compose desarrollo/producción, health checks, migraciones, backups y `.env.example`. Se agregó una alternativa económica en Fly.io: una sola Machine con volumen cifrado (`fly.toml`, `Dockerfile.fly`, `ops/fly/entrypoint.sh`) que empaqueta web/API/PostgreSQL/Redis, escala a cero y no corre el worker Monte Carlo en producción (`SIRIUS_ALLOW_REMOTE_COMPUTE=false`); lanzadores de un clic en Windows (`INICIAR_SIRIUS.cmd`, `PUBLICAR_SIRIUS_FLY.cmd`, `SIMULAR_Y_PUBLICAR.cmd`) | Validación en una infraestructura productiva real queda fuera del repositorio; el despliegue a Fly todavía no se ejecutó contra la cuenta real del operador |
 
 ## Hallazgo corregido durante esta auditoría
 
@@ -44,3 +44,43 @@ podía reconocer a Argentina como campeón 2022 por penales. Ahora:
    verificables; hasta entonces conservar snapshots observacionales.
 3. Ampliar el backtest sólo con predicciones y datos prematch congelados, nunca reconstruidos a
    posteriori.
+
+## Adenda 2026-08-21: revisión del flujo Fly + cómputo local
+
+El trabajo de despliegue en Fly.io y cómputo local (fila 12 y 15) llegó a esta sesión sin commitear.
+Antes de darlo por cerrado se ejecutó una revisión de código (7 hallazgos independientes) y se
+corrigieron nueve problemas reales, todos verificados con la suite completa después de cada cambio:
+
+- `services/api/update_pipeline.py`: `_git_commit`/`_git_state` ya no confunden un fallo transitorio
+  de `git` con un árbol de trabajo limpio (sólo `FileNotFoundError` cae al valor `"unavailable"`);
+  se alineó además el chequeo de `SIRIUS_GIT_DIRTY` con el de `SIRIUS_GIT_COMMIT`. Esto protege la
+  garantía anti-manipulación de la que depende todo el flujo de cómputo local.
+- `services/api/main.py`: `local_simulation_result` movió `import_local_result` a un threadpool
+  (`run_in_threadpool`) para no bloquear el loop de eventos durante la verificación de imágenes y
+  la persistencia SQL.
+- `services/api/local_compute.py`: se valida el `rank` de cada llave antes de indexar los archivos
+  verificados (evita un `KeyError` no controlado) y `LocalInputStore.append` ya no puede fallar por
+  una carrera en `mkdir`.
+- `scripts/simulate_local_and_publish.py`: si se omite `--workers` en una máquina con más de 64
+  núcleos, ahora se aplica el mismo tope que exige el servidor en vez de correr una simulación
+  completa que el servidor iba a rechazar igual.
+- `packages/common/config.py`: `SIRIUS_ROOT` vacío ya no resuelve silenciosamente al directorio de
+  trabajo actual.
+- Limpieza: `.gitignore` sumó `*.tsbuildinfo`; se corrigió un mensaje de error que decía Python 3.13
+  en vez de 3.12; se eliminaron `apps/web/src/app/api/update/route.ts` y las funciones
+  `job`/`update`/`JobStatus` del cliente frontend, huérfanas desde que el botón ACTUALIZAR fue
+  reemplazado por SIMULAR EN MI PC.
+
+Verificación ejecutada: 148 tests Python (`pytest -m "not slow"`), ESLint, `tsc --noEmit`, Vitest, y
+Playwright end-to-end contra un servidor de desarrollo aislado (el stack Docker existente en el
+puerto 3000 servía código previamente publicado y no debe usarse para verificar cambios locales).
+Todo en verde.
+
+Deuda técnica identificada pero no resuelta en esta revisión (no son bugs, son mejoras de
+mantenibilidad; ver hallazgos completos en el historial de la sesión): helpers de escritura atómica
+duplicados entre `PredictionArchive`, `tasks.py` y `local_compute.py`; geometría de llaves
+recalculada varias veces por exportación; símbolos con prefijo `_` de `update_pipeline.py`
+compartidos como API implícita entre tres módulos. Ninguno afecta corrección hoy.
+
+Próximo paso: el código no fue commiteado durante esta sesión a la espera de confirmación explícita
+del operador.

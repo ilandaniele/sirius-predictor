@@ -109,6 +109,7 @@ def _model_version(
         "sirius_version": scenario.models.sirius_version,
         "git_dirty": bool(manifest.get("git_dirty", False)),
         "working_tree_sha256": manifest.get("working_tree_sha256"),
+        "ephemeris": manifest.get("ephemeris"),
     }
     weights = manifest.get("weights", {})
     raw_mode_weights = weights.get(mode, {}) if isinstance(weights, dict) else {}
@@ -254,9 +255,13 @@ def persist_prediction_manifest(
             session.flush()
             runs_created += 1
         else:
+            # run_id is scoped to the Monte Carlo computation itself (scenario, teams,
+            # observations, seed, iterations, mode, model version) and deliberately excludes
+            # snapshot-only metadata like source consulted_at. A re-sync that only refreshes
+            # timestamps therefore reuses the same run_id under a new snapshot_id; that is not
+            # a collision as long as the recorded computation is byte-identical.
             if (
-                run.prediction_snapshot_id != snapshot.id
-                or run.mode != mode
+                run.mode != mode
                 or run.seed != int(result["seed"])
                 or run.iterations != int(result["iterations"])
                 or run.status != "completed"

@@ -14,6 +14,7 @@ import pandas as pd  # type: ignore[import-untyped]
 from engine.config import load_scenario, load_teams, teams_for_scenario
 from engine.domain import SimulationBundle
 from engine.sim import _sensitivity_table, run_engine
+from packages.common.config import get_settings
 from packages.common.types import ModelMode
 
 
@@ -211,7 +212,8 @@ def run_parallel(
     run_id = hashlib.sha256(
         (
             f"{scenario.scenario_id}:{chunks[0].manifest.input_sha256}:"
-            f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}"
+            f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}:"
+            f"{get_settings().model_version}"
         ).encode()
     ).hexdigest()[:16]
     if not math.isclose(float(ranking["Campeón %"].sum()), 100.0, abs_tol=1e-9):

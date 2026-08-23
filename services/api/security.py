@@ -26,7 +26,13 @@ class InProcessRateLimiter:
         if request.method != "POST":
             return await call_next(request)
         content_length = int(request.headers.get("content-length", "0") or 0)
-        if content_length > 1024 * 1024:
+        settings = get_settings()
+        body_limit = (
+            settings.local_result_max_bytes
+            if request.url.path == "/api/v1/local-simulation-results"
+            else 1024 * 1024
+        )
+        if content_length > body_limit:
             return JSONResponse(status_code=413, content={"detail": "request body too large"})
         identity = request.client.host if request.client else "unknown"
         now = time.monotonic()
@@ -47,3 +53,11 @@ def require_api_key(x_api_key: str | None = Header(default=None)) -> None:
         raise HTTPException(status_code=503, detail="production API key is not configured")
     if x_api_key is None or not compare_digest(x_api_key, settings.api_key.get_secret_value()):
         raise HTTPException(status_code=401, detail="invalid API key")
+
+
+def require_remote_compute_enabled() -> None:
+    if not get_settings().allow_remote_compute:
+        raise HTTPException(
+            status_code=409,
+            detail="Remote compute is disabled; use the local simulation publisher.",
+        )

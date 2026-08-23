@@ -1,12 +1,13 @@
 from __future__ import annotations
 
+import os
 from functools import lru_cache
 from pathlib import Path
 
 from pydantic import Field, SecretStr
 from pydantic_settings import BaseSettings, SettingsConfigDict
 
-ROOT = Path(__file__).resolve().parents[2]
+ROOT = Path(os.getenv("SIRIUS_ROOT") or Path(__file__).resolve().parents[2]).resolve()
 
 
 class Settings(BaseSettings):
@@ -31,9 +32,13 @@ class Settings(BaseSettings):
     http_max_bytes: int = 5 * 1024 * 1024
     collector_rate_limit_seconds: float = 1.0
     default_simulations: int = 100_000
-    model_version: str = "0.2.1"
+    simulation_workers: int | None = Field(default=None, ge=1, le=64)
+    model_version: str = "0.3.0"
     api_key: SecretStr | None = None
     post_rate_limit_per_minute: int = 10
+    allow_remote_compute: bool = True
+    local_result_max_bytes: int = Field(default=64 * 1024 * 1024, ge=1024 * 1024)
+    public_url: str = "https://sirius-engine-ilan-2030.fly.dev"
 
     def scenario_path_for(self, format_size: int = 64) -> Path:
         if format_size == 64:

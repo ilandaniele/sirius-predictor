@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+import os
 import subprocess
 from dataclasses import asdict, dataclass
 from datetime import UTC, datetime
@@ -20,13 +21,18 @@ from db.predictions import persist_prediction_manifest
 from db.repository import append_claim, sync_source_catalog
 from db.session import build_engine
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario
-from packages.astrology import ChartRecalculationReport, recalculate_accepted_charts
+from engine.domain import Team
+from packages.astrology import (
+    ChartRecalculationReport,
+    ephemeris_identity,
+    recalculate_accepted_charts,
+)
 from packages.common.config import ROOT, Settings, get_settings
 from packages.common.provenance import SourceClaimInput
 from packages.common.types import ModelMode
 from packages.montecarlo import ParallelSimulationResult, run_parallel
 from packages.reports import BracketExportSpec, export_five_brackets
-from packages.sirius import SiriusReviewQueue
+from packages.sirius import SiriusReviewQueue, sirius_application_status
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,6 +56,24 @@ class UpdateExecution:
     report_path: str
     bracket_manifest_path: str | None
     update_event_path: str
+
+
+@dataclass(slots=True)
+class PreparedUpdateInputs:
+    command: UpdateCommand
+    scenario_path: Path
+    scenario: Scenario
+    teams: list[Team]
+    previous: dict[str, Any] | None
+    update: UpdateReport
+    claim_persistence: dict[str, int]
+    sources: list[dict[str, Any]]
+    review_pointer: dict[str, Any] | None
+    reviewed_observations_path: Path | None
+    update_event_path: Path
+    git_state: dict[str, Any]
+    snapshot_id: str
+    existing: dict[str, Any] | None
 
 
 class Simulator(Protocol):
@@ -103,11 +127,24 @@ class PredictionArchive:
             raise FileExistsError(f"prediction snapshot already exists: {snapshot_id}")
         serialized = json.dumps(manifest, ensure_ascii=False, indent=2)
         self._atomic_write(target, serialized)
+        self.publish(manifest)
+        return target
+
+    def publish(self, manifest: dict[str, Any]) -> None:
+        """Move only latest pointers after an immutable snapshot is durable."""
+
+        snapshot_id = str(manifest.get("snapshot_id", ""))
+        target = self.predictions / snapshot_id / "manifest.json"
+        if not target.is_file():
+            raise FileNotFoundError(f"prediction snapshot is not durable: {snapshot_id}")
+        stored = json.loads(target.read_text(encoding="utf-8"))
+        if stored != manifest:
+            raise ValueError("stored prediction differs from publish manifest")
+        serialized = json.dumps(manifest, ensure_ascii=False, indent=2)
         self._atomic_write(self.latest_path, serialized)
         format_size = manifest.get("format_size")
         if format_size in {48, 64}:
             self._atomic_write(self.predictions / f"latest-{format_size}.json", serialized)
-        return target
 
     def append_update_event(
         self,
@@ -191,33 +228,54 @@ def build_collectors(settings: Settings) -> list[Collector]:
 
 
 def _git_commit() -> str:
-    result = subprocess.run(
-        ["git", "rev-parse", "HEAD"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        text=True,
-        timeout=5,
-    )
+    deployed_commit = os.getenv("SIRIUS_GIT_COMMIT")
+    if deployed_commit:
+        return deployed_commit
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            text=True,
+            timeout=5,
+        )
+    except FileNotFoundError:
+        return "unavailable"
     return result.stdout.strip() if result.returncode == 0 else "unavailable"
 
 
 def _git_state() -> dict[str, Any]:
     commit = _git_commit()
-    diff = subprocess.run(
-        ["git", "diff", "--binary", "HEAD", "--", "."],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        timeout=15,
-    )
-    untracked = subprocess.run(
-        ["git", "ls-files", "--others", "--exclude-standard", "-z"],
-        cwd=ROOT,
-        check=False,
-        capture_output=True,
-        timeout=15,
-    )
+    deployed_dirty = os.getenv("SIRIUS_GIT_DIRTY")
+    if deployed_dirty:
+        dirty = deployed_dirty.lower() in {"1", "true", "yes"}
+        return {
+            "git_commit": commit,
+            "git_dirty": dirty,
+            "working_tree_sha256": os.getenv("SIRIUS_WORKING_TREE_SHA256") or None,
+        }
+    try:
+        diff = subprocess.run(
+            ["git", "diff", "--binary", "HEAD", "--", "."],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            timeout=15,
+        )
+        untracked = subprocess.run(
+            ["git", "ls-files", "--others", "--exclude-standard", "-z"],
+            cwd=ROOT,
+            check=False,
+            capture_output=True,
+            timeout=15,
+        )
+    except (OSError, subprocess.TimeoutExpired):
+        return {
+            "git_commit": commit,
+            "git_dirty": False,
+            "working_tree_sha256": None,
+        }
     digest = hashlib.sha256()
     dirty = bool(diff.stdout or untracked.stdout)
     digest.update(diff.stdout)
@@ -322,13 +380,42 @@ def _attach_review_snapshot(sources: list[dict[str, Any]], pointer: dict[str, An
     sirius["reviewed_observations"] = int(pointer.get("reviewed_observations", 0))
 
 
+def _scenario_sha256(scenario: Scenario) -> str:
+    return hashlib.sha256(
+        json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
+    ).hexdigest()
+
+
+def _teams_sha256(teams: list[Team]) -> str:
+    return hashlib.sha256(
+        json.dumps(
+            [team.to_dict() for team in teams],
+            sort_keys=True,
+            ensure_ascii=False,
+            separators=(",", ":"),
+        ).encode("utf-8")
+    ).hexdigest()
+
+
+def _sirius_observations_sha256(scenario: Scenario) -> str:
+    path = ROOT / scenario.models.sirius_observations_file
+    return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+def _ephemeris_manifest() -> dict[str, str]:
+    provider, version = ephemeris_identity()
+    return {"provider": provider, "version": version}
+
+
 def _input_hash(
     command: UpdateCommand,
     scenario: Scenario,
     sources: list[dict[str, Any]],
     git_state: dict[str, Any] | None = None,
+    teams: list[Team] | None = None,
 ) -> str:
     code_state = git_state or _git_state()
+    selected_teams = teams or teams_for_scenario(load_teams(get_settings().teams_path), scenario)
     stable_sources = [
         {"source_id": item["source_id"], "sha256": item["effective_sha256"]}
         for item in sources
@@ -345,14 +432,12 @@ def _input_hash(
     payload = {
         "scenario_id": scenario.scenario_id,
         "scenario_as_of": scenario.as_of,
-        "scenario_sha256": hashlib.sha256(
-            json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
-        ).hexdigest(),
+        "scenario_sha256": _scenario_sha256(scenario),
+        "teams_sha256": _teams_sha256(selected_teams),
         "sources": stable_sources,
         "reviewed_sirius": review_snapshots,
-        "sirius_observations_sha256": hashlib.sha256(
-            (ROOT / scenario.models.sirius_observations_file).read_bytes()
-        ).hexdigest(),
+        "sirius_observations_sha256": _sirius_observations_sha256(scenario),
+        "ephemeris": _ephemeris_manifest(),
         "seed": command.seed,
         "iterations": command.iterations,
         "modes": [mode.value for mode in command.modes],
@@ -374,6 +459,7 @@ def _matches_previous_inputs(
     sources: list[dict[str, Any]],
     model_version: str,
     git_state: dict[str, Any] | None = None,
+    teams: list[Team] | None = None,
 ) -> bool:
     if previous is None:
         return False
@@ -398,13 +484,11 @@ def _matches_previous_inputs(
         for item in previous.get("sources", [])
         if item.get("review_snapshot_sha256")
     }
-    scenario_hash = hashlib.sha256(
-        json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
-    ).hexdigest()
+    scenario_hash = _scenario_sha256(scenario)
+    selected_teams = teams or teams_for_scenario(load_teams(get_settings().teams_path), scenario)
+    teams_hash = _teams_sha256(selected_teams)
     previous_scenario_hash = previous.get("scenario_sha256")
-    observations_hash = hashlib.sha256(
-        (ROOT / scenario.models.sirius_observations_file).read_bytes()
-    ).hexdigest()
+    observations_hash = _sirius_observations_sha256(scenario)
     code_state = git_state or _git_state()
     return bool(
         current_sources == previous_sources
@@ -415,6 +499,8 @@ def _matches_previous_inputs(
         and previous.get("final_hour", 18) == command.final_hour
         and previous.get("model_version") == model_version
         and previous.get("sirius_observations_sha256") == observations_hash
+        and previous.get("teams_sha256") == teams_hash
+        and previous.get("ephemeris") == _ephemeris_manifest()
         and previous.get("git_commit") == code_state["git_commit"]
         and previous.get("git_dirty", False) == code_state["git_dirty"]
         and previous.get("working_tree_sha256") == code_state["working_tree_sha256"]
@@ -423,6 +509,10 @@ def _matches_previous_inputs(
 
 
 def _simulation_summary(result: ParallelSimulationResult) -> dict[str, Any]:
+    application = sirius_application_status(
+        result.sirius_assessments,
+        result.sirius_evidence_audit,
+    )
     return {
         "run_id": result.run_id,
         "mode": result.mode.value,
@@ -442,6 +532,7 @@ def _simulation_summary(result: ParallelSimulationResult) -> dict[str, Any]:
             for bracket in result.top_brackets
         ],
         "sirius_evidence_audit": result.sirius_evidence_audit,
+        "sirius_application": application,
     }
 
 
@@ -482,6 +573,83 @@ class UpdateOrchestrator:
         self.simulator = simulator
         self.archive = PredictionArchive(self.settings.storage_path)
         self.bracket_spec = bracket_spec
+
+    def _sync_sirius_review(self, update: UpdateReport) -> None:
+        sirius_outcome = next(
+            (
+                outcome
+                for outcome in update.outcomes
+                if outcome.source_id == "sirius_blog"
+                and outcome.status == "success"
+                and outcome.snapshot_path
+            ),
+            None,
+        )
+        if sirius_outcome is None:
+            return
+        review_engine = build_engine(self.settings.database_url)
+        try:
+            with Session(review_engine) as review_session:
+                review_queue = SiriusReviewQueue(
+                    review_session,
+                    rules_path=ROOT / "data" / "sirius_rules.yaml",
+                    teams_path=self.settings.teams_path,
+                )
+                review_queue.sync_archive(Path(str(sirius_outcome.snapshot_path)).read_bytes())
+                review_session.commit()
+                review_queue.export_reviewed_snapshot(self.settings.storage_path / "sirius-review")
+        finally:
+            review_engine.dispose()
+
+    def prepare_inputs(self, command: UpdateCommand) -> PreparedUpdateInputs:
+        """Collect and freeze cheap inputs without running Monte Carlo."""
+
+        scenario_path = self.settings.scenario_path_for(command.format_size)
+        scenario = load_scenario(scenario_path)
+        teams = teams_for_scenario(load_teams(self.settings.teams_path), scenario)
+        previous = self.archive.load_latest(command.format_size)
+        update = UpdatePipeline(
+            self.collectors, self.settings.storage_path / "source_snapshots"
+        ).run()
+        claim_persistence = self._persist_claims(update)
+        self._sync_sirius_review(update)
+        sources = _source_manifest(update, previous)
+        review_pointer, reviewed_observations_path = _reviewed_snapshot(self.settings)
+        _attach_review_snapshot(sources, review_pointer)
+        update_event_path = self.archive.append_update_event(
+            sources,
+            update,
+            claim_persistence,
+        )
+        git_state = _git_state()
+        snapshot_id = _input_hash(command, scenario, sources, git_state, teams)
+        existing = self.archive.load(snapshot_id)
+        if existing is None and _matches_previous_inputs(
+            previous,
+            command,
+            scenario,
+            sources,
+            self.settings.model_version,
+            git_state,
+            teams,
+        ):
+            existing = previous
+        return PreparedUpdateInputs(
+            command=command,
+            scenario_path=scenario_path,
+            scenario=scenario,
+            teams=teams,
+            previous=previous,
+            update=update,
+            claim_persistence=claim_persistence,
+            sources=sources,
+            review_pointer=review_pointer,
+            reviewed_observations_path=reviewed_observations_path,
+            update_event_path=update_event_path,
+            git_state=git_state,
+            snapshot_id=snapshot_id,
+            existing=existing,
+        )
 
     def _recalculate_charts(self, claims: list[SourceClaimInput]) -> ChartRecalculationReport:
         relevant = [
@@ -576,60 +744,20 @@ class UpdateOrchestrator:
             prediction_engine.dispose()
 
     def run(self, command: UpdateCommand) -> UpdateExecution:
-        scenario_path = self.settings.scenario_path_for(command.format_size)
-        scenario = load_scenario(scenario_path)
-        teams = teams_for_scenario(load_teams(self.settings.teams_path), scenario)
-        previous = self.archive.load_latest(command.format_size)
-        update = UpdatePipeline(
-            self.collectors, self.settings.storage_path / "source_snapshots"
-        ).run()
-        claim_persistence = self._persist_claims(update)
-        sirius_outcome = next(
-            (
-                outcome
-                for outcome in update.outcomes
-                if outcome.source_id == "sirius_blog"
-                and outcome.status == "success"
-                and outcome.snapshot_path
-            ),
-            None,
-        )
-        if sirius_outcome is not None:
-            review_engine = build_engine(self.settings.database_url)
-            try:
-                with Session(review_engine) as review_session:
-                    review_queue = SiriusReviewQueue(
-                        review_session,
-                        rules_path=ROOT / "data" / "sirius_rules.yaml",
-                        teams_path=self.settings.teams_path,
-                    )
-                    review_queue.sync_archive(Path(str(sirius_outcome.snapshot_path)).read_bytes())
-                    review_session.commit()
-                    review_queue.export_reviewed_snapshot(
-                        self.settings.storage_path / "sirius-review"
-                    )
-            finally:
-                review_engine.dispose()
-        sources = _source_manifest(update, previous)
-        review_pointer, reviewed_observations_path = _reviewed_snapshot(self.settings)
-        _attach_review_snapshot(sources, review_pointer)
-        update_event_path = self.archive.append_update_event(
-            sources,
-            update,
-            claim_persistence,
-        )
-        git_state = _git_state()
-        snapshot_id = _input_hash(command, scenario, sources, git_state)
-        existing = self.archive.load(snapshot_id)
-        if existing is None and _matches_previous_inputs(
-            previous,
-            command,
-            scenario,
-            sources,
-            self.settings.model_version,
-            git_state,
-        ):
-            existing = previous
+        prepared = self.prepare_inputs(command)
+        scenario_path = prepared.scenario_path
+        scenario = prepared.scenario
+        teams = prepared.teams
+        previous = prepared.previous
+        update = prepared.update
+        claim_persistence = prepared.claim_persistence
+        sources = prepared.sources
+        reviewed_observations_path = prepared.reviewed_observations_path
+        update_event_path = prepared.update_event_path
+        git_state = prepared.git_state
+        snapshot_id = prepared.snapshot_id
+        existing = prepared.existing
+        review_pointer = prepared.review_pointer
         if existing is not None:
             self._persist_prediction(existing, scenario)
             snapshot_id = str(existing["snapshot_id"])
@@ -732,6 +860,10 @@ class UpdateOrchestrator:
                 teams,
                 output_dir / "brackets",
                 sirius_reasons=_sirius_reasons(hybrid_result),
+                sirius_application=sirius_application_status(
+                    hybrid_result.sirius_assessments,
+                    hybrid_result.sirius_evidence_audit,
+                ),
                 spec=self.bracket_spec,
             )
             bracket_manifest_path = (output_dir / "brackets" / "manifest.json").as_posix()
@@ -744,12 +876,10 @@ class UpdateOrchestrator:
             "model_version": self.settings.model_version,
             "scenario_id": scenario.scenario_id,
             "format_size": scenario.format.teams,
-            "scenario_sha256": hashlib.sha256(
-                json.dumps(asdict(scenario), sort_keys=True, ensure_ascii=False).encode()
-            ).hexdigest(),
-            "sirius_observations_sha256": hashlib.sha256(
-                (ROOT / scenario.models.sirius_observations_file).read_bytes()
-            ).hexdigest(),
+            "scenario_sha256": _scenario_sha256(scenario),
+            "teams_sha256": _teams_sha256(teams),
+            "sirius_observations_sha256": _sirius_observations_sha256(scenario),
+            "ephemeris": _ephemeris_manifest(),
             "sources": sources,
             "assumptions": {
                 **scenario.assumptions,
@@ -780,6 +910,14 @@ class UpdateOrchestrator:
             ),
             "sirius_evidence_audit": (
                 hybrid_result.sirius_evidence_audit if hybrid_result is not None else {}
+            ),
+            "sirius_application": (
+                sirius_application_status(
+                    hybrid_result.sirius_assessments,
+                    hybrid_result.sirius_evidence_audit,
+                )
+                if hybrid_result is not None
+                else {}
             ),
             "quality_pending_review": len(update.pending_review),
             "claim_persistence": claim_persistence,

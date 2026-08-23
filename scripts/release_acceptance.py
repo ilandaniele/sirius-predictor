@@ -17,6 +17,7 @@ from packages.football import DrawEngine
 from packages.football.backtest import run_full_backtest
 from packages.montecarlo import run_parallel
 from packages.reports import export_five_brackets
+from packages.sirius import sirius_application_status
 
 ROOT = Path(__file__).resolve().parents[1]
 
@@ -26,7 +27,7 @@ def _records(frame: pd.DataFrame) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run v0.2.1 release acceptance")
+    parser = argparse.ArgumentParser(description="Run v0.3.0 release acceptance")
     parser.add_argument("--iterations", type=int, default=100_000)
     parser.add_argument("--workers", type=int, default=None)
     parser.add_argument("--format-size", type=int, choices=(48, 64), default=64)
@@ -34,8 +35,8 @@ def main() -> None:
     if args.iterations < 100_000:
         raise ValueError("release acceptance requires at least 100,000 iterations")
 
-    scenario_path = ROOT / "data" / (
-        "scenario.yaml" if args.format_size == 64 else "scenario-48.yaml"
+    scenario_path = (
+        ROOT / "data" / ("scenario.yaml" if args.format_size == 64 else "scenario-48.yaml")
     )
     teams_path = ROOT / "data" / "teams.csv"
     scenario = load_scenario(scenario_path)
@@ -49,13 +50,7 @@ def main() -> None:
     historical_shapes = {
         str(edition): {
             "matches": len(edition_matches),
-            "teams": len(
-                {
-                    team
-                    for match in edition_matches
-                    for team in (match.home, match.away)
-                }
-            ),
+            "teams": len({team for match in edition_matches for team in (match.home, match.away)}),
             "stages": dict(Counter(match.stage for match in edition_matches)),
             "champion": next(
                 (match.winner for match in edition_matches if match.stage == "F"),
@@ -63,9 +58,7 @@ def main() -> None:
             ),
         }
         for edition in historical_editions
-        if (edition_matches := [
-            match for match in historical_matches if match.edition == edition
-        ])
+        if (edition_matches := [match for match in historical_matches if match.edition == edition])
     }
     backtest = run_full_backtest(historical_matches)
     consulted_at = datetime.now(UTC).isoformat()
@@ -149,6 +142,10 @@ def main() -> None:
         hybrid_result.top_brackets,
         teams,
         output / "brackets-4k",
+        sirius_application=sirius_application_status(
+            hybrid_result.sirius_assessments,
+            hybrid_result.sirius_evidence_audit,
+        ),
     )
     acceptance = {
         "teams": len(teams) == args.format_size,
@@ -158,9 +155,7 @@ def main() -> None:
         ),
         "five_brackets": len(bracket_manifests) == 5,
         "three_formats": all(len(item["files"]) == 3 for item in bracket_manifests),
-        "sensitivity_12_rows": all(
-            item["sensitivity_rows"] == 12 for item in simulations.values()
-        ),
+        "sensitivity_12_rows": all(item["sensitivity_rows"] == 12 for item in simulations.values()),
         "backtest_four_models": set(backtest.metrics["model"])
         == {"FOOTBALL_ONLY", "SIRIUS_PURIST", "SIRIUS_CALIBRATED", "HYBRID"},
         "backtest_no_temporal_leakage": bool(
@@ -177,9 +172,7 @@ def main() -> None:
         == set(EDITION_FOLDERS),
         "backtest_sirius_ranks_not_invented": bool(
             backtest.champion_ranking.loc[
-                backtest.champion_ranking["model"].isin(
-                    {"SIRIUS_PURIST", "SIRIUS_CALIBRATED"}
-                ),
+                backtest.champion_ranking["model"].isin({"SIRIUS_PURIST", "SIRIUS_CALIBRATED"}),
                 "rank",
             ]
             .isna()
@@ -195,7 +188,7 @@ def main() -> None:
         ),
     }
     manifest = {
-        "release": "0.2.1",
+        "release": "0.3.0",
         "created_at": datetime.now(UTC).isoformat(),
         "scenario": scenario.scenario_id,
         "format_size": args.format_size,
