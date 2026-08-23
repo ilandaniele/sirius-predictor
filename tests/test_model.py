@@ -1,3 +1,4 @@
+from dataclasses import replace
 from datetime import datetime
 from zoneinfo import ZoneInfo
 
@@ -8,9 +9,20 @@ from engine.sirius import SiriusExperimentalLayer, lunar_longitude
 
 
 def test_probabilities_are_normalized(scenario, teams):
+    # teams.csv carries no real Sirius prior (unsourced data was neutralized to 0 for
+    # every team); inject synthetic, clearly-test-only values here so this test verifies
+    # the scenario-proxy fallback mechanism itself, not production data content.
+    synthetic_teams = [
+        replace(team, sirius_index=0.3, sirius_confidence=0.6)
+        if team.team_id == "ARG"
+        else replace(team, sirius_index=-0.1, sirius_confidence=0.4)
+        if team.team_id == "ESP"
+        else team
+        for team in teams
+    ]
     layer = SiriusExperimentalLayer(scenario.models.max_sirius_elo_adjustment)
-    model = FootballMatchModel(teams, layer, mode="combined")
-    ratings = {team.team_id: team.projected_elo for team in teams}
+    model = FootballMatchModel(synthetic_teams, layer, mode="combined")
+    ratings = {team.team_id: team.projected_elo for team in synthetic_teams}
     kickoff = datetime(2030, 7, 21, 18, tzinfo=ZoneInfo("Europe/Madrid"))
     probabilities = model.probabilities("ARG", "ESP", ratings, kickoff)
     assert np.isclose(probabilities.home + probabilities.draw + probabilities.away, 1.0)

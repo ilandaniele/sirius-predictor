@@ -27,8 +27,8 @@ Columnas obligatorias de `data/teams.csv`:
 | `host`, `pot` | Hipótesis de anfitrión y bombo |
 | `projected_elo` | Prior exclusivamente futbolístico |
 | `rating_uncertainty` | Incertidumbre del rating, no calidad Sirius |
-| `sirius_index` | Prior experimental hipotético entre equipos |
-| `sirius_confidence` | Confianza del dato Sirius en `[0,1]` |
+| `sirius_index` | Fallback legacy para llamadas sin `assessments` (ver `engine/sirius.py`); en `0.0` para los 64 equipos porque no hay metodología Sirius sourced que lo justifique por equipo — nunca se completa a mano. La producción real ignora esta columna: usa `sirius_assessments` (evidencia humana revisada) |
+| `sirius_confidence` | Idem, en `[0,1]`; en `0.0` por la misma razón |
 | `qualification_status` | `host_assumption` o `projected` |
 | `coach`, `captain` | Valores conocidos o `Por definir`; nunca inventar horas natales |
 | `source_id`, `as_of` | Procedencia y fecha de corte |
