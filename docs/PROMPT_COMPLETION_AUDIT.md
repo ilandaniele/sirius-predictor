@@ -22,7 +22,7 @@ presenta como terminado.
 | 12. ACTUALIZAR | Completo para inputs disponibles | El botón que encolaba un job Celery fue reemplazado por un flujo de cómputo local verificado: `POST /api/v1/local-simulation-inputs` congela fuentes/inputs en Fly, `scripts/simulate_local_and_publish.py` corre Monte Carlo/llaves/backtest en la PC del operador, y `POST /api/v1/local-simulation-results` (`services/api/local_compute.py`) valida checksums, provenance, leakage y probabilidades antes de publicar en volumen y PostgreSQL. Idempotente y append-only; rechaza bundles alterados, inputs vencidos, código distinto y downgrade automático de fuente A a C/D | Claims sin hora zonificada o contrato completo quedan omitidos de forma trazable hasta validación; no se completan automáticamente |
 | 13. Historial | Completo | manifests append-only, commit, versión, timestamp, seed, fuentes, supuestos y resultados | Ninguno conocido |
 | 14. Seguridad/calidad | Completo para v0.2 | allow-list SSRF, límites, API key, auditorías, CI backend/frontend/integration | Revisar periódicamente dependencias y TOS |
-| 15. Deploy | Completo | Compose desarrollo/producción, health checks, migraciones, backups y `.env.example`. Se agregó una alternativa económica en Fly.io: una sola Machine con volumen cifrado (`fly.toml`, `Dockerfile.fly`, `ops/fly/entrypoint.sh`) que empaqueta web/API/PostgreSQL/Redis, escala a cero y no corre el worker Monte Carlo en producción (`SIRIUS_ALLOW_REMOTE_COMPUTE=false`); lanzadores de un clic en Windows (`INICIAR_SIRIUS.cmd`, `PUBLICAR_SIRIUS_FLY.cmd`, `SIMULAR_Y_PUBLICAR.cmd`) | Validación en una infraestructura productiva real queda fuera del repositorio; el despliegue a Fly todavía no se ejecutó contra la cuenta real del operador |
+| 15. Deploy | Completo y verificado en producción | Compose desarrollo/producción, health checks, migraciones, backups y `.env.example`. Alternativa económica en Fly.io: una sola Machine con volumen cifrado (`fly.toml`, `Dockerfile.fly`, `ops/fly/entrypoint.sh`) que empaqueta web/API/PostgreSQL/Redis, escala a cero (modo `suspend`, resume en <1s) y no corre el worker Monte Carlo en producción (`SIRIUS_ALLOW_REMOTE_COMPUTE=false`); lanzadores de un clic en Windows, incluido `SINCRONIZAR_TODO.cmd` (deploy + sync + simulación + publicación en un paso). Desplegado contra la cuenta real del operador en `sirius-engine-ilan-2030.fly.dev`, con al menos una publicación end-to-end verificada (simulación local real → snapshot publicado → servido en vivo) | Monitoreo/alertas productivas quedan fuera del repositorio |
 
 ## Hallazgo corregido durante esta auditoría
 
@@ -82,5 +82,37 @@ duplicados entre `PredictionArchive`, `tasks.py` y `local_compute.py`; geometrí
 recalculada varias veces por exportación; símbolos con prefijo `_` de `update_pipeline.py`
 compartidos como API implícita entre tres módulos. Ninguno afecta corrección hoy.
 
-Próximo paso: el código no fue commiteado durante esta sesión a la espera de confirmación explícita
-del operador.
+Este trabajo fue commiteado y pusheado a `agent/v0-2-formats-sirius-archive` (4 commits) tras
+confirmación explícita del operador, y desplegado contra la cuenta real de Fly.
+
+## Adenda 2026-08-22: primer deploy real, bugs encontrados en producción y auditoría de sesgo
+
+El primer deploy contra la cuenta real de Fly y la primera publicación end-to-end (simulación local
+completa → subida → validación en el servidor) expusieron dos bugs que ninguna suite de tests local
+podía atrapar, porque dependían de estado ya persistido en la base de datos de producción:
+
+- El `run_id` del Monte Carlo no incluía la versión del modelo: un cambio de código que alteraba la
+  forma del resultado (por ejemplo, agregar `sirius_application`) colisionaba con una fila ya
+  publicada bajo el mismo seed/escenario en vez de convivir como una versión nueva
+  (`packages/montecarlo/runner.py`, `engine/sim.py`).
+- `SimulationRun` exigía que el `prediction_snapshot_id` coincidiera exactamente con el snapshot
+  nuevo, pero un re-sync que sólo refresca `consulted_at` de las fuentes genera un `snapshot_id`
+  distinto reutilizando el mismo cálculo Monte Carlo — se comparó byte a byte contra lo guardado en
+  Postgres (vía `flyctl ssh console` + `psql`) para confirmar que los datos eran idénticos antes de
+  relajar el chequeo (`db/predictions.py`, con test de regresión).
+
+Además, dos hallazgos de UX en vivo: `X-Frame-Options: DENY` global impedía que el `<object>` del
+dashboard embebiera el SVG de las llaves (se acotó a `SAMEORIGIN` sólo para esa ruta), y
+`Content-Disposition: attachment` forzaba una descarga en vez de mostrar la imagen inline.
+
+Se rediseñó el cuadro de llaves como árbol de dos lados (16vos convergiendo desde cada borde hacia
+semifinales/final/campeón centrado) reemplazando el diseño de una sola tira; se cambió
+`auto_stop_machines` a `suspend` (resume en cientos de milisegundos en vez de un boot completo,
+verificado con dos suspensiones manuales reales) y se paralelizó el arranque de Postgres/Redis en
+`ops/fly/entrypoint.sh`.
+
+Auditoría de sesgo pedida explícitamente por el operador ("no te subjetives porque soy argentino"):
+se verificó empíricamente que `sirius_index`/`sirius_confidence` de `data/teams.csv` no afectan
+ninguna predicción real (HYBRID = FOOTBALL_ONLY exacto), pero Argentina tenía el valor más alto de
+los 64 equipos en ambos campos sin ninguna fuente que lo justificara — se llevaron a cero para todos
+los equipos. Ver `docs/DATA_CONTRACT.md`.
