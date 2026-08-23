@@ -11,8 +11,7 @@ import type {
   SiriusReviewStatus,
   SourceRecord,
   Team,
-  UpdateEvent,
-  JobStatus
+  UpdateEvent
 } from "./types";
 
 const API_URL = process.env.NEXT_PUBLIC_API_URL ?? "http://localhost:8000/api/v1";
@@ -64,14 +63,5 @@ export const api = {
         body: JSON.stringify(payload)
       }
     ),
-  job: (jobId: string) => request<ApiEnvelope<JobStatus>>(`/jobs/${jobId}`),
-  asset: (path: string) => `${API_URL}${path}`,
-  update: async (formatSize: 48 | 64 = 64) => {
-    const response = await fetch("/api/update", {
-      method: "POST",
-      body: JSON.stringify({ iterations: 100_000, seed: 2030, format_size: formatSize })
-    });
-    if (!response.ok) throw new Error(`API ${response.status}: ${await response.text()}`);
-    return response.json() as Promise<{ job_id: string; status: string; detail: string }>;
-  }
+  asset: (path: string) => `${API_URL}${path}`
 };

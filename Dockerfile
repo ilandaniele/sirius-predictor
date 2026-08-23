@@ -16,7 +16,8 @@ RUN python -m pip wheel --wheel-dir /wheels .
 
 FROM python:3.13-slim AS runtime
 ENV PYTHONUNBUFFERED=1 \
-    PYTHONDONTWRITEBYTECODE=1
+    PYTHONDONTWRITEBYTECODE=1 \
+    SIRIUS_ROOT=/app
 RUN groupadd --system sirius && useradd --system --gid sirius --home /app sirius
 WORKDIR /app
 COPY --from=builder /wheels /wheels

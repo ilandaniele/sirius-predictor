@@ -57,6 +57,10 @@ def test_initial_migration_creates_complete_schema(tmp_path: Path, monkeypatch) 
     assert {"snapshot_key", "mode", "format_size"} <= prediction_columns
     run_columns = {column["name"] for column in inspect(engine).get_columns("simulation_runs")}
     assert "run_id" in run_columns
+    tournament_columns = {
+        column["name"]: column for column in inspect(engine).get_columns("tournaments")
+    }
+    assert tournament_columns["status"]["type"].length == 100
     engine.dispose()
 
 

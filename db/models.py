@@ -101,7 +101,7 @@ class Tournament(Base, IdMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     edition: Mapped[int] = mapped_column(Integer, nullable=False)
     format_id: Mapped[str] = mapped_column(ForeignKey("tournament_formats.id"), nullable=False)
-    status: Mapped[str] = mapped_column(String(40), nullable=False)
+    status: Mapped[str] = mapped_column(String(100), nullable=False)
     assumptions: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
     __table_args__ = (UniqueConstraint("name", "edition"),)
 

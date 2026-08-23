@@ -23,6 +23,8 @@ def test_parallel_aggregation_preserves_probability_mass_and_paths() -> None:
     assert result.workers == 2
     assert abs(result.ranking["Campeón %"].sum() - 100) < 1e-9
     assert len(result.top_brackets) == 5
+    assert all(bracket["scope"] == "SF_AND_FINAL" for bracket in result.top_brackets)
+    assert all(len(bracket["decisive_matches"]) == 3 for bracket in result.top_brackets)
     assert len(result.sensitivity) == 12
     group_probability = result.argentina_stages.loc[
         result.argentina_stages["Etapa alcanzada"] == "Group", "Probabilidad %"

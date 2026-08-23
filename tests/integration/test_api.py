@@ -65,6 +65,59 @@ def test_invalid_query_and_security_headers() -> None:
     assert "x-api-key" in preflight.headers["access-control-allow-headers"].lower()
 
 
+def test_bracket_svg_allows_same_origin_embedding_other_routes_stay_denied() -> None:
+    snapshot_id = "0" * 64
+    svg_response = client.get(f"/api/v1/predictions/{snapshot_id}/brackets/1.svg")
+    assert svg_response.headers["x-frame-options"] == "SAMEORIGIN"
+    other_response = client.get("/api/v1/scenario")
+    assert other_response.headers["x-frame-options"] == "DENY"
+
+
+def test_production_shape_disables_remote_monte_carlo(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(api_main.settings, "allow_remote_compute", False)
+    guarded_client = TestClient(create_app())
+    simulation = guarded_client.post(
+        "/api/v1/simulation-jobs",
+        json={"format_size": 64, "iterations": 100, "mode": "HYBRID"},
+    )
+    update = guarded_client.post(
+        "/api/v1/update-jobs",
+        json={"format_size": 64, "iterations": 100},
+    )
+    assert simulation.status_code == 409
+    assert update.status_code == 409
+    assert "local simulation publisher" in simulation.json()["detail"]
+
+
+def test_local_compute_routes_expose_input_contract_and_require_zip(
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    monkeypatch.setattr(
+        api_main,
+        "prepare_local_simulation",
+        lambda _settings, _command: {
+            "schema_version": "local-simulation-input-v1",
+            "status": "ready",
+            "input_id": "a" * 64,
+        },
+    )
+    local_client = TestClient(create_app())
+    prepared = local_client.post(
+        "/api/v1/local-simulation-inputs",
+        json={"format_size": 48, "iterations": 100, "workers": 1},
+    )
+    invalid_upload = local_client.post(
+        "/api/v1/local-simulation-results",
+        content=b"not-a-zip",
+        headers={"Content-Type": "application/json"},
+    )
+    assert prepared.status_code == 200
+    assert prepared.json()["data"]["status"] == "ready"
+    assert invalid_upload.status_code == 415
+
+
 def _review_archive_payload() -> bytes:
     entry = {
         "id": {"$t": "tag:blogger.com,1999:blog-1.post-99"},

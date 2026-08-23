@@ -1,0 +1,55 @@
+app = "sirius-engine-ilan-2030"
+primary_region = "gru"
+kill_signal = "SIGTERM"
+kill_timeout = "300s"
+
+[build]
+  dockerfile = "Dockerfile.fly"
+
+[build.args]
+  NEXT_PUBLIC_API_URL = "/api/v1"
+
+[env]
+  NEXT_PUBLIC_API_URL = "/api/v1"
+  SIRIUS_CORS_ORIGINS = '["https://sirius-engine-ilan-2030.fly.dev"]'
+  SIRIUS_DATABASE_URL = "postgresql+psycopg://sirius@/sirius?host=/data/postgres-socket"
+  SIRIUS_ENVIRONMENT = "production"
+  SIRIUS_ALLOW_REMOTE_COMPUTE = "false"
+  SIRIUS_LOCAL_RESULT_MAX_BYTES = "67108864"
+  SIRIUS_INTERNAL_API_URL = "http://127.0.0.1:8000/api/v1"
+  SIRIUS_REDIS_URL = "redis://127.0.0.1:6379/0"
+  SIRIUS_SIMULATION_WORKERS = "2"
+  SIRIUS_STORAGE_PATH = "/data/storage"
+
+[http_service]
+  internal_port = 3000
+  force_https = true
+  auto_stop_machines = "suspend"
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [http_service.concurrency]
+    type = "requests"
+    soft_limit = 20
+    hard_limit = 40
+
+  [[http_service.checks]]
+    grace_period = "60s"
+    interval = "30s"
+    method = "GET"
+    path = "/api/v1/scenario"
+    timeout = "10s"
+
+[[mounts]]
+  source = "sirius_data"
+  destination = "/data"
+  initial_size = "5gb"
+  snapshot_retention = 7
+  auto_extend_size_threshold = 80
+  auto_extend_size_increment = "1GB"
+  auto_extend_size_limit = "10GB"
+
+[[vm]]
+  cpu_kind = "shared"
+  cpus = 2
+  memory = "2048mb"

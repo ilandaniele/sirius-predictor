@@ -182,7 +182,7 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
     try {
       await api.decideSiriusReviewCandidate(selected.id, payload, apiKey);
       setMessage(
-        "Decisión guardada. ACTUALIZAR generará un snapshot si cambió la evidencia.",
+        "Decisión guardada. La próxima simulación local generará un snapshot si cambió la evidencia.",
       );
       await load(filter, offset);
     } catch (error) {

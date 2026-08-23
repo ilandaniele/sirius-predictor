@@ -18,8 +18,9 @@ packages/football     packages/astrology
          packages/sirius
  testimonios + confianza + robustez
                  │
+                 │ input congelado y autenticado
                  ▼
- packages/montecarlo ── tres modos separados
+ PC local: backtest + packages/montecarlo ── tres modos separados
                  │
        ┌─────────┴──────────┐
        ▼                    ▼
@@ -28,13 +29,13 @@ PredictionSnapshot    packages/reports
        │                    │
        └─────────┬──────────┘
                  ▼
-       FastAPI ◄── Celery/Redis ──► Next.js
+       FastAPI ◄── bundle verificado ──► Next.js
 ```
 
 ## Límites de módulo
 
 - `apps/web`: presentación y provenance; no contiene reglas del torneo.
-- `services/api`: contratos HTTP, autenticación, jobs y orquestación idempotente.
+- `services/api`: contratos HTTP, autenticación, inputs congelados e importación idempotente.
 - `packages/common`: configuración, modos, seguridad y precedencia de fuentes.
 - `packages/football`: sorteo, baseline, torneo y backtesting.
 - `packages/astrology`: efemérides y técnicas deterministas; no decide pesos Sirius.
@@ -53,13 +54,15 @@ PredictionSnapshot    packages/reports
    conflictos en revisión.
 4. Recalcular sólo cartas con claims aceptados y contrato completo; reutilizar caché por hash para
    entradas idénticas y registrar omisiones sin imputar datos.
-5. Recalcular testimonios Sirius.
-6. Ejecutar Monte Carlo por modo.
-7. crear el manifest y persistir `PredictionSnapshot`/`SimulationRun` append-only por modo; un
+5. Congelar fuentes, revisión, escenario, equipos, versión y código en un input local.
+6. Ejecutar primero HYBRID y persistir cinco escenarios decisivos visuales; luego ejecutar los modos
+   de control y el backtesting en la PC. Los parciales nunca dependen de un directorio temporal.
+7. Subir un ZIP con manifest de archivos y checksums; rechazar rutas, formatos o inputs inválidos.
+8. Crear el manifest y persistir `PredictionSnapshot`/`SimulationRun` append-only por modo; un
    replay repara filas SQL ausentes y rechaza divergencias.
-8. comparar con el snapshot anterior.
-9. generar informe y exactamente cinco llaves.
-10. registrar notificación local.
+9. Comparar con el snapshot anterior.
+10. Publicar informe, backtest y exactamente cinco visuales de semifinales, final y campeón.
+11. Registrar auditoría de importación local.
 
 El hash idempotente excluye timestamps de consulta e incluye hashes efectivos. Si una descarga
 falla, se conserva el hash válido anterior y no se crea una predicción espuria.
@@ -70,6 +73,7 @@ incluso cuando la predicción resulta ser un replay idempotente.
 
 ## Reproducibilidad
 
-Cada salida registra commit, versión, timestamp, hashes de fuente, supuestos, semilla, número de
-simulaciones, modo y pesos. La paralelización usa semillas de chunk derivadas y registra el número
-de workers. Los archivos históricos son write-once; sólo el puntero `latest` es mutable.
+Cada salida registra commit, versión, timestamp, hashes de fuente, escenario, equipos, supuestos,
+semilla, número de simulaciones, modo y pesos. La paralelización usa semillas de chunk derivadas y
+registra el número de workers. Los archivos históricos son write-once; sólo el puntero `latest` es
+mutable. Fly no acepta un resultado si el código desplegado cambió después de congelar el input.

@@ -53,7 +53,24 @@ export type Prediction = {
   argentina_groups?: Array<Record<string, string | number>>;
   final_pairs: Array<Record<string, string | number>>;
   sensitivity?: Array<Record<string, string | number>>;
-  top_brackets: Array<Record<string, string | number>>;
+  top_brackets: Array<{
+    signature: string;
+    signature_version?: "decisive-v1";
+    scope?: "SF_AND_FINAL";
+    champion: string;
+    runner_up: string;
+    density_percent: number;
+    decisive_matches?: Array<{
+      round: "SF" | "F";
+      match_index: number;
+      team_a_id: string;
+      team_a: string;
+      team_b_id: string;
+      team_b: string;
+      winner_id: string;
+      winner: string;
+    }>;
+  }>;
   model_comparison?: Record<string, number | null>;
   changes?: string[];
   update_summary?: string;
@@ -70,6 +87,15 @@ export type Prediction = {
     reviewed_observations: number;
     pending_observations: number;
     teams_with_evidence: number;
+  };
+  sirius_application?: {
+    status: string;
+    label: string;
+    effective: boolean;
+    reviewed_observations: number;
+    pending_observations: number;
+    teams_with_evidence: number;
+    teams_with_nonzero_adjustment: number;
   };
 };
 
@@ -161,12 +187,6 @@ export type SiriusReviewDecisionInput = {
     time_data_grade: Provenance["quality"] | null;
     time_source_note: string | null;
   };
-};
-
-export type JobStatus = {
-  job_id: string;
-  status: string;
-  result: { snapshot_id?: string; summary?: string } | null;
 };
 
 export type Draw = Record<string, Team[]>;
