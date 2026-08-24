@@ -141,6 +141,8 @@ export type SiriusReviewDecision = {
   observation: Record<string, unknown> | null;
 };
 
+export type AstroSource = "sirius" | "argumental";
+
 export type SiriusReviewCandidate = {
   id: string;
   fingerprint: string;
@@ -149,7 +151,7 @@ export type SiriusReviewCandidate = {
   claim_text: string;
   title: string;
   published_at: string;
-  source_id: "sirius_blog";
+  source_id: "sirius_blog" | "argumental_blog";
   source_url: string;
   consulted_at: string;
   quality: "B";
@@ -187,6 +189,15 @@ export type SiriusReviewDecisionInput = {
     time_data_grade: Provenance["quality"] | null;
     time_source_note: string | null;
   };
+};
+
+export type CombinedAssessment = {
+  sirius: Record<string, SiriusAssessment>;
+  argumental: Record<string, SiriusAssessment>;
+  combined: Record<string, SiriusAssessment>;
+  sirius_evidence_audit: { reviewed_observations: number; pending_observations: number };
+  argumental_evidence_audit: { reviewed_observations: number; pending_observations: number };
+  combined_evidence_audit: { reviewed_observations: number; pending_observations: number };
 };
 
 export type Draw = Record<string, Team[]>;

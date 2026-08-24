@@ -12,6 +12,12 @@ from typing import Any, Protocol
 import yaml
 from sqlalchemy.orm import Session
 
+from collectors.argumental_archive import (
+    argumental_archive_collector_from_config,
+)
+from collectors.argumental_archive import (
+    parse_archive_index as argumental_parse_archive_index,
+)
 from collectors.common.base import Collector
 from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
@@ -218,6 +224,8 @@ def build_collectors(settings: Settings) -> list[Collector]:
         (
             sirius_archive_collector_from_config(record)
             if record.get("id") == "sirius_blog"
+            else argumental_archive_collector_from_config(record)
+            if record.get("id") == "argumental_blog"
             else fifa_ranking_collector_from_config(record)
             if record.get("id") == "fifa_ranking"
             else raw_collector_from_config(record, ROOT)
@@ -327,12 +335,14 @@ def _source_manifest(report: UpdateReport, previous: dict[str, Any] | None) -> l
     return rows
 
 
-def _reviewed_snapshot(settings: Settings) -> tuple[dict[str, Any] | None, Path | None]:
-    pointer_path = settings.storage_path / "sirius-review" / "latest.json"
+def _reviewed_snapshot(
+    settings: Settings, folder_name: str = "sirius-review"
+) -> tuple[dict[str, Any] | None, Path | None]:
+    pointer_path = settings.storage_path / folder_name / "latest.json"
     if not pointer_path.is_file():
         return None, None
     pointer = json.loads(pointer_path.read_text(encoding="utf-8"))
-    review_root = (settings.storage_path / "sirius-review").resolve()
+    review_root = (settings.storage_path / folder_name).resolve()
     root = (review_root / "snapshots").resolve()
     relative_path = pointer.get("relative_path")
     target = (
@@ -369,15 +379,19 @@ def _reviewed_snapshot(settings: Settings) -> tuple[dict[str, Any] | None, Path 
     return pointer, target
 
 
-def _attach_review_snapshot(sources: list[dict[str, Any]], pointer: dict[str, Any] | None) -> None:
+def _attach_review_snapshot(
+    sources: list[dict[str, Any]],
+    pointer: dict[str, Any] | None,
+    source_id: str = "sirius_blog",
+) -> None:
     if pointer is None:
         return
-    sirius = next((item for item in sources if item["source_id"] == "sirius_blog"), None)
-    if sirius is None:
+    target = next((item for item in sources if item["source_id"] == source_id), None)
+    if target is None:
         return
-    sirius["review_snapshot_sha256"] = pointer["snapshot_id"]
-    sirius["review_snapshot_path"] = pointer["path"]
-    sirius["reviewed_observations"] = int(pointer.get("reviewed_observations", 0))
+    target["review_snapshot_sha256"] = pointer["snapshot_id"]
+    target["review_snapshot_path"] = pointer["path"]
+    target["reviewed_observations"] = int(pointer.get("reviewed_observations", 0))
 
 
 def _scenario_sha256(scenario: Scenario) -> str:
@@ -400,6 +414,13 @@ def _teams_sha256(teams: list[Team]) -> str:
 def _sirius_observations_sha256(scenario: Scenario) -> str:
     path = ROOT / scenario.models.sirius_observations_file
     return hashlib.sha256(path.read_bytes()).hexdigest()
+
+
+# Argumental's reviewed snapshot is captured for governance/comparison (see `sources[]` and the
+# descriptive combined-assessment endpoint) but, unlike Sirius's, is not threaded into `Simulator`.
+# Its hash must stay out of the snapshot identity, or an Argumental-only review decision would
+# force a needless Monte Carlo re-run with an unchanged simulated result.
+MODEL_INPUT_REVIEW_SOURCES = {"sirius_blog"}
 
 
 def _ephemeris_manifest() -> dict[str, str]:
@@ -427,7 +448,7 @@ def _input_hash(
             "sha256": item["review_snapshot_sha256"],
         }
         for item in sources
-        if item.get("review_snapshot_sha256")
+        if item.get("review_snapshot_sha256") and item["source_id"] in MODEL_INPUT_REVIEW_SOURCES
     ]
     payload = {
         "scenario_id": scenario.scenario_id,
@@ -477,12 +498,13 @@ def _matches_previous_inputs(
     current_review = {
         item["source_id"]: item.get("review_snapshot_sha256")
         for item in sources
-        if item.get("review_snapshot_sha256")
+        if item.get("review_snapshot_sha256") and item["source_id"] in MODEL_INPUT_REVIEW_SOURCES
     }
     previous_review = {
         item["source_id"]: item.get("review_snapshot_sha256")
         for item in previous.get("sources", [])
         if item.get("review_snapshot_sha256")
+        and item.get("source_id") in MODEL_INPUT_REVIEW_SOURCES
     }
     scenario_hash = _scenario_sha256(scenario)
     selected_teams = teams or teams_for_scenario(load_teams(get_settings().teams_path), scenario)
@@ -601,6 +623,39 @@ class UpdateOrchestrator:
         finally:
             review_engine.dispose()
 
+    def _sync_argumental_review(self, update: UpdateReport) -> None:
+        argumental_outcome = next(
+            (
+                outcome
+                for outcome in update.outcomes
+                if outcome.source_id == "argumental_blog"
+                and outcome.status == "success"
+                and outcome.snapshot_path
+            ),
+            None,
+        )
+        if argumental_outcome is None:
+            return
+        review_engine = build_engine(self.settings.database_url)
+        try:
+            with Session(review_engine) as review_session:
+                review_queue = SiriusReviewQueue(
+                    review_session,
+                    rules_path=ROOT / "data" / "argumental_rules.yaml",
+                    teams_path=self.settings.teams_path,
+                    source_id="argumental_blog",
+                    parse_archive_index=argumental_parse_archive_index,
+                )
+                review_queue.sync_archive(
+                    Path(str(argumental_outcome.snapshot_path)).read_bytes()
+                )
+                review_session.commit()
+                review_queue.export_reviewed_snapshot(
+                    self.settings.storage_path / "argumental-review"
+                )
+        finally:
+            review_engine.dispose()
+
     def prepare_inputs(self, command: UpdateCommand) -> PreparedUpdateInputs:
         """Collect and freeze cheap inputs without running Monte Carlo."""
 
@@ -613,9 +668,12 @@ class UpdateOrchestrator:
         ).run()
         claim_persistence = self._persist_claims(update)
         self._sync_sirius_review(update)
+        self._sync_argumental_review(update)
         sources = _source_manifest(update, previous)
         review_pointer, reviewed_observations_path = _reviewed_snapshot(self.settings)
-        _attach_review_snapshot(sources, review_pointer)
+        _attach_review_snapshot(sources, review_pointer, source_id="sirius_blog")
+        argumental_review_pointer, _ = _reviewed_snapshot(self.settings, "argumental-review")
+        _attach_review_snapshot(sources, argumental_review_pointer, source_id="argumental_blog")
         update_event_path = self.archive.append_update_event(
             sources,
             update,

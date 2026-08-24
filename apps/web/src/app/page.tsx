@@ -2,10 +2,10 @@
 
 import { useEffect, useMemo, useState } from "react";
 
+import { AstrologiaPanel } from "@/components/AstrologiaPanel";
 import { MetricCard } from "@/components/MetricCard";
 import { SourceBadge } from "@/components/SourceBadge";
 import { HistoryChart } from "@/components/HistoryChart";
-import { SiriusReviewQueue } from "@/components/SiriusReviewQueue";
 import { api } from "@/lib/api";
 import type {
   BacktestResult,
@@ -14,28 +14,16 @@ import type {
   Prediction,
   Provenance,
   Scenario,
-  SiriusArchive,
   SourceRecord,
   Team,
   UpdateEvent
 } from "@/lib/types";
 
-const tabs = [
-  "Dashboard",
-  "Argentina",
-  "Selecciones",
-  "Sorteo",
-  "Simulaciones",
-  "Sirius",
-  "Fuentes",
-  "Backtesting",
-  "Historial",
-  "Configuración"
-] as const;
+const tabs = ["Predicción", "Astrología", "Sistema"] as const;
 
 export default function Home() {
   const [formatSize, setFormatSize] = useState<48 | 64>(64);
-  const [active, setActive] = useState<(typeof tabs)[number]>("Dashboard");
+  const [active, setActive] = useState<(typeof tabs)[number]>("Predicción");
   const [scenario, setScenario] = useState<Scenario | null>(null);
   const [teams, setTeams] = useState<Team[]>([]);
   const [prediction, setPrediction] = useState<Prediction | null>(null);
@@ -45,7 +33,6 @@ export default function Home() {
   const [backtest, setBacktest] = useState<BacktestResult | null>(null);
   const [lastUpdate, setLastUpdate] = useState<UpdateEvent | null>(null);
   const [history, setHistory] = useState<HistoryPoint[]>([]);
-  const [siriusArchive, setSiriusArchive] = useState<SiriusArchive | null>(null);
   const [status, setStatus] = useState("Cargando contratos…");
   const [iterationsChoice, setIterationsChoice] = useState<"100000" | "200000" | "300000" | "custom">(
     "100000"
@@ -63,11 +50,10 @@ export default function Home() {
       api.draw(2030, formatSize),
       api.sources(),
       api.backtest(),
-      api.latestUpdate(),
-      api.siriusArchive()
+      api.latestUpdate()
     ])
       .then(
-        ([scenarioResult, teamResult, latest, historical, drawResult, catalog, tested, update, archive]) => {
+        ([scenarioResult, teamResult, latest, historical, drawResult, catalog, tested, update]) => {
         setScenario(scenarioResult.data);
         setTeams(teamResult.data);
         setPrediction(latest.data);
@@ -92,7 +78,6 @@ export default function Home() {
         setSourceCatalog(catalog.data);
         setBacktest(tested.data);
         setLastUpdate(update.data);
-        setSiriusArchive(archive.data);
         const successful = update.data?.sources.filter(
           (source) => source.fetch_status === "success"
         ).length;
@@ -185,9 +170,9 @@ export default function Home() {
 
       <section className="hero">
         <div>
-          <p className="eyebrow">INTELIGENCIA DE TORNEO · v0.3.0</p>
+          <p className="eyebrow">INTELIGENCIA DE TORNEO · v0.4.0</p>
           <h1>Mundial 2030<br /><em>Sirius Engine</em></h1>
-          <p className="lede">Baseline futbolístico y modelo Sirius experimental, separados, comparables y trazables.</p>
+          <p className="lede">Baseline futbolístico y modelos astrológicos experimentales, separados, comparables y trazables.</p>
         </div>
         <div className="status"><span className="pulse" />{status}</div>
       </section>
@@ -205,7 +190,7 @@ export default function Home() {
       ) : null}
 
       <aside className="disclaimer">
-        La astrología no tiene validez científica demostrada para predecir fútbol. Sirius se publica como experimento y siempre junto a FOOTBALL_ONLY.
+        La astrología no tiene validez científica demostrada para predecir fútbol. Sirius y Astrología Argumental se publican como experimentos y siempre junto a FOOTBALL_ONLY.
       </aside>
 
       <nav className="tabs" aria-label="Secciones">
@@ -223,120 +208,220 @@ export default function Home() {
           <MetricCard label="Simulaciones" value={prediction?.iterations.toLocaleString("es-UY") ?? "Pendiente"} detail={prediction?.mode ?? "3 modelos separados"} source={modelSource} />
         </div>
 
-        {active === "Historial" ? <article className="panel history"><div className="panel-title"><div><p>EVOLUCIÓN APPEND-ONLY</p><h3>Argentina · España · Francia · Brasil</h3></div></div><HistoryChart points={history} /></article> : null}
-
-        {active === "Selecciones" ? <article className="panel wide"><div className="panel-title"><div><p>CAMPO PROYECTADO</p><h3>{formatSize} selecciones · no es clasificación oficial</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div><div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small></div>)}</div></article> : null}
-
-        {active === "Sorteo" ? <div className="two-columns"><article className="panel"><div className="panel-title"><div><p>SEED 2030</p><h3>Un sorteo legal reproducible</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div><div className="groups-grid">{Object.entries(draw).map(([group, members]) => <div key={group}><b>Grupo {group}</b>{members.map((team) => <span key={team.team_id}>{team.team_id} · {team.team}</span>)}</div>)}</div></article><article className="panel"><div className="panel-title"><div><p>ARGENTINA</p><h3>Grupo actual y familias frecuentes</h3></div></div>{argentinaGroup ? <div className="focus-group"><b>Grupo {argentinaGroup[0]}</b>{argentinaGroup[1].map((team) => <span key={team.team_id}>{team.team}</span>)}</div> : null}<DataTable rows={prediction?.argentina_groups ?? []} empty="Ejecutá una actualización para estimar familias." /></article></div> : null}
-
-        {active === "Simulaciones" ? <>
-          <aside className={`sirius-state ${prediction?.sirius_application?.effective ? "active" : "neutral"}`}>
-            <b>{prediction?.sirius_application?.label ?? "Sirius todavía no fue evaluado"}</b>
-            <span>
-              {prediction?.sirius_application
-                ? `${prediction.sirius_application.reviewed_observations} observaciones revisadas · ${prediction.sirius_application.teams_with_evidence} selecciones con evidencia`
-                : "Ejecutá la simulación local para verificar si Sirius aporta una señal diferencial."}
-            </span>
-          </aside>
-          <div className="two-columns">
-            <article className="panel">
-              <div className="panel-title"><div><p>MONTE CARLO</p><h3>Ranking de campeón</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>
-              <DataTable rows={prediction?.ranking?.slice(0, 20) ?? []} empty="Todavía no hay simulación persistida." />
-            </article>
-            <article className="panel">
-              <div className="panel-title"><div><p>CRUCES DECISIVOS</p><h3>Los cinco escenarios conjuntos más frecuentes</h3></div></div>
-              <div className="bracket-list">
-                {prediction?.top_brackets?.map((bracket, index) => {
-                  const semifinals = (bracket.decisive_matches ?? []).filter((match) => match.round === "SF");
-                  return <div key={bracket.signature}>
-                    <b>#{index + 1} · {bracket.champion}</b>
-                    <span>{semifinals.length ? `${semifinals.map((match) => `${match.team_a}–${match.team_b}`).join(" · ")} · ` : ""}{Number(bracket.density_percent).toFixed(4)}% conjunto</span>
-                  </div>;
-                })}
-              </div>
-              {!prediction?.top_brackets?.length ? <p className="empty">Sin escenarios decisivos simulados.</p> : null}
-            </article>
-          </div>
-          <article className="panel wide bracket-gallery">
-            <div className="panel-title"><div><p>EXPORTACIONES REPRODUCIBLES</p><h3>Semifinales, final y campeón · PNG 4K, SVG y PDF</h3></div></div>
-            {prediction?.bracket_urls?.length ? <>
-              {(() => {
-                const featured = prediction.bracket_urls[0];
-                const featuredStats = prediction.top_brackets?.[0];
-                const featuredTeam = featuredStats ? teams.find((team) => team.team_id === featuredStats.champion) : undefined;
-                return <div className="bracket-featured">
-                  <div className="bracket-featured-label">
-                    <span className="badge-star">★ Escenario más probable</span>
-                    {featuredStats ? <span>{featuredTeam?.team ?? featuredStats.champion} campeón · {Number(featuredStats.density_percent).toFixed(4)}% del Monte Carlo</span> : null}
-                  </div>
-                  <a className="bracket-zoom" href={api.asset(featured.svg)} target="_blank" rel="noreferrer" aria-label="Ampliar escenario decisivo 1 en una pestaña nueva">
-                    <object aria-label="Escenario decisivo 1, el más probable" data={api.asset(featured.svg)} type="image/svg+xml" />
-                    <span className="bracket-zoom-hint">🔍 Ampliar (abre en pestaña nueva, con zoom)</span>
-                  </a>
-                  <div className="bracket-actions">
-                    <a href={api.asset(featured.png)} download>PNG</a>
-                    <a href={api.asset(featured.svg)} download>SVG</a>
-                    <a href={api.asset(featured.pdf)} download>PDF</a>
-                  </div>
-                </div>;
-              })()}
-              <div className="bracket-grid">{prediction.bracket_urls.slice(1).map((bracket) => <div key={bracket.rank}><a className="bracket-zoom" href={api.asset(bracket.svg)} target="_blank" rel="noreferrer" aria-label={`Ampliar escenario decisivo ${bracket.rank} en una pestaña nueva`}><object aria-label={`Escenario decisivo ${bracket.rank}`} data={api.asset(bracket.svg)} type="image/svg+xml" /><span className="bracket-zoom-hint">🔍 Ampliar</span></a><div><b>Escenario #{bracket.rank}</b><a href={api.asset(bracket.png)} download>PNG</a><a href={api.asset(bracket.svg)} download>SVG</a><a href={api.asset(bracket.pdf)} download>PDF</a></div></div>)}</div>
-            </> : <p className="empty">Ejecutá SIMULAR_Y_PUBLICAR.cmd. Las imágenes quedan guardadas en storage/outbox/runs aunque falle una etapa posterior.</p>}
-          </article>
-        </> : null}
-
-        {active === "Argentina" ? <div className="two-columns tab-detail"><article className="panel"><div className="panel-title"><div><p>ETAPAS</p><h3>Probabilidad de avance</h3></div></div><DataTable rows={prediction?.argentina_stages ?? []} empty="Sin snapshot ejecutado." /></article><article className="panel"><div className="panel-title"><div><p>RIVALES</p><h3>Frecuencia condicional por ronda</h3></div></div>{Object.entries(prediction?.argentina_rivals ?? {}).map(([round, rows]) => <div className="round-block" key={round}><b>{round}</b><DataTable rows={rows.slice(0, 5)} empty="Sin encuentros" /></div>)}</article></div> : null}
-
-        {active === "Sirius" ? <div className="two-columns"><article className="panel"><div className="panel-title"><div><p>MODELO EXPERIMENTAL</p><h3>Índices revisados y límites</h3></div></div><div className="sirius-cards"><span><small>Confianza validada</small><b>{argentinaAssessment ? `${(argentinaAssessment.data_confidence * 100).toFixed(0)}%` : "0%"}</b><em>Separada de la fuerza descriptiva</em></span><span><small>Índice Recorrido</small><b>{argentinaAssessment?.journey_index.value?.toFixed(1) ?? "Sin evidencia"}</b><em>{argentinaAssessment?.journey_index.status ?? "Ejecutá la simulación local"}</em></span><span><small>Índice Coronación</small><b>{argentinaAssessment?.coronation_index.value?.toFixed(1) ?? "Sin evidencia"}</b><em>No se imputan testimonios faltantes</em></span></div></article><article className="panel"><div className="panel-title"><div><p>ARCHIVO JUAN CRUZ SIRIUS</p><h3>Desde la primera publicación disponible</h3></div></div>{siriusArchive ? <><div className="archive-stats"><b>{siriusArchive.captured_total}/{siriusArchive.declared_total}</b><span>posts completos · {siriusArchive.sports_relevant_total} deportivos</span><small>{new Date(siriusArchive.earliest_published_at).toLocaleDateString("es-UY")} → {new Date(siriusArchive.latest_published_at).toLocaleDateString("es-UY")} · calidad B</small></div><div className="archive-posts">{siriusArchive.recent_sports_posts.slice(0, 8).map((post) => <a key={post.post_id} href={post.url} target="_blank" rel="noreferrer"><b>{post.title}</b><span>{new Date(post.published_at).toLocaleDateString("es-UY")} · revisión pendiente</span></a>)}</div></> : <p className="empty">La preparación del input captura el archivo completo; las coincidencias quedan pendientes de revisión manual.</p>}</article><article className="panel"><div className="panel-title"><div><p>SENSIBILIDAD</p><h3>Hora de la final y datos desconocidos</h3></div></div><DataTable rows={prediction?.sensitivity ?? []} empty="Se genera con una simulación; 4 horas × 3 offsets." /></article></div> : null}
-
-        {active === "Sirius" ? <SiriusReviewQueue teams={teams} /> : null}
-
-        {active === "Fuentes" ? <article className="panel wide"><div className="panel-title"><div><p>CATÁLOGO Y GOBERNANZA</p><h3>Fuente · URL · calidad · uso</h3></div></div><div className="source-grid">{sourceCatalog.map((source) => <div key={source.id}><span className={`grade quality-${source.grade}`}>{source.grade}</span><strong>{source.name}</strong><p>{source.use}</p>{source.url?.startsWith("http") ? <a href={source.url} target="_blank" rel="noreferrer">Abrir fuente ↗</a> : <code>{source.url ?? "Adaptador pendiente"}</code>}<small>{source.enabled ? "Habilitada" : "Deshabilitada"} · robots: {source.robots_policy ?? "sin registrar"}</small></div>)}</div></article> : null}
-
-        {active === "Backtesting" ? <article className="panel wide"><div className="panel-title"><div><p>VALIDACIÓN TEMPORAL</p><h3>2010 · 2014 · 2018 · 2022 · 2026</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>{backtest ? <><p className="micro">{backtest.matches} partidos · disponibles {backtest.available_editions.join(", ")}{backtest.missing_editions.length ? ` · sin datos: ${backtest.missing_editions.join(", ")}` : ""}</p><DataTable rows={backtest.metrics} empty="Sin métricas." /><h3 className="subheading">Ablaciones</h3><DataTable rows={backtest.ablations} empty="Sin ablaciones." /></> : <p className="empty">Ejecutá scripts/release_acceptance.py; el dashboard no inventa resultados ausentes.</p>}</article> : null}
-
-        {active === "Configuración" ? <div className="two-columns"><article className="panel"><div className="panel-title"><div><p>ESCENARIO</p><h3>Supuestos configurables</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div><ul className="config-list"><li>{formatSize} equipos · {scenario?.format.groups ?? "—"} grupos · {scenario?.format.best_third_placed ? "2 + 8 mejores terceros" : "clasifican 2"}</li><li>64 es el valor predeterminado; 48 usa la estructura oficial 2026 como alternativa</li><li>Monte Carlo, backtesting y llaves se calculan localmente; Fly sólo valida y publica</li><li>Máximo 2 UEFA y 1 de otras confederaciones</li><li>Argentina y España en sectores opuestos</li><li>Final Madrid · 21/07/2030 · 18:00 base</li><li>Sensibilidad 17/18/20/21 y ±15 minutos</li></ul></article><article className="panel"><div className="panel-title"><div><p>MODELOS</p><h3>Separación obligatoria</h3></div></div>{["FOOTBALL_ONLY", "SIRIUS_ONLY", "HYBRID"].map((model) => <div className="model-row" key={model}><i /><b>{model}</b><span>versionado</span></div>)}</article></div> : null}
-
-        {active === "Dashboard" || active === "Argentina" ? <div className="dashboard-grid">
-          <article className="panel ranking">
-            <div className="panel-title"><div><p>RANKING DE CANDIDATOS</p><h3>Fuerza futbolística proyectada</h3></div><span>Confianza ≠ fuerza</span></div>
-            <div className="ranking-list">
-              {candidates.map((team, index) => (
-                <div className="rank-row" key={team.team_id}>
-                  <b>{String(index + 1).padStart(2, "0")}</b><span className="flag">{team.team_id}</span><strong>{team.team}</strong>
-                  <div className="bar"><i style={{ width: `${Math.max(8, (team.projected_elo - 1300) / 7)}%` }} /></div>
-                  <code>{team.projected_elo}</code>
+        {active === "Predicción" ? (
+          <>
+            <div className="section-block">
+              <h2>Resumen</h2>
+              <p>Ranking futbolístico, foco Argentina y comparador de modelos.</p>
+            </div>
+            <div className="dashboard-grid">
+              <article className="panel ranking">
+                <div className="panel-title"><div><p>RANKING DE CANDIDATOS</p><h3>Fuerza futbolística proyectada</h3></div><span>Confianza ≠ fuerza</span></div>
+                <div className="ranking-list">
+                  {candidates.map((team, index) => (
+                    <div className="rank-row" key={team.team_id}>
+                      <b>{String(index + 1).padStart(2, "0")}</b><span className="flag">{team.team_id}</span><strong>{team.team}</strong>
+                      <div className="bar"><i style={{ width: `${Math.max(8, (team.projected_elo - 1300) / 7)}%` }} /></div>
+                      <code>{team.projected_elo}</code>
+                    </div>
+                  ))}
+                  {!candidates.length ? <p className="empty">Esperando API de equipos.</p> : null}
                 </div>
-              ))}
-              {!candidates.length ? <p className="empty">Esperando API de equipos.</p> : null}
+              </article>
+
+              <article className="panel argentina">
+                <div className="panel-title"><div><p>FOCO ARGENTINA</p><h3>Camino de la selección</h3></div><span className="arg-pill">ARG</span></div>
+                <div className="probability"><span>Probabilidad de campeón</span><strong>{String(prediction?.ranking?.find((row) => row.ID === "ARG")?.["Campeón %"] ?? "—")}{prediction ? "%" : ""}</strong></div>
+                <div className="sirius-indices">
+                  <span><small>Confianza validada</small><b>{argentinaAssessment ? `${(argentinaAssessment.data_confidence * 100).toFixed(0)}%` : "0%"}</b></span>
+                  <span><small>Índice recorrido</small><b>{argentinaAssessment?.journey_index.value?.toFixed(1) ?? "—"}</b></span>
+                  <span><small>Índice coronación</small><b>{argentinaAssessment?.coronation_index.value?.toFixed(1) ?? "—"}</b></span>
+                </div>
+                <div className="timeline">{["Grupos", "16avos", "Octavos", "Cuartos", "Semi", "Final"].map((round) => <div key={round}><i /><span>{round}</span></div>)}</div>
+                <div className="assumptions"><b>Supuesto activo</b><p>Lionel Scaloni continúa como DT. Capitán y datos futuros quedan pendientes; no se imputan.</p></div>
+              </article>
+
+              <article className="panel provenance-panel">
+                <div className="panel-title"><div><p>TRAZABILIDAD</p><h3>Fuentes de esta vista</h3></div></div>
+                {sources.length ? sources.map((source, index) => <SourceBadge source={source} key={`${source.source_id}-${index}`} />) : <p className="empty">Sin provenance cargada.</p>}
+                {lastUpdate ? <p className="micro">Última consulta: {new Date(lastUpdate.created_at).toLocaleString("es-UY")} · {lastUpdate.pending_review} pendientes · {lastUpdate.conflicts} conflictos.</p> : null}
+                <p className="micro">Cada predicción conserva versión, timestamp, commit, semilla, pesos, supuestos y snapshots de entrada.</p>
+              </article>
+
+              <article className="panel model-panel">
+                <div className="panel-title"><div><p>COMPARADOR</p><h3>Modelos aislados</h3></div></div>
+                {["FOOTBALL_ONLY", "SIRIUS_ONLY", "HYBRID"].map((model, index) => <div className="model-row" key={model}><i className={`model-${index}`} /><b>{model}</b><span>{prediction?.model_comparison?.[model] != null ? `${Number(prediction.model_comparison[model]).toFixed(2)}% ARG` : "sin ejecutar"}</span></div>)}
+                {prediction?.changes?.length ? <div className="changes"><b>Cambios detectados</b>{prediction.changes.map((change) => <p key={change}>{change}</p>)}</div> : null}
+              </article>
             </div>
-          </article>
 
-          <article className="panel argentina">
-            <div className="panel-title"><div><p>FOCO ARGENTINA</p><h3>Camino de la selección</h3></div><span className="arg-pill">ARG</span></div>
-            <div className="probability"><span>Probabilidad de campeón</span><strong>{String(prediction?.ranking?.find((row) => row.ID === "ARG")?.["Campeón %"] ?? "—")}{prediction ? "%" : ""}</strong></div>
-            <div className="sirius-indices">
-              <span><small>Confianza validada</small><b>{argentinaAssessment ? `${(argentinaAssessment.data_confidence * 100).toFixed(0)}%` : "0%"}</b></span>
-              <span><small>Índice recorrido</small><b>{argentinaAssessment?.journey_index.value?.toFixed(1) ?? "—"}</b></span>
-              <span><small>Índice coronación</small><b>{argentinaAssessment?.coronation_index.value?.toFixed(1) ?? "—"}</b></span>
+            <div className="section-block">
+              <h2>Argentina en detalle</h2>
+              <p>Probabilidad de avance por etapa y rivales condicionales.</p>
             </div>
-            <div className="timeline">{["Grupos", "16avos", "Octavos", "Cuartos", "Semi", "Final"].map((round) => <div key={round}><i /><span>{round}</span></div>)}</div>
-            <div className="assumptions"><b>Supuesto activo</b><p>Lionel Scaloni continúa como DT. Capitán y datos futuros quedan pendientes; no se imputan.</p></div>
-          </article>
+            <div className="two-columns tab-detail">
+              <article className="panel">
+                <div className="panel-title"><div><p>ETAPAS</p><h3>Probabilidad de avance</h3></div></div>
+                <DataTable rows={prediction?.argentina_stages ?? []} empty="Sin snapshot ejecutado." />
+              </article>
+              <article className="panel">
+                <div className="panel-title"><div><p>RIVALES</p><h3>Frecuencia condicional por ronda</h3></div></div>
+                {Object.entries(prediction?.argentina_rivals ?? {}).map(([round, rows]) => <div className="round-block" key={round}><b>{round}</b><DataTable rows={rows.slice(0, 5)} empty="Sin encuentros" /></div>)}
+              </article>
+            </div>
 
-          <article className="panel provenance-panel">
-            <div className="panel-title"><div><p>TRAZABILIDAD</p><h3>Fuentes de esta vista</h3></div></div>
-            {sources.length ? sources.map((source, index) => <SourceBadge source={source} key={`${source.source_id}-${index}`} />) : <p className="empty">Sin provenance cargada.</p>}
-            {lastUpdate ? <p className="micro">Última consulta: {new Date(lastUpdate.created_at).toLocaleString("es-UY")} · {lastUpdate.pending_review} pendientes · {lastUpdate.conflicts} conflictos.</p> : null}
-            <p className="micro">Cada predicción conserva versión, timestamp, commit, semilla, pesos, supuestos y snapshots de entrada.</p>
-          </article>
+            <div className="section-block">
+              <h2>Selecciones y sorteo</h2>
+              <p>Campo proyectado y grupo de Argentina.</p>
+            </div>
+            <article className="panel wide">
+              <div className="panel-title"><div><p>CAMPO PROYECTADO</p><h3>{formatSize} selecciones · no es clasificación oficial</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
+              <div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small></div>)}</div>
+            </article>
+            <div className="two-columns">
+              <article className="panel">
+                <div className="panel-title"><div><p>SEED 2030</p><h3>Un sorteo legal reproducible</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
+                <div className="groups-grid">{Object.entries(draw).map(([group, members]) => <div key={group}><b>Grupo {group}</b>{members.map((team) => <span key={team.team_id}>{team.team_id} · {team.team}</span>)}</div>)}</div>
+              </article>
+              <article className="panel">
+                <div className="panel-title"><div><p>ARGENTINA</p><h3>Grupo actual y familias frecuentes</h3></div></div>
+                {argentinaGroup ? <div className="focus-group"><b>Grupo {argentinaGroup[0]}</b>{argentinaGroup[1].map((team) => <span key={team.team_id}>{team.team}</span>)}</div> : null}
+                <DataTable rows={prediction?.argentina_groups ?? []} empty="Ejecutá una actualización para estimar familias." />
+              </article>
+            </div>
 
-          <article className="panel model-panel">
-            <div className="panel-title"><div><p>COMPARADOR</p><h3>Modelos aislados</h3></div></div>
-            {["FOOTBALL_ONLY", "SIRIUS_ONLY", "HYBRID"].map((model, index) => <div className="model-row" key={model}><i className={`model-${index}`} /><b>{model}</b><span>{prediction?.model_comparison?.[model] != null ? `${Number(prediction.model_comparison[model]).toFixed(2)}% ARG` : "sin ejecutar"}</span></div>)}
-            {prediction?.changes?.length ? <div className="changes"><b>Cambios detectados</b>{prediction.changes.map((change) => <p key={change}>{change}</p>)}</div> : null}
-          </article>
-        </div> : null}
+            <div className="section-block">
+              <h2>Simulación</h2>
+              <p>Ranking Monte Carlo, cruces decisivos y exportaciones de llaves.</p>
+            </div>
+            <aside className={`sirius-state ${prediction?.sirius_application?.effective ? "active" : "neutral"}`}>
+              <b>{prediction?.sirius_application?.label ?? "Sirius todavía no fue evaluado"}</b>
+              <span>
+                {prediction?.sirius_application
+                  ? `${prediction.sirius_application.reviewed_observations} observaciones revisadas · ${prediction.sirius_application.teams_with_evidence} selecciones con evidencia`
+                  : "Ejecutá la simulación local para verificar si Sirius aporta una señal diferencial."}
+              </span>
+            </aside>
+            <div className="two-columns">
+              <article className="panel">
+                <div className="panel-title"><div><p>MONTE CARLO</p><h3>Ranking de campeón</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>
+                <DataTable rows={prediction?.ranking?.slice(0, 20) ?? []} empty="Todavía no hay simulación persistida." />
+              </article>
+              <article className="panel">
+                <div className="panel-title"><div><p>CRUCES DECISIVOS</p><h3>Los cinco escenarios conjuntos más frecuentes</h3></div></div>
+                <div className="bracket-list">
+                  {prediction?.top_brackets?.map((bracket, index) => {
+                    const semifinals = (bracket.decisive_matches ?? []).filter((match) => match.round === "SF");
+                    return <div key={bracket.signature}>
+                      <b>#{index + 1} · {bracket.champion}</b>
+                      <span>{semifinals.length ? `${semifinals.map((match) => `${match.team_a}–${match.team_b}`).join(" · ")} · ` : ""}{Number(bracket.density_percent).toFixed(4)}% conjunto</span>
+                    </div>;
+                  })}
+                </div>
+                {!prediction?.top_brackets?.length ? <p className="empty">Sin escenarios decisivos simulados.</p> : null}
+              </article>
+            </div>
+            <article className="panel wide bracket-gallery">
+              <div className="panel-title"><div><p>EXPORTACIONES REPRODUCIBLES</p><h3>Semifinales, final y campeón · PNG 4K, SVG y PDF</h3></div></div>
+              {prediction?.bracket_urls?.length ? <>
+                {(() => {
+                  const featured = prediction.bracket_urls[0];
+                  const featuredStats = prediction.top_brackets?.[0];
+                  const featuredTeam = featuredStats ? teams.find((team) => team.team_id === featuredStats.champion) : undefined;
+                  return <div className="bracket-featured">
+                    <div className="bracket-featured-label">
+                      <span className="badge-star">★ Escenario más probable</span>
+                      {featuredStats ? <span>{featuredTeam?.team ?? featuredStats.champion} campeón · {Number(featuredStats.density_percent).toFixed(4)}% del Monte Carlo</span> : null}
+                    </div>
+                    <a className="bracket-zoom" href={api.asset(featured.svg)} target="_blank" rel="noreferrer" aria-label="Ampliar escenario decisivo 1 en una pestaña nueva">
+                      <object aria-label="Escenario decisivo 1, el más probable" data={api.asset(featured.svg)} type="image/svg+xml" />
+                      <span className="bracket-zoom-hint">🔍 Ampliar (abre en pestaña nueva, con zoom)</span>
+                    </a>
+                    <div className="bracket-actions">
+                      <a href={api.asset(featured.png)} download>PNG</a>
+                      <a href={api.asset(featured.svg)} download>SVG</a>
+                      <a href={api.asset(featured.pdf)} download>PDF</a>
+                    </div>
+                  </div>;
+                })()}
+                <div className="bracket-grid">{prediction.bracket_urls.slice(1).map((bracket) => <div key={bracket.rank}><a className="bracket-zoom" href={api.asset(bracket.svg)} target="_blank" rel="noreferrer" aria-label={`Ampliar escenario decisivo ${bracket.rank} en una pestaña nueva`}><object aria-label={`Escenario decisivo ${bracket.rank}`} data={api.asset(bracket.svg)} type="image/svg+xml" /><span className="bracket-zoom-hint">🔍 Ampliar</span></a><div><b>Escenario #{bracket.rank}</b><a href={api.asset(bracket.png)} download>PNG</a><a href={api.asset(bracket.svg)} download>SVG</a><a href={api.asset(bracket.pdf)} download>PDF</a></div></div>)}</div>
+              </> : <p className="empty">Ejecutá SIMULAR_Y_PUBLICAR.cmd. Las imágenes quedan guardadas en storage/outbox/runs aunque falle una etapa posterior.</p>}
+            </article>
+            <article className="panel wide">
+              <div className="panel-title"><div><p>SENSIBILIDAD</p><h3>Hora de la final y datos desconocidos</h3></div></div>
+              <DataTable rows={prediction?.sensitivity ?? []} empty="Se genera con una simulación; 4 horas × 3 offsets." />
+            </article>
+
+            <div className="section-block">
+              <h2>Historial</h2>
+              <p>Evolución append-only de la probabilidad de campeón.</p>
+            </div>
+            <article className="panel history">
+              <div className="panel-title"><div><p>EVOLUCIÓN APPEND-ONLY</p><h3>Argentina · España · Francia · Brasil</h3></div></div>
+              <HistoryChart points={history} />
+            </article>
+          </>
+        ) : null}
+
+        {active === "Astrología" ? (
+          <>
+            <div className="section-block">
+              <p>
+                Dos fuentes astrológicas públicas independientes, cada una con su propia cola de
+                revisión humana append-only: Sirius (múltiples cartas natales combinadas) y
+                Astrología Argumental (método Frawley sobre la carta del partido, astrología
+                electiva y mundana). Ninguna influye en el Monte Carlo; los modelos FOOTBALL_ONLY,
+                SIRIUS_ONLY e HYBRID siguen separados como siempre.
+              </p>
+            </div>
+            <AstrologiaPanel teams={teams} />
+          </>
+        ) : null}
+
+        {active === "Sistema" ? (
+          <>
+            <div className="section-block">
+              <h2>Fuentes</h2>
+              <p>Catálogo y gobernanza de cada fuente pública utilizada.</p>
+            </div>
+            <article className="panel wide">
+              <div className="panel-title"><div><p>CATÁLOGO Y GOBERNANZA</p><h3>Fuente · URL · calidad · uso</h3></div></div>
+              <div className="source-grid">{sourceCatalog.map((source) => <div key={source.id}><span className={`grade quality-${source.grade}`}>{source.grade}</span><strong>{source.name}</strong><p>{source.use}</p>{source.url?.startsWith("http") ? <a href={source.url} target="_blank" rel="noreferrer">Abrir fuente ↗</a> : <code>{source.url ?? "Adaptador pendiente"}</code>}<small>{source.enabled ? "Habilitada" : "Deshabilitada"} · robots: {source.robots_policy ?? "sin registrar"}</small></div>)}</div>
+            </article>
+
+            <div className="section-block">
+              <h2>Backtesting</h2>
+              <p>Validación temporal contra ediciones pasadas del Mundial.</p>
+            </div>
+            <article className="panel wide">
+              <div className="panel-title"><div><p>VALIDACIÓN TEMPORAL</p><h3>2010 · 2014 · 2018 · 2022 · 2026</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>
+              {backtest ? <><p className="micro">{backtest.matches} partidos · disponibles {backtest.available_editions.join(", ")}{backtest.missing_editions.length ? ` · sin datos: ${backtest.missing_editions.join(", ")}` : ""}</p><DataTable rows={backtest.metrics} empty="Sin métricas." /><h3 className="subheading">Ablaciones</h3><DataTable rows={backtest.ablations} empty="Sin ablaciones." /></> : <p className="empty">Ejecutá scripts/release_acceptance.py; el dashboard no inventa resultados ausentes.</p>}
+            </article>
+
+            <div className="section-block">
+              <h2>Configuración</h2>
+              <p>Supuestos del escenario y separación obligatoria de modelos.</p>
+            </div>
+            <div className="two-columns">
+              <article className="panel">
+                <div className="panel-title"><div><p>ESCENARIO</p><h3>Supuestos configurables</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
+                <ul className="config-list">
+                  <li>{formatSize} equipos · {scenario?.format.groups ?? "—"} grupos · {scenario?.format.best_third_placed ? "2 + 8 mejores terceros" : "clasifican 2"}</li>
+                  <li>64 es el valor predeterminado; 48 usa la estructura oficial 2026 como alternativa</li>
+                  <li>Monte Carlo, backtesting y llaves se calculan localmente; Fly sólo valida y publica</li>
+                  <li>Máximo 2 UEFA y 1 de otras confederaciones</li>
+                  <li>Argentina y España en sectores opuestos</li>
+                  <li>Final Madrid · 21/07/2030 · 18:00 base</li>
+                  <li>Sensibilidad 17/18/20/21 y ±15 minutos</li>
+                </ul>
+              </article>
+              <article className="panel">
+                <div className="panel-title"><div><p>MODELOS</p><h3>Separación obligatoria</h3></div></div>
+                {["FOOTBALL_ONLY", "SIRIUS_ONLY", "HYBRID"].map((model) => <div className="model-row" key={model}><i /><b>{model}</b><span>versionado</span></div>)}
+              </article>
+            </div>
+          </>
+        ) : null}
       </section>
 
       <footer><span>Mundial 2030 Sirius Engine</span><span>Madrid · 21/07/2030 · 18:00 base · ±15 min</span></footer>

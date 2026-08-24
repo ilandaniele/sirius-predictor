@@ -69,12 +69,14 @@ def latest_backtest(storage_path: Path) -> dict[str, Any] | None:
     return json.loads(path.read_text(encoding="utf-8"))
 
 
-def latest_sirius_archive(storage_path: Path, limit: int = 50) -> dict[str, Any] | None:
+def _latest_archive(
+    storage_path: Path, source_id: str, schema_version: str, limit: int = 50
+) -> dict[str, Any] | None:
     event = PredictionArchive(storage_path).latest_update_event()
     if event is None:
         return None
     source = next(
-        (item for item in event.get("sources", []) if item.get("source_id") == "sirius_blog"),
+        (item for item in event.get("sources", []) if item.get("source_id") == source_id),
         None,
     )
     if source is None or not source.get("snapshot_path"):
@@ -84,7 +86,7 @@ def latest_sirius_archive(storage_path: Path, limit: int = 50) -> dict[str, Any]
     if snapshot_root not in target.parents or not target.is_file():
         return None
     raw = json.loads(target.read_text(encoding="utf-8"))
-    if raw.get("schema_version") != "sirius-archive-v2":
+    if raw.get("schema_version") != schema_version:
         return None
     sports_posts = [post for post in raw.get("posts", []) if post.get("sports_relevant")]
     techniques = Counter(
@@ -105,3 +107,11 @@ def latest_sirius_archive(storage_path: Path, limit: int = 50) -> dict[str, Any]
         "review_policy": "candidate_only_manual_confirmation_required",
         "recent_sports_posts": list(reversed(sports_posts))[:limit],
     }
+
+
+def latest_sirius_archive(storage_path: Path, limit: int = 50) -> dict[str, Any] | None:
+    return _latest_archive(storage_path, "sirius_blog", "sirius-archive-v2", limit)
+
+
+def latest_argumental_archive(storage_path: Path, limit: int = 50) -> dict[str, Any] | None:
+    return _latest_archive(storage_path, "argumental_blog", "argumental-archive-v1", limit)

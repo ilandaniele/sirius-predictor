@@ -53,6 +53,15 @@
   robots_policy: review_before_enable_archive_at_low_rate
   use: Archivo público primario paginado desde el primer post; genera candidatos que requieren revisión humana antes de entrar al modelo.
   enabled: true
+- id: argumental_blog
+  name: Astrología Argumental — Santiago Rodríguez Spuch
+  grade: B
+  kind: blogger_archive
+  url: https://astrologiaargumental.blogspot.com/
+  terms_url: https://policies.google.com/terms
+  robots_policy: review_before_enable_archive_at_low_rate
+  use: Segunda fuente astrológica pública (método Frawley, astrología electiva y mundana); genera candidatos que requieren revisión humana antes de entrar al modelo.
+  enabled: true
 - id: federations
   name: Federaciones nacionales
   grade: A

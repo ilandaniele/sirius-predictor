@@ -1,6 +1,8 @@
 import type {
   ApiEnvelope,
+  AstroSource,
   BacktestResult,
+  CombinedAssessment,
   Draw,
   HistoryPoint,
   Prediction,
@@ -41,22 +43,28 @@ export const api = {
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
   siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),
-  siriusReviewCandidates: (status: SiriusReviewStatus = "pending", offset = 0) =>
-    request<ApiEnvelope<SiriusReviewQueue>>(
-      `/sirius/review-candidates?status=${status}&limit=200&offset=${offset}`
+  argumentalArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/argumental/archive"),
+  combinedAssessment: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<CombinedAssessment>>(
+      `/astrology/combined-assessment?format_size=${formatSize}`
     ),
-  syncSiriusReviewCandidates: (apiKey: string) =>
-    request<ApiEnvelope<Record<string, unknown>>>("/sirius/review-candidates/sync", {
+  astroReviewCandidates: (source: AstroSource, status: SiriusReviewStatus = "pending", offset = 0) =>
+    request<ApiEnvelope<SiriusReviewQueue>>(
+      `/${source}/review-candidates?status=${status}&limit=200&offset=${offset}`
+    ),
+  syncAstroReviewCandidates: (source: AstroSource, apiKey: string) =>
+    request<ApiEnvelope<Record<string, unknown>>>(`/${source}/review-candidates/sync`, {
       method: "POST",
       headers: apiKey ? { "X-API-Key": apiKey } : undefined
     }),
-  decideSiriusReviewCandidate: (
+  decideAstroReviewCandidate: (
+    source: AstroSource,
     candidateId: string,
     payload: SiriusReviewDecisionInput,
     apiKey: string
   ) =>
     request<ApiEnvelope<Record<string, unknown>>>(
-      `/sirius/review-candidates/${candidateId}/decisions`,
+      `/${source}/review-candidates/${candidateId}/decisions`,
       {
         method: "POST",
         headers: apiKey ? { "X-API-Key": apiKey } : undefined,

@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import hashlib
 import json
+from collections.abc import Callable
 from datetime import UTC, datetime
 from pathlib import Path
 from typing import Any, Literal
@@ -11,7 +12,7 @@ import yaml
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from collectors.sirius_archive import parse_archive_index
+from collectors.sirius_archive import parse_archive_index as parse_sirius_archive_index
 from db.base import new_id
 from db.models import SiriusReviewCandidate, SiriusReviewDecision
 from engine.config import load_teams
@@ -53,22 +54,26 @@ class SiriusReviewQueue:
         *,
         rules_path: str | Path,
         teams_path: str | Path,
+        source_id: str = "sirius_blog",
+        parse_archive_index: Callable[[bytes], list[Any]] = parse_sirius_archive_index,
     ) -> None:
         self.session = session
         self.rules_path = Path(rules_path)
         self.teams_path = Path(teams_path)
+        self.source_id = source_id
+        self._parse_archive_index = parse_archive_index
 
     def sync_archive(self, payload: bytes) -> dict[str, Any]:
         raw = json.loads(payload)
         consulted_at = datetime.fromisoformat(str(raw["consulted_at"]))
-        posts = parse_archive_index(payload)
+        posts = self._parse_archive_index(payload)
         candidates: list[dict[str, Any]] = []
         for post in posts:
             if not post.sports_relevant:
                 continue
             for claim_index, claim_text in enumerate(post.explicit_claims):
                 fingerprint_payload = {
-                    "source_id": "sirius_blog",
+                    "source_id": self.source_id,
                     "post_id": post.post_id,
                     "content_sha256": post.content_sha256,
                     "claim_index": claim_index,

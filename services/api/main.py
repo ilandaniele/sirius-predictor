@@ -14,15 +14,18 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, JSONResponse
 from sqlalchemy.orm import Session
 
+from collectors.argumental_archive import parse_archive_index as argumental_parse_archive_index
+from collectors.sirius_archive import parse_archive_index as sirius_parse_archive_index
 from db.session import get_session
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario, validate_scenario
 from engine.domain import Team
 from engine.draw import draw_groups
 from packages.common.config import ROOT, get_settings
 from packages.common.types import ModelMode
-from packages.sirius import ReviewConflictError, SiriusReviewQueue
+from packages.sirius import ReviewConflictError, SiriusReviewQueue, build_sirius_assessments
 
 from .catalog import (
+    latest_argumental_archive,
     latest_backtest,
     latest_run_summary,
     latest_sirius_archive,
@@ -41,7 +44,7 @@ from .schemas import (
 )
 from .security import InProcessRateLimiter, require_api_key, require_remote_compute_enabled
 from .tasks import celery_app, run_simulation_task, update_world_cup_task
-from .update_pipeline import PredictionArchive, UpdateCommand
+from .update_pipeline import PredictionArchive, UpdateCommand, _reviewed_snapshot
 
 settings = get_settings()
 SessionDependency = Annotated[Session, Depends(get_session)]
@@ -54,28 +57,55 @@ def _scenario_inputs(format_size: int = 64) -> tuple[Scenario, list[Team]]:
     return scenario, teams
 
 
-def _review_queue(session: Session) -> SiriusReviewQueue:
+_ASTRO_SOURCES: dict[str, dict[str, str]] = {
+    "sirius": {
+        "source_id": "sirius_blog",
+        "rules_path": "sirius_rules.yaml",
+        "review_folder": "sirius-review",
+        "parser": "sirius",
+    },
+    "argumental": {
+        "source_id": "argumental_blog",
+        "rules_path": "argumental_rules.yaml",
+        "review_folder": "argumental-review",
+        "parser": "argumental",
+    },
+}
+
+
+def _review_queue(
+    session: Session, source: Literal["sirius", "argumental"] = "sirius"
+) -> SiriusReviewQueue:
+    config = _ASTRO_SOURCES[source]
     return SiriusReviewQueue(
         session,
-        rules_path=ROOT / "data" / "sirius_rules.yaml",
+        rules_path=ROOT / "data" / config["rules_path"],
         teams_path=settings.teams_path,
+        source_id=config["source_id"],
+        parse_archive_index=(
+            argumental_parse_archive_index if source == "argumental" else sirius_parse_archive_index
+        ),
     )
 
 
-def _latest_sirius_snapshot_path() -> Path | None:
+def _latest_archive_snapshot_path(
+    source: Literal["sirius", "argumental"] = "sirius",
+) -> Path | None:
+    config = _ASTRO_SOURCES[source]
+    source_id = config["source_id"]
     event = PredictionArchive(settings.storage_path).latest_update_event()
-    source = next(
+    item = next(
         (
-            item
-            for item in (event or {}).get("sources", [])
-            if item.get("source_id") == "sirius_blog" and item.get("snapshot_path")
+            entry
+            for entry in (event or {}).get("sources", [])
+            if entry.get("source_id") == source_id and entry.get("snapshot_path")
         ),
         None,
     )
-    if source is None:
+    if item is None:
         return None
-    root = (settings.storage_path / "source_snapshots" / "sirius_blog").resolve()
-    target = Path(str(source["snapshot_path"])).resolve()
+    root = (settings.storage_path / "source_snapshots" / source_id).resolve()
+    target = Path(str(item["snapshot_path"])).resolve()
     if root not in target.parents or not target.is_file():
         return None
     return target
@@ -279,7 +309,7 @@ def create_app() -> FastAPI:
         dependencies=[Depends(require_api_key)],
     )
     def sync_sirius_review_candidates(session: SessionDependency) -> ApiEnvelope:
-        snapshot_path = _latest_sirius_snapshot_path()
+        snapshot_path = _latest_archive_snapshot_path("sirius")
         if snapshot_path is None:
             raise HTTPException(status_code=404, detail="Sirius archive snapshot not found")
         queue = _review_queue(session)
@@ -338,6 +368,163 @@ def create_app() -> FastAPI:
                 else []
             ),
             warnings=["Sirius es un modelo experimental sin validez científica demostrada."],
+        )
+
+    @application.get("/api/v1/argumental/archive", response_model=ApiEnvelope)
+    def argumental_archive() -> ApiEnvelope:
+        result = latest_argumental_archive(settings.storage_path)
+        return ApiEnvelope(
+            data=result,
+            provenance=(
+                [provenance("argumental_blog", str(result["consulted_at"]))] if result else []
+            ),
+            warnings=(
+                []
+                if result
+                else [
+                    "El archivo de Astrología Argumental todavía no fue capturado por ACTUALIZAR."
+                ]
+            ),
+        )
+
+    @application.get("/api/v1/argumental/review-candidates", response_model=ApiEnvelope)
+    def argumental_review_candidates(
+        session: SessionDependency,
+        status: Literal["pending", "approved", "rejected", "all"] = Query(default="pending"),
+        limit: int = Query(default=50, ge=1, le=200),
+        offset: int = Query(default=0, ge=0),
+    ) -> ApiEnvelope:
+        result = _review_queue(session, "argumental").list_candidates(
+            status=status,
+            limit=limit,
+            offset=offset,
+        )
+        consulted = next(
+            (item["consulted_at"] for item in result["items"] if item.get("consulted_at")),
+            None,
+        )
+        return ApiEnvelope(
+            data=result,
+            provenance=[provenance("argumental_blog", consulted)] if consulted else [],
+            warnings=(
+                []
+                if result["counts"]["total"]
+                else ["La cola está vacía; sincronizá el archivo de Argumental primero."]
+            ),
+        )
+
+    @application.post(
+        "/api/v1/argumental/review-candidates/sync",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    def sync_argumental_review_candidates(session: SessionDependency) -> ApiEnvelope:
+        snapshot_path = _latest_archive_snapshot_path("argumental")
+        if snapshot_path is None:
+            raise HTTPException(status_code=404, detail="Argumental archive snapshot not found")
+        queue = _review_queue(session, "argumental")
+        result = queue.sync_archive(snapshot_path.read_bytes())
+        session.commit()
+        result["review_snapshot"] = queue.export_reviewed_snapshot(
+            settings.storage_path / "argumental-review"
+        )
+        archive = latest_argumental_archive(settings.storage_path)
+        return ApiEnvelope(
+            data=result,
+            provenance=(
+                [provenance("argumental_blog", str(archive["consulted_at"]))] if archive else []
+            ),
+            assumptions=[
+                "Las frases detectadas siguen pendientes; la sincronización no aprueba evidencia."
+            ],
+        )
+
+    @application.post(
+        "/api/v1/argumental/review-candidates/{candidate_id}/decisions",
+        response_model=ApiEnvelope,
+        dependencies=[Depends(require_api_key)],
+    )
+    def decide_argumental_review_candidate(
+        candidate_id: str,
+        payload: SiriusReviewDecisionRequest,
+        session: SessionDependency,
+    ) -> ApiEnvelope:
+        if len(candidate_id) > 64:
+            raise ValueError("invalid candidate_id")
+        queue = _review_queue(session, "argumental")
+        try:
+            decision = queue.decide(
+                candidate_id,
+                action=payload.action,
+                reviewer=payload.reviewer,
+                reason=payload.reason,
+                expected_decision_id=payload.expected_decision_id,
+                approval=(payload.approval.model_dump() if payload.approval is not None else None),
+            )
+        except LookupError as exc:
+            raise HTTPException(status_code=404, detail=str(exc)) from exc
+        except ReviewConflictError as exc:
+            raise HTTPException(status_code=409, detail=str(exc)) from exc
+        session.commit()
+        review_snapshot = queue.export_reviewed_snapshot(
+            settings.storage_path / "argumental-review"
+        )
+        return ApiEnvelope(
+            data={
+                "decision": queue.decision_view(decision),
+                "review_snapshot": review_snapshot,
+            },
+            provenance=(
+                [provenance("argumental_blog", str(decision.observation.get("consulted_at")))]
+                if decision.observation
+                else []
+            ),
+            warnings=["Astrología Argumental es una fuente experimental sin validez científica."],
+        )
+
+    @application.get("/api/v1/astrology/combined-assessment", response_model=ApiEnvelope)
+    def combined_astrology_assessment(format_size: int = Query(default=64)) -> ApiEnvelope:
+        _, teams = _scenario_inputs(format_size)
+        team_ids = {team.team_id for team in teams}
+        base_path = ROOT / "data" / "sirius_observations.yaml"
+        _, sirius_reviewed_path = _reviewed_snapshot(settings, "sirius-review")
+        _, argumental_reviewed_path = _reviewed_snapshot(settings, "argumental-review")
+        additional = [
+            path for path in (sirius_reviewed_path, argumental_reviewed_path) if path is not None
+        ]
+        sirius_only, sirius_audit = build_sirius_assessments(
+            team_ids,
+            base_path,
+            additional_observations_path=sirius_reviewed_path,
+        )
+        argumental_only, argumental_audit = build_sirius_assessments(
+            team_ids,
+            base_path,
+            additional_observations_path=argumental_reviewed_path,
+        )
+        combined, combined_audit = build_sirius_assessments(
+            team_ids,
+            base_path,
+            additional_observations_path=additional,
+        )
+        return ApiEnvelope(
+            data={
+                "sirius": {team_id: item.to_dict() for team_id, item in sirius_only.items()},
+                "argumental": {
+                    team_id: item.to_dict() for team_id, item in argumental_only.items()
+                },
+                "combined": {team_id: item.to_dict() for team_id, item in combined.items()},
+                "sirius_evidence_audit": sirius_audit,
+                "argumental_evidence_audit": argumental_audit,
+                "combined_evidence_audit": combined_audit,
+            },
+            provenance=[],
+            warnings=[
+                "Cálculo descriptivo en vivo (no ligado a una simulación puntual); no influye en "
+                "el Monte Carlo, que sigue separando FOOTBALL_ONLY, SIRIUS_ONLY e HYBRID.",
+                "Astrología Argumental (método Frawley, astrología electiva y mundana) es una "
+                "segunda fuente pública experimental sin validez científica demostrada.",
+            ],
         )
 
     @application.get("/api/v1/predictions/history", response_model=ApiEnvelope)

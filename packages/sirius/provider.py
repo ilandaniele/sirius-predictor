@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import hashlib
+from collections.abc import Sequence
 from pathlib import Path
 from typing import Any
 
@@ -87,29 +88,33 @@ def build_sirius_assessments(
     team_ids: set[str],
     observations_path: str | Path,
     mode: SiriusMode = SiriusMode.PURIST,
-    additional_observations_path: str | Path | None = None,
+    additional_observations_path: str | Path | Sequence[str | Path] | None = None,
 ) -> tuple[dict[str, SiriusAssessment], dict[str, Any]]:
     observations, audit = load_reviewed_observations(observations_path, team_ids)
+    additional_paths: list[str | Path] = []
     if additional_observations_path is not None:
-        additional, additional_audit = load_reviewed_observations(
-            additional_observations_path, team_ids
-        )
-        for team_id, items in additional.items():
-            observations[team_id].extend(items)
+        if isinstance(additional_observations_path, (str, Path)):
+            additional_paths = [additional_observations_path]
+        else:
+            additional_paths = list(additional_observations_path)
+    if additional_paths:
+        reviewed_total = audit["reviewed_observations"]
+        pending_total = audit["pending_observations"]
+        snapshots = [audit["snapshot_sha256"]]
+        for path in additional_paths:
+            additional, additional_audit = load_reviewed_observations(path, team_ids)
+            for team_id, items in additional.items():
+                observations[team_id].extend(items)
+            reviewed_total += additional_audit["reviewed_observations"]
+            pending_total += additional_audit["pending_observations"]
+            snapshots.append(additional_audit["snapshot_sha256"])
         audit = {
             "schema_version": audit["schema_version"],
-            "reviewed_observations": (
-                audit["reviewed_observations"] + additional_audit["reviewed_observations"]
-            ),
-            "pending_observations": (
-                audit["pending_observations"] + additional_audit["pending_observations"]
-            ),
+            "reviewed_observations": reviewed_total,
+            "pending_observations": pending_total,
             "teams_with_evidence": sum(bool(items) for items in observations.values()),
-            "observation_files": 2,
-            "observation_snapshots": [
-                audit["snapshot_sha256"],
-                additional_audit["snapshot_sha256"],
-            ],
+            "observation_files": 1 + len(additional_paths),
+            "observation_snapshots": snapshots,
         }
     engine = SiriusEngine()
     return (

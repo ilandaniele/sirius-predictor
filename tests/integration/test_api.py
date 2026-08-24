@@ -8,6 +8,8 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, sessionmaker
 
+from collectors.argumental_archive import build_archive_index as build_argumental_archive_index
+from collectors.argumental_archive import parse_archive_index as argumental_parse_archive_index
 from collectors.sirius_archive import build_archive_index
 from db.base import Base
 from db.models import DataQuality
@@ -229,4 +231,110 @@ def test_sirius_review_api_is_manual_append_only_and_conflict_safe(
     )
     assert rejected.status_code == 200
     assert rejected.json()["data"]["review_snapshot"]["reviewed_observations"] == 0
+    engine.dispose()
+
+
+def _argumental_review_archive_payload() -> bytes:
+    entry = {
+        "id": {"$t": "tag:blogger.com,1999:blog-2.post-7"},
+        "published": {"$t": "2026-07-10T15:01:00-03:00"},
+        "updated": {"$t": "2026-07-10T15:02:00-03:00"},
+        "title": {"$t": "Mundial: Argentina vs Francia"},
+        "content": {
+            "$t": (
+                "Analisis del partido Argentina Francia mediante el metodo Frawley: "
+                "el regente del ascendente favorece a Argentina, que ganara la final."
+            )
+        },
+        "link": [
+            {
+                "rel": "alternate",
+                "href": "https://astrologiaargumental.blogspot.com/post-7.html",
+            }
+        ],
+    }
+    return build_argumental_archive_index(
+        [
+            json.dumps(
+                {
+                    "feed": {
+                        "openSearch$totalResults": {"$t": "1"},
+                        "entry": [entry],
+                    }
+                }
+            ).encode()
+        ],
+        datetime(2026, 8, 20, tzinfo=UTC),
+    )
+
+
+def test_argumental_review_api_and_combined_assessment_endpoint(
+    tmp_path: Path, monkeypatch: pytest.MonkeyPatch
+) -> None:
+    engine = create_engine(f"sqlite:///{(tmp_path / 'api-argumental-review.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    factory = sessionmaker(bind=engine, expire_on_commit=False)
+    with factory() as session:
+        session.add(
+            DataQuality(
+                code="B",
+                label="Archivo confiable",
+                precedence=4,
+                requires_manual_review=False,
+            )
+        )
+        session.commit()
+        queue = SiriusReviewQueue(
+            session,
+            rules_path=api_main.ROOT / "data" / "argumental_rules.yaml",
+            teams_path=api_main.settings.teams_path,
+            source_id="argumental_blog",
+            parse_archive_index=argumental_parse_archive_index,
+        )
+        queue.sync_archive(_argumental_review_archive_payload())
+        session.commit()
+
+    def test_session() -> Generator[Session]:
+        with factory() as session:
+            yield session
+
+    monkeypatch.setattr(api_main.settings, "storage_path", tmp_path / "storage")
+    application = create_app()
+    application.dependency_overrides[get_session] = test_session
+    review_client = TestClient(application)
+
+    pending = review_client.get("/api/v1/argumental/review-candidates").json()["data"]
+    assert pending["counts"]["pending"] == 1
+    candidate_id = pending["items"][0]["id"]
+    request = {
+        "action": "approved",
+        "reviewer": "Ilan",
+        "reason": "Contraste manual contra la publicación",
+        "approval": {
+            "team_id": "ARG",
+            "feature_id": "frawley_method",
+            "polarity": "favorable",
+            "strength": 0.8,
+            "data_confidence": 0.7,
+            "hour_robustness": 0.9,
+            "description": "Testimonio revisado manualmente",
+            "time_known": True,
+            "time_source_url": "https://example.com/verified-time",
+            "time_consulted_at": "2026-07-10T18:00:00-03:00",
+            "time_data_grade": "B",
+            "time_source_note": "Hora contrastada con la fuente",
+        },
+    }
+    approved = review_client.post(
+        f"/api/v1/argumental/review-candidates/{candidate_id}/decisions", json=request
+    )
+    assert approved.status_code == 200
+    assert approved.json()["data"]["review_snapshot"]["reviewed_observations"] == 1
+
+    combined = review_client.get("/api/v1/astrology/combined-assessment").json()["data"]
+    assert combined["sirius_evidence_audit"]["reviewed_observations"] == 0
+    assert combined["argumental_evidence_audit"]["reviewed_observations"] == 1
+    assert combined["combined_evidence_audit"]["reviewed_observations"] == 1
+    assert combined["argumental"]["ARG"]["coronation_index"]["value"] is not None
+    assert combined["combined"]["ARG"]["coronation_index"]["value"] is not None
     engine.dispose()

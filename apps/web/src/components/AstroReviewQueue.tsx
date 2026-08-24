@@ -4,6 +4,7 @@ import { FormEvent, useEffect, useMemo, useState } from "react";
 
 import { api } from "@/lib/api";
 import type {
+  AstroSource,
   SiriusReviewCandidate,
   SiriusReviewDecisionInput,
   SiriusReviewQueue as SiriusReviewQueueData,
@@ -11,20 +12,34 @@ import type {
   Team,
 } from "@/lib/types";
 
-const TIME_REQUIRED = new Set([
-  "solar_return",
-  "primary_directions",
-  "arabic_parts",
-  "lunar_return",
-  "demi_lunar",
-  "quarti_lunar",
-  "kickoff_chart",
-  "houses_i_vii",
-  "rulers_mc_moon",
-  "match_arabic_parts",
-  "extra_time_penalties",
-  "critical_minutes",
-]);
+const TIME_REQUIRED_BY_SOURCE: Record<AstroSource, Set<string>> = {
+  sirius: new Set([
+    "solar_return",
+    "primary_directions",
+    "arabic_parts",
+    "lunar_return",
+    "demi_lunar",
+    "quarti_lunar",
+    "kickoff_chart",
+    "houses_i_vii",
+    "rulers_mc_moon",
+    "match_arabic_parts",
+    "extra_time_penalties",
+    "critical_minutes",
+  ]),
+  argumental: new Set([
+    "frawley_method",
+    "house_rulers",
+    "aspects_applying_separating",
+    "midheaven_ascendant",
+    "electional_domification",
+  ]),
+};
+
+const SOURCE_LABEL: Record<AstroSource, string> = {
+  sirius: "Sirius",
+  argumental: "Astrología Argumental",
+};
 
 type ReviewForm = {
   action: "approved" | "rejected";
@@ -75,7 +90,7 @@ function formForCandidate(
   };
 }
 
-export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
+export function AstroReviewQueue({ teams, source }: { teams: Team[]; source: AstroSource }) {
   const [filter, setFilter] = useState<SiriusReviewStatus>("pending");
   const [offset, setOffset] = useState(0);
   const [queue, setQueue] = useState<SiriusReviewQueueData | null>(null);
@@ -95,7 +110,7 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
     nextOffset = offset,
   ) {
     try {
-      const result = await api.siriusReviewCandidates(nextFilter, nextOffset);
+      const result = await api.astroReviewCandidates(source, nextFilter, nextOffset);
       setQueue(result.data);
       setMessage(
         result.data.counts.total
@@ -114,7 +129,7 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
 
   useEffect(() => {
     let cancelled = false;
-    void api.siriusReviewCandidates(filter, offset).then(
+    void api.astroReviewCandidates(source, filter, offset).then(
       (result) => {
         if (cancelled) return;
         setQueue(result.data);
@@ -135,13 +150,13 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
     return () => {
       cancelled = true;
     };
-  }, [filter, offset]);
+  }, [source, filter, offset]);
 
   async function syncArchive() {
     setBusy(true);
     setMessage("Sincronizando candidatos sin aprobarlos…");
     try {
-      await api.syncSiriusReviewCandidates(apiKey);
+      await api.syncAstroReviewCandidates(source, apiKey);
       await load(filter, offset);
     } catch (error) {
       setMessage(`No se pudo sincronizar · ${(error as Error).message}`);
@@ -180,7 +195,7 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
     setBusy(true);
     setMessage("Guardando una nueva decisión inmutable…");
     try {
-      await api.decideSiriusReviewCandidate(selected.id, payload, apiKey);
+      await api.decideAstroReviewCandidate(source, selected.id, payload, apiKey);
       setMessage(
         "Decisión guardada. La próxima simulación local generará un snapshot si cambió la evidencia.",
       );
@@ -192,13 +207,13 @@ export function SiriusReviewQueue({ teams }: { teams: Team[] }) {
     }
   }
 
-  const requiresTime = TIME_REQUIRED.has(form.featureId);
+  const requiresTime = TIME_REQUIRED_BY_SOURCE[source].has(form.featureId);
 
   return (
     <article className="panel wide review-queue">
       <div className="panel-title">
         <div>
-          <p>REVISIÓN HUMANA APPEND-ONLY</p>
+          <p>REVISIÓN HUMANA APPEND-ONLY · {SOURCE_LABEL[source].toUpperCase()}</p>
           <h3>Candidatos del archivo → evidencia estructurada</h3>
         </div>
         <button type="button" onClick={syncArchive} disabled={busy}>
