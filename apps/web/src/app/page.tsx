@@ -21,6 +21,43 @@ import type {
 
 const tabs = ["Predicción", "Astrología", "Sistema"] as const;
 
+const PREDICCION_SECTIONS = [
+  { id: "resumen", label: "Resumen" },
+  { id: "argentina", label: "Argentina" },
+  { id: "selecciones", label: "Selecciones y sorteo" },
+  { id: "simulacion", label: "Simulación" },
+  { id: "historial", label: "Historial" }
+] as const;
+
+function SectionHeading({
+  id,
+  title,
+  description
+}: {
+  id: string;
+  title: string;
+  description: string;
+}) {
+  return (
+    <div className="section-block" id={id}>
+      <h2>{title}</h2>
+      <p>{description}</p>
+    </div>
+  );
+}
+
+function SectionNav({ sections }: { sections: ReadonlyArray<{ id: string; label: string }> }) {
+  return (
+    <nav className="section-nav" aria-label="Ir a sección">
+      {sections.map((section) => (
+        <a key={section.id} href={`#${section.id}`}>
+          {section.label}
+        </a>
+      ))}
+    </nav>
+  );
+}
+
 export default function Home() {
   const [formatSize, setFormatSize] = useState<48 | 64>(64);
   const [active, setActive] = useState<(typeof tabs)[number]>("Predicción");
@@ -210,10 +247,12 @@ export default function Home() {
 
         {active === "Predicción" ? (
           <>
-            <div className="section-block">
-              <h2>Resumen</h2>
-              <p>Ranking futbolístico, foco Argentina y comparador de modelos.</p>
-            </div>
+            <SectionNav sections={PREDICCION_SECTIONS} />
+            <SectionHeading
+              id="resumen"
+              title="Resumen"
+              description="Ranking futbolístico, foco Argentina y comparador de modelos."
+            />
             <div className="dashboard-grid">
               <article className="panel ranking">
                 <div className="panel-title"><div><p>RANKING DE CANDIDATOS</p><h3>Fuerza futbolística proyectada</h3></div><span>Confianza ≠ fuerza</span></div>
@@ -255,10 +294,11 @@ export default function Home() {
               </article>
             </div>
 
-            <div className="section-block">
-              <h2>Argentina en detalle</h2>
-              <p>Probabilidad de avance por etapa y rivales condicionales.</p>
-            </div>
+            <SectionHeading
+              id="argentina"
+              title="Argentina en detalle"
+              description="Probabilidad de avance por etapa y rivales condicionales."
+            />
             <div className="two-columns tab-detail">
               <article className="panel">
                 <div className="panel-title"><div><p>ETAPAS</p><h3>Probabilidad de avance</h3></div></div>
@@ -270,10 +310,11 @@ export default function Home() {
               </article>
             </div>
 
-            <div className="section-block">
-              <h2>Selecciones y sorteo</h2>
-              <p>Campo proyectado y grupo de Argentina.</p>
-            </div>
+            <SectionHeading
+              id="selecciones"
+              title="Selecciones y sorteo"
+              description="Campo proyectado y grupo de Argentina."
+            />
             <article className="panel wide">
               <div className="panel-title"><div><p>CAMPO PROYECTADO</p><h3>{formatSize} selecciones · no es clasificación oficial</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
               <div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small></div>)}</div>
@@ -290,10 +331,11 @@ export default function Home() {
               </article>
             </div>
 
-            <div className="section-block">
-              <h2>Simulación</h2>
-              <p>Ranking Monte Carlo, cruces decisivos y exportaciones de llaves.</p>
-            </div>
+            <SectionHeading
+              id="simulacion"
+              title="Simulación"
+              description="Ranking Monte Carlo, cruces decisivos y exportaciones de llaves."
+            />
             <aside className={`sirius-state ${prediction?.sirius_application?.effective ? "active" : "neutral"}`}>
               <b>{prediction?.sirius_application?.label ?? "Sirius todavía no fue evaluado"}</b>
               <span>
@@ -305,7 +347,7 @@ export default function Home() {
             <div className="two-columns">
               <article className="panel">
                 <div className="panel-title"><div><p>MONTE CARLO</p><h3>Ranking de campeón</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>
-                <DataTable rows={prediction?.ranking?.slice(0, 20) ?? []} empty="Todavía no hay simulación persistida." />
+                <DataTable rows={prediction?.ranking?.slice(0, 20) ?? []} empty="Todavía no hay simulación persistida." maxColumns={8} />
               </article>
               <article className="panel">
                 <div className="panel-title"><div><p>CRUCES DECISIVOS</p><h3>Los cinco escenarios conjuntos más frecuentes</h3></div></div>
@@ -352,10 +394,11 @@ export default function Home() {
               <DataTable rows={prediction?.sensitivity ?? []} empty="Se genera con una simulación; 4 horas × 3 offsets." />
             </article>
 
-            <div className="section-block">
-              <h2>Historial</h2>
-              <p>Evolución append-only de la probabilidad de campeón.</p>
-            </div>
+            <SectionHeading
+              id="historial"
+              title="Historial"
+              description="Evolución append-only de la probabilidad de campeón."
+            />
             <article className="panel history">
               <div className="panel-title"><div><p>EVOLUCIÓN APPEND-ONLY</p><h3>Argentina · España · Francia · Brasil</h3></div></div>
               <HistoryChart points={history} />
@@ -380,28 +423,31 @@ export default function Home() {
 
         {active === "Sistema" ? (
           <>
-            <div className="section-block">
-              <h2>Fuentes</h2>
-              <p>Catálogo y gobernanza de cada fuente pública utilizada.</p>
-            </div>
+            <SectionHeading
+              id="fuentes"
+              title="Fuentes"
+              description="Catálogo y gobernanza de cada fuente pública utilizada."
+            />
             <article className="panel wide">
               <div className="panel-title"><div><p>CATÁLOGO Y GOBERNANZA</p><h3>Fuente · URL · calidad · uso</h3></div></div>
               <div className="source-grid">{sourceCatalog.map((source) => <div key={source.id}><span className={`grade quality-${source.grade}`}>{source.grade}</span><strong>{source.name}</strong><p>{source.use}</p>{source.url?.startsWith("http") ? <a href={source.url} target="_blank" rel="noreferrer">Abrir fuente ↗</a> : <code>{source.url ?? "Adaptador pendiente"}</code>}<small>{source.enabled ? "Habilitada" : "Deshabilitada"} · robots: {source.robots_policy ?? "sin registrar"}</small></div>)}</div>
             </article>
 
-            <div className="section-block">
-              <h2>Backtesting</h2>
-              <p>Validación temporal contra ediciones pasadas del Mundial.</p>
-            </div>
+            <SectionHeading
+              id="backtesting"
+              title="Backtesting"
+              description="Validación temporal contra ediciones pasadas del Mundial."
+            />
             <article className="panel wide">
               <div className="panel-title"><div><p>VALIDACIÓN TEMPORAL</p><h3>2010 · 2014 · 2018 · 2022 · 2026</h3></div>{modelSource ? <SourceBadge source={modelSource} /> : null}</div>
               {backtest ? <><p className="micro">{backtest.matches} partidos · disponibles {backtest.available_editions.join(", ")}{backtest.missing_editions.length ? ` · sin datos: ${backtest.missing_editions.join(", ")}` : ""}</p><DataTable rows={backtest.metrics} empty="Sin métricas." /><h3 className="subheading">Ablaciones</h3><DataTable rows={backtest.ablations} empty="Sin ablaciones." /></> : <p className="empty">Ejecutá scripts/release_acceptance.py; el dashboard no inventa resultados ausentes.</p>}
             </article>
 
-            <div className="section-block">
-              <h2>Configuración</h2>
-              <p>Supuestos del escenario y separación obligatoria de modelos.</p>
-            </div>
+            <SectionHeading
+              id="configuracion"
+              title="Configuración"
+              description="Supuestos del escenario y separación obligatoria de modelos."
+            />
             <div className="two-columns">
               <article className="panel">
                 <div className="panel-title"><div><p>ESCENARIO</p><h3>Supuestos configurables</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
@@ -429,9 +475,17 @@ export default function Home() {
   );
 }
 
-function DataTable({ rows, empty }: { rows: Array<Record<string, unknown>>; empty: string }) {
+function DataTable({
+  rows,
+  empty,
+  maxColumns = 6
+}: {
+  rows: Array<Record<string, unknown>>;
+  empty: string;
+  maxColumns?: number;
+}) {
   if (!rows.length) return <p className="empty">{empty}</p>;
-  const columns = Object.keys(rows[0]).slice(0, 6);
+  const columns = Object.keys(rows[0]).slice(0, maxColumns);
   return <div className="data-table"><table><thead><tr>{columns.map((column) => <th key={column}>{column}</th>)}</tr></thead><tbody>{rows.map((row, index) => <tr key={index}>{columns.map((column) => <td key={column}>{formatCell(row[column])}</td>)}</tr>)}</tbody></table></div>;
 }
 
