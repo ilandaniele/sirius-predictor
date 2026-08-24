@@ -2,13 +2,13 @@
   "schema_version": "sirius-birth-data-v1",
   "records": [
     {
-      "person_name": "Didier Claude Deschamps",
-      "birth_date": "1968-10-15",
+      "person_name": "Zinedine Yazid Zidane",
+      "birth_date": "1972-06-23",
       "birth_time": null,
       "timezone": "Europe/Paris",
-      "place": "Bayona (Bayonne), Francia",
-      "latitude": 43.4933,
-      "longitude": -1.4753,
+      "place": "Marsella (Marseille), Francia",
+      "latitude": 43.2965,
+      "longitude": 5.3698,
       "time_known": false,
       "rodden_rating": "X"
     }

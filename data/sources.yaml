@@ -101,25 +101,25 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Fecha de nacimiento del seleccionador de España. Hora desconocida, nunca imputada a las 12:00.
   enabled: true
-- id: natal_morata
-  name: Álvaro Morata — Wikipedia (biografía)
+- id: natal_rodri
+  name: Rodri Hernández — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/%C3%81lvaro_Morata
-  local_path: data/natal_morata.json
+  url: https://es.wikipedia.org/wiki/Rodri_Hern%C3%A1ndez
+  local_path: data/natal_rodri.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán de España. Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del capitán de España (confirmado durante el Mundial 2026 real). Hora desconocida, nunca imputada.
   enabled: true
-- id: natal_deschamps
-  name: Didier Deschamps — Wikipedia (biografía)
+- id: natal_zidane
+  name: Zinedine Zidane — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/Didier_Deschamps
-  local_path: data/natal_deschamps.json
+  url: https://es.wikipedia.org/wiki/Zinedine_Zidane
+  local_path: data/natal_zidane.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Francia. Hora desconocida, nunca imputada a las 12:00.
+  use: Fecha de nacimiento del seleccionador de Francia (asumió el cargo el 28/07/2026, contrato hasta 2030). Hora desconocida, nunca imputada a las 12:00.
   enabled: true
 - id: natal_mbappe
   name: Kylian Mbappé — Wikipedia (biografía)
@@ -141,13 +141,13 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Fecha de nacimiento del seleccionador de Brasil. Hora desconocida, nunca imputada a las 12:00.
   enabled: true
-- id: natal_casemiro
-  name: Casemiro — Wikipedia (biografía)
+- id: natal_marquinhos
+  name: Marquinhos (Marcos Aoás Corrêa) — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/Casemiro
-  local_path: data/natal_casemiro.json
+  url: https://es.wikipedia.org/wiki/Marcos_Ao%C3%A1s_Corr%C3%AAa
+  local_path: data/natal_marquinhos.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán de Brasil. Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del capitán de Brasil (confirmado durante el Mundial 2026 real). Hora desconocida, nunca imputada.
   enabled: true
