@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "James David Rodríguez Rubio",
+      "birth_date": "1991-07-12",
+      "birth_time": null,
+      "timezone": "America/Bogota",
+      "place": "Cúcuta, Colombia",
+      "latitude": 7.8891,
+      "longitude": -72.5079,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

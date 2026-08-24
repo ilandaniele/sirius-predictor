@@ -181,15 +181,15 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Fecha de nacimiento del seleccionador de Noruega. Hora desconocida, nunca imputada.
   enabled: true
-- id: natal_odegaard
-  name: Martin Ødegaard — Wikipedia (biografía)
+- id: natal_haaland
+  name: Erling Haaland — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/Martin_%C3%98degaard
-  local_path: data/natal_odegaard.json
+  url: https://es.wikipedia.org/wiki/Erling_Haaland
+  local_path: data/natal_haaland.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán de Noruega. Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del capitán de Noruega (corrige a Ødegaard, quien no es el capitán actual). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_van_bommel
   name: Mark van Bommel — Wikipedia (biografía)
@@ -231,15 +231,15 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Estados Unidos. Hora desconocida, nunca imputada.
   enabled: true
-- id: natal_bielsa
-  name: Marcelo Bielsa — Wikipedia (biografía)
+- id: natal_forlan
+  name: Diego Forlán — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/Marcelo_Bielsa
-  local_path: data/natal_bielsa.json
+  url: https://es.wikipedia.org/wiki/Diego_Forl%C3%A1n
+  local_path: data/natal_forlan.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Uruguay. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Uruguay (corrige a Bielsa, reemplazado en agosto de 2026). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_valverde
   name: Federico Valverde — Wikipedia (biografía)
@@ -250,4 +250,164 @@
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Uruguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_klopp
+  name: Jürgen Klopp — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Jurgen_Klopp
+  local_path: data/natal_klopp.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Alemania (asumió el cargo el 24/07/2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_kimmich
+  name: Joshua Kimmich — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Joshua_Kimmich
+  local_path: data/natal_kimmich.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Alemania. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_alfaro
+  name: Gustavo Alfaro — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Gustavo_Alfaro
+  local_path: data/natal_alfaro.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Paraguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_gomez_paraguay
+  name: Gustavo Gómez Portillo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Gustavo_G%C3%B3mez_Portillo
+  local_path: data/natal_gomez_paraguay.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Paraguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_martinez_roberto
+  name: Roberto Martínez Montoliu — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Roberto_Mart%C3%ADnez_Montoliu
+  local_path: data/natal_martinez_roberto.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Portugal. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ronaldo
+  name: Cristiano Ronaldo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Cristiano_Ronaldo
+  local_path: data/natal_ronaldo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Portugal. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_xavi
+  name: Xavi Hernández — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Xavi_Hern%C3%A1ndez
+  local_path: data/natal_xavi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Países Bajos (asumió el cargo el 12/08/2026, sucediendo a Koeman). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_van_dijk
+  name: Virgil van Dijk — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Virgil_van_Dijk
+  local_path: data/natal_van_dijk.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Países Bajos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ouahbi
+  name: Mohamed Ouahbi — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.besoccer.com/coach/mohamed-ouahbi-58647
+  local_path: data/natal_ouahbi.json
+  terms_url: https://www.besoccer.com/static/terms
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Marruecos (sucesor de Walid Regragui). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hakimi
+  name: Achraf Hakimi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Achraf_Hakimi
+  local_path: data/natal_hakimi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Marruecos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lorenzo
+  name: Néstor Lorenzo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Nestor_Lorenzo
+  local_path: data/natal_lorenzo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Colombia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_james_rodriguez
+  name: James Rodríguez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/James_Rodr%C3%ADguez
+  local_path: data/natal_james_rodriguez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Colombia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_moriyasu
+  name: Hajime Moriyasu — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hajime_Moriyasu
+  local_path: data/natal_moriyasu.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Japón. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_itakura
+  name: Kō Itakura — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/K%C5%8D_Itakura
+  local_path: data/natal_itakura.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Japón (asumió el brazalete tras el retiro de Wataru Endo por lesión durante el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_dalic
+  name: Zlatko Dalić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Zlatko_Dali%C4%87
+  local_path: data/natal_dalic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Croacia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_modric
+  name: Luka Modrić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Luka_Modric
+  local_path: data/natal_modric.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Croacia. Hora desconocida, nunca imputada.
   enabled: true

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Roberto Martínez Montoliu",
+      "birth_date": "1973-07-13",
+      "birth_time": null,
+      "timezone": "Europe/Madrid",
+      "place": "Balaguer, Lérida, España",
+      "latitude": 41.7904,
+      "longitude": 0.8066,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

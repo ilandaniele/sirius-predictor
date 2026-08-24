@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Cristiano Ronaldo dos Santos Aveiro",
+      "birth_date": "1985-02-05",
+      "birth_time": null,
+      "timezone": "Atlantic/Madeira",
+      "place": "Funchal, Madeira, Portugal",
+      "latitude": 32.6669,
+      "longitude": -16.9241,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

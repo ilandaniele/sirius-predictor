@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Kō Itakura",
+      "birth_date": "1997-01-27",
+      "birth_time": null,
+      "timezone": "Asia/Tokyo",
+      "place": "Aoba-ku, Yokohama, Kanagawa, Japón",
+      "latitude": 35.5372,
+      "longitude": 139.6086,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

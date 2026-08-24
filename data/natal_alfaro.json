@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Gustavo Julio Alfaro",
+      "birth_date": "1962-08-14",
+      "birth_time": null,
+      "timezone": "America/Argentina/Buenos_Aires",
+      "place": "Rafaela, Santa Fe, Argentina",
+      "latitude": -31.2503,
+      "longitude": -61.4867,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
