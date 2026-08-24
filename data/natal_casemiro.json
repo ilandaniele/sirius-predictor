@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Carlos Henrique Casimiro",
+      "birth_date": "1992-02-23",
+      "birth_time": null,
+      "timezone": "America/Sao_Paulo",
+      "place": "São José dos Campos, São Paulo, Brasil",
+      "latitude": -23.2237,
+      "longitude": -45.9009,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

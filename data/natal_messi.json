@@ -2,13 +2,13 @@
   "schema_version": "sirius-birth-data-v1",
   "records": [
     {
-      "person_name": "Lionel Sebastián Scaloni",
-      "birth_date": "1978-05-16",
+      "person_name": "Lionel Andrés Messi",
+      "birth_date": "1987-06-24",
       "birth_time": null,
       "timezone": "America/Argentina/Buenos_Aires",
-      "place": "Pujato, Santa Fe, Argentina",
-      "latitude": -32.9833,
-      "longitude": -61.15,
+      "place": "Rosario, Santa Fe, Argentina",
+      "latitude": -32.9468,
+      "longitude": -60.6393,
       "time_known": false,
       "rodden_rating": "X"
     }

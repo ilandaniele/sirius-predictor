@@ -79,5 +79,75 @@
   local_path: data/natal_scaloni.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del DT de Argentina (asumido continuidad 2030 en data/scenario.yaml); hora desconocida, nunca imputada a las 12:00 — no alimenta un cálculo de carta real hasta que exista un análisis de sensibilidad horaria.
+  use: Fecha de nacimiento del DT de Argentina (asumido continuidad 2030 en data/scenario.yaml); hora desconocida, nunca imputada a las 12:00 — alimenta un análisis de sensibilidad horaria (signos invariantes), no una carta con hora exacta.
+  enabled: true
+- id: natal_messi
+  name: Lionel Messi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Lionel_Messi
+  local_path: data/natal_messi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Argentina 2014-2026; no implica un supuesto sobre quién será capitán en 2030 (data/scenario.yaml deja ese dato explícitamente pendiente). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_de_la_fuente
+  name: Luis de la Fuente — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Luis_de_la_Fuente_Castillo
+  local_path: data/natal_de_la_fuente.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de España. Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_morata
+  name: Álvaro Morata — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/%C3%81lvaro_Morata
+  local_path: data/natal_morata.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de España. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_deschamps
+  name: Didier Deschamps — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Didier_Deschamps
+  local_path: data/natal_deschamps.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Francia. Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_mbappe
+  name: Kylian Mbappé — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Kylian_Mbapp%C3%A9
+  local_path: data/natal_mbappe.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Francia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ancelotti
+  name: Carlo Ancelotti — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Carlo_Ancelotti
+  local_path: data/natal_ancelotti.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Brasil. Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_casemiro
+  name: Casemiro — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Casemiro
+  local_path: data/natal_casemiro.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Brasil. Hora desconocida, nunca imputada.
   enabled: true

@@ -8,6 +8,7 @@ from sqlalchemy.orm import Session
 
 from db.base import Base
 from db.models import AstrologyChart as StoredAstrologyChart
+from db.models import AstrologyTimeSensitivity as StoredAstrologyTimeSensitivity
 from packages.astrology import (
     AstrologyChartCache,
     ChartRequest,
@@ -144,3 +145,67 @@ def test_selective_recalculation_reports_real_miss_then_hit(session: Session) ->
     assert second.to_dict()["recalculated_count"] == 0
     assert second.to_dict()["cache_hit_count"] == 1
     assert first.recalculated[0]["input_hash"] == second.cache_hits[0]["input_hash"]
+
+
+def _birth_claim(
+    *, timezone: str | None, latitude: float | None, longitude: float | None
+) -> SourceClaimInput:
+    return SourceClaimInput(
+        entity_type="BirthData",
+        entity_key="Lionel Sebastián Scaloni",
+        field_name="birth_data",
+        value={
+            "person_name": "Lionel Sebastián Scaloni",
+            "birth_date": "1978-05-16",
+            "birth_time": None,
+            "timezone": timezone,
+            "place": "Pujato, Santa Fe, Argentina",
+            "latitude": latitude,
+            "longitude": longitude,
+            "time_known": False,
+            "rodden_rating": "X",
+            "chart_request": {"time_known": False},
+        },
+        source_id="natal_scaloni",
+        source_url="https://es.wikipedia.org/wiki/Lionel_Scaloni",
+        consulted_at=datetime(2026, 8, 24, tzinfo=UTC),
+        grade=DataGrade.B,
+        confidence=0.85,
+        official=False,
+        manually_confirmed=True,
+    )
+
+
+def test_unknown_time_birth_data_gets_a_marginalized_sensitivity_result_not_a_skip(
+    session: Session,
+) -> None:
+    claim = _birth_claim(
+        timezone="America/Argentina/Buenos_Aires", latitude=-32.9833, longitude=-61.15
+    )
+    first = recalculate_accepted_charts(session, [claim])
+    session.commit()
+    second = recalculate_accepted_charts(session, [claim])
+    session.commit()
+
+    assert first.skipped == []
+    assert first.failed == []
+    assert first.to_dict()["sensitivity_computed_count"] == 1
+    assert first.to_dict()["sensitivity_cache_hit_count"] == 0
+    assert second.to_dict()["sensitivity_computed_count"] == 0
+    assert second.to_dict()["sensitivity_cache_hit_count"] == 1
+    assert (
+        first.sensitivity_computed[0]["input_hash"]
+        == second.sensitivity_cache_hits[0]["input_hash"]
+    )
+    assert session.scalar(select(func.count()).select_from(StoredAstrologyTimeSensitivity)) == 1
+
+
+def test_unknown_time_birth_data_without_location_stays_honestly_skipped(
+    session: Session,
+) -> None:
+    claim = _birth_claim(timezone=None, latitude=None, longitude=None)
+    report = recalculate_accepted_charts(session, [claim])
+    assert report.sensitivity_computed == []
+    assert report.to_dict()["skipped_count"] == 1
+    assert "timezone" in report.skipped[0]["reason"]
+    assert session.scalar(select(func.count()).select_from(StoredAstrologyTimeSensitivity)) == 0

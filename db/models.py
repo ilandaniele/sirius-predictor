@@ -261,6 +261,29 @@ class AstrologyChart(Base, IdMixin, TimestampMixin):
     result: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
+class AstrologyTimeSensitivity(Base, IdMixin, TimestampMixin):
+    """Marginalized result for a subject whose exact birth/event time is unknown.
+
+    Never stores a single guessed moment (no imputed noon): the result is a
+    scan across the full civil day, keeping only placements that are the same
+    regardless of which hour is picked (invariant_signs) plus the full
+    variable spread for transparency.
+    """
+
+    __tablename__ = "astrology_time_sensitivity"
+
+    subject_type: Mapped[str] = mapped_column(String(60), nullable=False)
+    subject_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    input_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    birth_date: Mapped[date] = mapped_column(Date, nullable=False)
+    timezone: Mapped[str] = mapped_column(String(80), nullable=False)
+    latitude: Mapped[float | None] = mapped_column(Float)
+    longitude: Mapped[float | None] = mapped_column(Float)
+    step_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    ephemeris_version: Mapped[str] = mapped_column(String(80), nullable=False)
+    result: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+
+
 class AstrologyTechniqueResult(Base, IdMixin, TimestampMixin):
     __tablename__ = "astrology_technique_results"
 

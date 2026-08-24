@@ -189,7 +189,7 @@ def test_natal_collector_publishes_an_unknown_time_birth_data_claim(tmp_path: Pa
                         "person_name": "Lionel Sebastián Scaloni",
                         "birth_date": "1978-05-16",
                         "birth_time": None,
-                        "timezone": None,
+                        "timezone": "America/Argentina/Buenos_Aires",
                         "place": "Pujato, Santa Fe, Argentina",
                         "latitude": -32.9833,
                         "longitude": -61.15,
@@ -234,5 +234,21 @@ def test_natal_collector_publishes_an_unknown_time_birth_data_claim(tmp_path: Pa
         report = recalculate_accepted_charts(session, claims)
     assert report.recalculated == []
     assert report.failed == []
-    assert len(report.skipped) == 1
-    assert "unknown time" in report.skipped[0]["reason"]
+    assert report.skipped == []
+    assert len(report.sensitivity_computed) == 1
+
+
+def test_all_curated_natal_data_files_parse_and_never_impute_a_time() -> None:
+    natal_dir = Path(__file__).resolve().parents[2] / "data"
+    paths = sorted(natal_dir.glob("natal_*.json"))
+    assert len(paths) >= 8
+    for path in paths:
+        records = parse_birth_records(path.read_bytes())
+        assert len(records) == 1
+        record = records[0]
+        assert record.person_name
+        assert record.time_known is False
+        assert record.birth_time is None
+        assert record.timezone
+        assert record.latitude is not None
+        assert record.longitude is not None

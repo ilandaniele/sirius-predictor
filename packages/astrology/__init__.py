@@ -2,10 +2,13 @@
 
 from .cache import (
     AstrologyChartCache,
+    AstrologyTimeSensitivityCache,
     ChartCacheResult,
     ChartRecalculationReport,
+    TimeSensitivityCacheResult,
     chart_input_hash,
     recalculate_accepted_charts,
+    sensitivity_input_hash,
 )
 from .ephemeris import EphemerisUnavailable, chart, ephemeris_available, ephemeris_identity
 from .models import AstrologyChart, ChartRequest, GeoLocation, TechniqueResult
@@ -35,12 +38,14 @@ from .techniques import (
 __all__ = [
     "AstrologyChart",
     "AstrologyChartCache",
+    "AstrologyTimeSensitivityCache",
     "ChartCacheResult",
     "ChartRequest",
     "ChartRecalculationReport",
     "EphemerisUnavailable",
     "GeoLocation",
     "TechniqueResult",
+    "TimeSensitivityCacheResult",
     "accidental_dignities",
     "antiscia",
     "arabic_parts",
@@ -65,6 +70,7 @@ __all__ = [
     "relocalize",
     "rulers_and_almutens",
     "secondary_progressions",
+    "sensitivity_input_hash",
     "solar_return",
     "transits",
 ]

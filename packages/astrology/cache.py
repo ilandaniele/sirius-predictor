@@ -3,7 +3,7 @@ from __future__ import annotations
 import hashlib
 import json
 from dataclasses import dataclass, field
-from datetime import UTC, datetime
+from datetime import UTC, date, datetime, time
 from typing import Any, Literal
 
 from sqlalchemy import select
@@ -11,6 +11,7 @@ from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session
 
 from db.models import AstrologyChart as StoredAstrologyChart
+from db.models import AstrologyTimeSensitivity as StoredAstrologyTimeSensitivity
 from packages.common.provenance import SourceClaimInput
 
 from .ephemeris import BODIES, DEFAULT_ORBS, chart, ephemeris_identity
@@ -21,9 +22,12 @@ from .models import (
     ChartRequest,
     GeoLocation,
     HouseAngles,
+    TechniqueResult,
 )
+from .sensitivity import birth_time_sensitivity
 
 CHART_CACHE_SCHEMA = "astrology-chart-cache-v1"
+TIME_SENSITIVITY_SCHEMA = "astrology-time-sensitivity-cache-v1"
 CHART_ENTITY_TYPES = frozenset({"BirthData", "Fixture", "CoachDebutEvent"})
 
 
@@ -42,6 +46,8 @@ class ChartRecalculationReport:
     cache_hits: list[dict[str, str]] = field(default_factory=list)
     skipped: list[dict[str, str]] = field(default_factory=list)
     failed: list[dict[str, str]] = field(default_factory=list)
+    sensitivity_computed: list[dict[str, str]] = field(default_factory=list)
+    sensitivity_cache_hits: list[dict[str, str]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -55,6 +61,10 @@ class ChartRecalculationReport:
             "skipped_count": len(self.skipped),
             "failed": self.failed,
             "failed_count": len(self.failed),
+            "sensitivity_computed": self.sensitivity_computed,
+            "sensitivity_computed_count": len(self.sensitivity_computed),
+            "sensitivity_cache_hits": self.sensitivity_cache_hits,
+            "sensitivity_cache_hit_count": len(self.sensitivity_cache_hits),
         }
 
 
@@ -299,6 +309,175 @@ class AstrologyChartCache:
         )
 
 
+@dataclass(frozen=True, slots=True)
+class TimeSensitivityCacheResult:
+    result: TechniqueResult
+    input_hash: str
+    record_id: str
+    status: Literal["hit", "recalculated"]
+
+
+def sensitivity_input_hash(
+    subject_type: str,
+    subject_id: str,
+    birth_date: date,
+    timezone_name: str,
+    location: GeoLocation | None,
+    step_minutes: int,
+) -> str:
+    provider, ephemeris_version = ephemeris_identity()
+    payload = {
+        "schema_version": TIME_SENSITIVITY_SCHEMA,
+        "subject_type": subject_type,
+        "subject_id": subject_id,
+        "birth_date": birth_date.isoformat(),
+        "timezone": timezone_name,
+        "location": (
+            {"latitude": location.latitude, "longitude": location.longitude}
+            if location is not None
+            else None
+        ),
+        "step_minutes": step_minutes,
+        "provider": provider,
+        "ephemeris_version": ephemeris_version,
+    }
+    return hashlib.sha256(_canonical_json(payload).encode("utf-8")).hexdigest()
+
+
+class AstrologyTimeSensitivityCache:
+    """Append-only, content-addressed storage for unknown-time marginalizations.
+
+    Distinct from AstrologyChartCache: a chart needs one known moment, this
+    scans a full civil day instead of picking one, and is only ever used when
+    the exact time is explicitly not known.
+    """
+
+    def __init__(self, session: Session):
+        self.session = session
+
+    def get_or_calculate(
+        self,
+        subject_type: str,
+        subject_id: str,
+        birth_date: date,
+        timezone_name: str,
+        location: GeoLocation,
+        *,
+        step_minutes: int = 15,
+    ) -> TimeSensitivityCacheResult:
+        input_hash = sensitivity_input_hash(
+            subject_type, subject_id, birth_date, timezone_name, location, step_minutes
+        )
+        existing = self.session.scalar(
+            select(StoredAstrologyTimeSensitivity).where(
+                StoredAstrologyTimeSensitivity.input_hash == input_hash
+            )
+        )
+        if existing is not None:
+            return TimeSensitivityCacheResult(
+                result=TechniqueResult(
+                    technique=str(existing.result["technique"]),
+                    result=dict(existing.result["result"]),
+                    parameters=dict(existing.result["parameters"]),
+                    warnings=tuple(existing.result.get("warnings", ())),
+                ),
+                input_hash=input_hash,
+                record_id=existing.id,
+                status="hit",
+            )
+
+        calculated = birth_time_sensitivity(
+            datetime.combine(birth_date, time.min),
+            timezone_name,
+            location,
+            step_minutes=step_minutes,
+        )
+        _, ephemeris_version = ephemeris_identity()
+        stored = StoredAstrologyTimeSensitivity(
+            subject_type=subject_type,
+            subject_id=subject_id,
+            input_hash=input_hash,
+            birth_date=birth_date,
+            timezone=timezone_name,
+            latitude=location.latitude if location is not None else None,
+            longitude=location.longitude if location is not None else None,
+            step_minutes=step_minutes,
+            ephemeris_version=ephemeris_version,
+            result={
+                "technique": calculated.technique,
+                "result": calculated.result,
+                "parameters": calculated.parameters,
+                "warnings": list(calculated.warnings),
+            },
+        )
+        try:
+            with self.session.begin_nested():
+                self.session.add(stored)
+                self.session.flush()
+        except IntegrityError:
+            concurrent = self.session.scalar(
+                select(StoredAstrologyTimeSensitivity).where(
+                    StoredAstrologyTimeSensitivity.input_hash == input_hash
+                )
+            )
+            if concurrent is None:  # pragma: no cover - defensive database race guard
+                raise
+            return TimeSensitivityCacheResult(
+                result=TechniqueResult(
+                    technique=str(concurrent.result["technique"]),
+                    result=dict(concurrent.result["result"]),
+                    parameters=dict(concurrent.result["parameters"]),
+                    warnings=tuple(concurrent.result.get("warnings", ())),
+                ),
+                input_hash=input_hash,
+                record_id=concurrent.id,
+                status="hit",
+            )
+        return TimeSensitivityCacheResult(
+            result=calculated,
+            input_hash=input_hash,
+            record_id=stored.id,
+            status="recalculated",
+        )
+
+
+def _birth_sensitivity_request(
+    claim: SourceClaimInput,
+) -> tuple[date, str, GeoLocation, str] | tuple[None, None, None, str]:
+    """Parse a BirthData claim with a known-false time into a sensitivity request.
+
+    Returns (birth_date, timezone_name, location, reason) where a None
+    birth_date means the claim could not be turned into a request and reason
+    explains why (never a fabricated time or location).
+    """
+
+    if not isinstance(claim.value, dict):
+        return None, None, None, "claim value is not an object"
+    raw_birth_date = claim.value.get("birth_date")
+    if not isinstance(raw_birth_date, str):
+        return None, None, None, "birth_date must be an ISO date string"
+    try:
+        birth_date = date.fromisoformat(raw_birth_date)
+    except ValueError:
+        return None, None, None, "birth_date is not a valid ISO date"
+    timezone_name = claim.value.get("timezone")
+    if not isinstance(timezone_name, str) or not timezone_name:
+        return None, None, None, "unknown-time sensitivity analysis requires a known timezone"
+    latitude = claim.value.get("latitude")
+    longitude = claim.value.get("longitude")
+    if latitude is None or longitude is None:
+        return None, None, None, "unknown-time sensitivity analysis requires a known location"
+    try:
+        location = GeoLocation(
+            latitude=float(latitude),
+            longitude=float(longitude),
+            name=str(claim.value.get("place", "")),
+        )
+    except (TypeError, ValueError):
+        return None, None, None, "invalid latitude/longitude for sensitivity analysis"
+    return birth_date, timezone_name, location, ""
+
+
 def _claim_request(claim: SourceClaimInput) -> tuple[_ParsedClaim | None, str | None]:
     if claim.source_url is None:
         return None, "source provenance is missing its URL"
@@ -383,8 +562,51 @@ def recalculate_accepted_charts(
         requested_entities=sorted({f"{claim.entity_type}:{claim.entity_key}" for claim in relevant})
     )
     cache = AstrologyChartCache(session)
+    sensitivity_cache = AstrologyTimeSensitivityCache(session)
     for claim in relevant:
         entity = f"{claim.entity_type}:{claim.entity_key}"
+        if (
+            claim.entity_type == "BirthData"
+            and isinstance(claim.value, dict)
+            and claim.value.get("time_known") is False
+        ):
+            birth_date, timezone_name, location, sensitivity_reason = _birth_sensitivity_request(
+                claim
+            )
+            if birth_date is None or timezone_name is None or location is None:
+                report.skipped.append(
+                    {
+                        "entity": entity,
+                        "field": claim.field_name,
+                        "source_id": claim.source_id,
+                        "reason": sensitivity_reason or "invalid sensitivity request",
+                    }
+                )
+                continue
+            try:
+                sensitivity_result = sensitivity_cache.get_or_calculate(
+                    claim.entity_type, claim.entity_key, birth_date, timezone_name, location
+                )
+            except (RuntimeError, ValueError) as error:
+                report.failed.append(
+                    {
+                        "entity": entity,
+                        "field": claim.field_name,
+                        "source_id": claim.source_id,
+                        "reason": str(error),
+                    }
+                )
+                continue
+            row = {
+                "entity": entity,
+                "record_id": sensitivity_result.record_id,
+                "input_hash": sensitivity_result.input_hash,
+            }
+            if sensitivity_result.status == "hit":
+                report.sensitivity_cache_hits.append(row)
+            else:
+                report.sensitivity_computed.append(row)
+            continue
         parsed, reason = _claim_request(claim)
         if parsed is None:
             report.skipped.append(
