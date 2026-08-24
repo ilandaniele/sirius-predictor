@@ -179,7 +179,9 @@ class SiriusReviewQueue:
     ) -> dict[str, Any]:
         decisions = self._latest_decisions()
         rows = self.session.scalars(
-            select(SiriusReviewCandidate).order_by(
+            select(SiriusReviewCandidate)
+            .where(SiriusReviewCandidate.source_id == self.source_id)
+            .order_by(
                 SiriusReviewCandidate.published_at.asc(),
                 SiriusReviewCandidate.post_id.asc(),
                 SiriusReviewCandidate.claim_index.asc(),
@@ -247,7 +249,7 @@ class SiriusReviewQueue:
             candidate_id,
             with_for_update=True,
         )
-        if candidate is None:
+        if candidate is None or candidate.source_id != self.source_id:
             raise LookupError("Sirius review candidate not found")
         if action not in {"approved", "rejected"}:
             raise ValueError("action must be approved or rejected")

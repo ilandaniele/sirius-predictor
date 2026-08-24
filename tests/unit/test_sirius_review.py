@@ -7,6 +7,8 @@ import pytest
 from sqlalchemy import create_engine, select
 from sqlalchemy.orm import Session
 
+from collectors.argumental_archive import build_archive_index as build_argumental_archive_index
+from collectors.argumental_archive import parse_archive_index as argumental_parse_archive_index
 from collectors.sirius_archive import build_archive_index
 from db.base import Base
 from db.models import DataQuality, SiriusReviewDecision
@@ -213,3 +215,81 @@ def test_feature_must_be_explicitly_detected_in_candidate(
             reason="La técnica no figura en el candidato",
             approval=approval,
         )
+
+
+def _argumental_archive_payload() -> bytes:
+    entry = {
+        "id": {"$t": "tag:blogger.com,1999:blog-2.post-9"},
+        "published": {"$t": "2026-07-11T15:01:00-03:00"},
+        "updated": {"$t": "2026-07-11T15:02:00-03:00"},
+        "title": {"$t": "Mundial Argentina vs Brasil"},
+        "content": {
+            "$t": (
+                "Analisis del partido mediante el metodo Frawley: Argentina ganara la final."
+            )
+        },
+        "link": [
+            {
+                "rel": "alternate",
+                "href": "https://astrologiaargumental.blogspot.com/post-9.html",
+            }
+        ],
+    }
+    page = json.dumps(
+        {
+            "feed": {
+                "openSearch$totalResults": {"$t": "1"},
+                "entry": [entry],
+            }
+        }
+    ).encode()
+    return build_argumental_archive_index([page], datetime(2026, 8, 20, tzinfo=UTC))
+
+
+def test_review_queues_do_not_leak_candidates_across_sources(tmp_path: Path) -> None:
+    engine = create_engine(f"sqlite:///{(tmp_path / 'multi-source.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    session = Session(engine)
+    session.add(
+        DataQuality(
+            code="B",
+            label="Archivo confiable",
+            precedence=4,
+            requires_manual_review=False,
+        )
+    )
+    session.commit()
+
+    sirius = SiriusReviewQueue(
+        session,
+        rules_path=ROOT / "data" / "sirius_rules.yaml",
+        teams_path=ROOT / "data" / "teams.csv",
+        source_id="sirius_blog",
+    )
+    argumental = SiriusReviewQueue(
+        session,
+        rules_path=ROOT / "data" / "argumental_rules.yaml",
+        teams_path=ROOT / "data" / "teams.csv",
+        source_id="argumental_blog",
+        parse_archive_index=argumental_parse_archive_index,
+    )
+    sirius.sync_archive(_archive_payload())
+    argumental.sync_archive(_argumental_archive_payload())
+    session.commit()
+
+    sirius_items = sirius.list_candidates(status="all")["items"]
+    argumental_items = argumental.list_candidates(status="all")["items"]
+    assert sirius_items and argumental_items
+    assert all(item["source_id"] == "sirius_blog" for item in sirius_items)
+    assert all(item["source_id"] == "argumental_blog" for item in argumental_items)
+
+    argumental_candidate_id = argumental_items[0]["id"]
+    with pytest.raises(LookupError):
+        sirius.decide(
+            argumental_candidate_id,
+            action="rejected",
+            reviewer="Ilan",
+            reason="No pertenece a esta cola de revisión",
+        )
+    session.close()
+    engine.dispose()
