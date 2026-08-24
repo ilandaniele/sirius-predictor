@@ -3,6 +3,7 @@ from datetime import UTC, datetime
 from pathlib import Path
 
 import pytest
+import yaml
 from sqlalchemy import create_engine, func, select
 from sqlalchemy.orm import Session
 
@@ -338,13 +339,16 @@ def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) ->
     assert first_manifest["affected_charts"] == ["Fixture:final-2030"]
     assert first_manifest["chart_recalculation"]["recalculated_count"] == 1
     assert first_manifest["chart_recalculation"]["cache_hit_count"] == 0
+    # sources.yaml grows over time as new fact-checked sources are added (natal data,
+    # blogs, etc.); +1 accounts for OfficialFixtureCollector, which isn't cataloged there.
+    catalog_size = len(yaml.safe_load((ROOT / "data" / "sources.yaml").read_text("utf-8")))
     assert first_manifest["claim_persistence"] == {
         "observed": 1,
         "inserted": 1,
         "duplicates": 0,
         "eligible": 1,
         "pending": 0,
-        "sources_created": 17,
+        "sources_created": catalog_size + 1,
         "sources_updated": 0,
     }
     assert second_manifest["chart_recalculation"]["recalculated_count"] == 0

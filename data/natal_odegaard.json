@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Martin Ødegaard",
+      "birth_date": "1998-12-17",
+      "birth_time": null,
+      "timezone": "Europe/Oslo",
+      "place": "Drammen, Noruega",
+      "latitude": 59.7439,
+      "longitude": 10.2045,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

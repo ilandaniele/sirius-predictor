@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Thomas Tuchel",
+      "birth_date": "1973-08-29",
+      "birth_time": null,
+      "timezone": "Europe/Berlin",
+      "place": "Krumbach, Baviera, Alemania",
+      "latitude": 48.25,
+      "longitude": 10.3667,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

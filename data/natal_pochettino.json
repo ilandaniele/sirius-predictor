@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mauricio Pochettino Trossero",
+      "birth_date": "1972-03-02",
+      "birth_time": null,
+      "timezone": "America/Argentina/Buenos_Aires",
+      "place": "Murphy, Santa Fe, Argentina",
+      "latitude": -31.2333,
+      "longitude": -61.15,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

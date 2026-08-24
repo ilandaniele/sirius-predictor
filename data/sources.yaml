@@ -151,3 +151,103 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Brasil (confirmado durante el Mundial 2026 real). Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_tuchel
+  name: Thomas Tuchel — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Thomas_Tuchel
+  local_path: data/natal_tuchel.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Inglaterra (la FA lo ratificó hasta julio de 2028 tras el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_kane
+  name: Harry Kane — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Harry_Kane
+  local_path: data/natal_kane.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Inglaterra. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_solbakken
+  name: Ståle Solbakken — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/St%C3%A5le_Solbakken
+  local_path: data/natal_solbakken.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Noruega. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_odegaard
+  name: Martin Ødegaard — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Martin_%C3%98degaard
+  local_path: data/natal_odegaard.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Noruega. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_van_bommel
+  name: Mark van Bommel — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Mark_van_Bommel
+  local_path: data/natal_van_bommel.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Bélgica (asumió el cargo el 15/08/2026, contrato hasta la Eurocopa 2028, sucediendo a Rudi García). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_tielemans
+  name: Youri Tielemans — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Youri_Tielemans
+  local_path: data/natal_tielemans.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Bélgica (nombrado por Rudi García antes del cambio de DT; sin evidencia de que van Bommel lo haya reemplazado). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_pochettino
+  name: Mauricio Pochettino — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Mauricio_Pochettino
+  local_path: data/natal_pochettino.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del entrenador de Estados Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ream
+  name: Tim Ream — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Tim_Ream
+  local_path: data/natal_ream.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Estados Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bielsa
+  name: Marcelo Bielsa — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Marcelo_Bielsa
+  local_path: data/natal_bielsa.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Uruguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_valverde
+  name: Federico Valverde — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Federico_Valverde
+  local_path: data/natal_valverde.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Uruguay. Hora desconocida, nunca imputada.
+  enabled: true

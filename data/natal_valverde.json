@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Federico Santiago Valverde Dipetta",
+      "birth_date": "1998-07-22",
+      "birth_time": null,
+      "timezone": "America/Montevideo",
+      "place": "Montevideo, Uruguay",
+      "latitude": -34.9011,
+      "longitude": -56.1645,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

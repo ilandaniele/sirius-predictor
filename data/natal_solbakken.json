@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ståle Solbakken",
+      "birth_date": "1968-02-27",
+      "birth_time": null,
+      "timezone": "Europe/Oslo",
+      "place": "Kongsvinger, Noruega",
+      "latitude": 60.19,
+      "longitude": 12.0,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

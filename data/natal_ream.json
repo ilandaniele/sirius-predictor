@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Timothy Michael Ream",
+      "birth_date": "1987-10-05",
+      "birth_time": null,
+      "timezone": "America/Chicago",
+      "place": "St. Louis, Misuri, Estados Unidos",
+      "latitude": 38.627,
+      "longitude": -90.1994,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
