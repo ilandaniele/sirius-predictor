@@ -22,6 +22,7 @@ from collectors.common.base import Collector
 from collectors.common.pipeline import UpdatePipeline, UpdateReport
 from collectors.common.raw import raw_collector_from_config
 from collectors.fifa import fifa_ranking_collector_from_config
+from collectors.natal import natal_collector_from_config
 from collectors.sirius_archive import sirius_archive_collector_from_config
 from db.predictions import persist_prediction_manifest
 from db.repository import append_claim, sync_source_catalog
@@ -228,6 +229,8 @@ def build_collectors(settings: Settings) -> list[Collector]:
             if record.get("id") == "argumental_blog"
             else fifa_ranking_collector_from_config(record)
             if record.get("id") == "fifa_ranking"
+            else natal_collector_from_config(record, ROOT)
+            if record.get("kind") == "local_natal_data"
             else raw_collector_from_config(record, ROOT)
         )
         for record in raw

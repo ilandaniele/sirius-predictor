@@ -71,3 +71,13 @@
   robots_policy: adapter_not_configured
   use: Entrenadores, capitanes y datos oficiales; se incorpora por adaptadores específicos.
   enabled: false
+- id: natal_scaloni
+  name: Lionel Scaloni — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Lionel_Scaloni
+  local_path: data/natal_scaloni.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del DT de Argentina (asumido continuidad 2030 en data/scenario.yaml); hora desconocida, nunca imputada a las 12:00 — no alimenta un cálculo de carta real hasta que exista un análisis de sensibilidad horaria.
+  enabled: true

@@ -13,7 +13,9 @@ from collectors.fifa.ranking import (
     parse_fifa_ranking,
 )
 from collectors.fifa.structured import StructuredFifaParser
+from collectors.natal import natal_collector_from_config
 from collectors.natal.parser import parse_birth_records
+from packages.astrology import recalculate_accepted_charts
 
 
 def test_fifa_ranking_parser_supports_versioned_embedded_json() -> None:
@@ -174,3 +176,63 @@ def test_unknown_birth_time_stays_null_and_never_becomes_noon() -> None:
             birth_time="12:00",
             time_known=False,
         )
+
+
+def test_natal_collector_publishes_an_unknown_time_birth_data_claim(tmp_path: Path) -> None:
+    data_path = tmp_path / "natal.json"
+    data_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "sirius-birth-data-v1",
+                "records": [
+                    {
+                        "person_name": "Lionel Sebastián Scaloni",
+                        "birth_date": "1978-05-16",
+                        "birth_time": None,
+                        "timezone": None,
+                        "place": "Pujato, Santa Fe, Argentina",
+                        "latitude": -32.9833,
+                        "longitude": -61.15,
+                        "time_known": False,
+                        "rodden_rating": "X",
+                    }
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    collector = natal_collector_from_config(
+        {
+            "id": "natal_scaloni",
+            "url": "https://es.wikipedia.org/wiki/Lionel_Scaloni",
+            "grade": "B",
+            "local_path": "natal.json",
+            "terms_url": "https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use",
+            "robots_policy": "curated_local_file_cites_public_biography",
+        },
+        tmp_path,
+    )
+    payload = collector.fetch()
+    claims = collector.parse(payload, datetime(2026, 8, 24, tzinfo=UTC))
+    assert len(claims) == 1
+    claim = claims[0]
+    assert claim.entity_type == "BirthData"
+    assert claim.entity_key == "Lionel Sebastián Scaloni"
+    assert claim.manually_confirmed is True
+    assert claim.value["time_known"] is False
+    assert claim.value["birth_time"] is None
+    assert claim.value["chart_request"] == {"time_known": False}
+
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import Session as OrmSession
+
+    from db.base import Base
+
+    engine = create_engine(f"sqlite:///{(tmp_path / 'astro.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    with OrmSession(engine) as session:
+        report = recalculate_accepted_charts(session, claims)
+    assert report.recalculated == []
+    assert report.failed == []
+    assert len(report.skipped) == 1
+    assert "unknown time" in report.skipped[0]["reason"]

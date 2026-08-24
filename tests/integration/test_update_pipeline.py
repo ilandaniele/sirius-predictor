@@ -344,7 +344,7 @@ def test_update_pipeline_recalculates_only_accepted_complete_charts(tmp_path) ->
         "duplicates": 0,
         "eligible": 1,
         "pending": 0,
-        "sources_created": 9,
+        "sources_created": 10,
         "sources_updated": 0,
     }
     assert second_manifest["chart_recalculation"]["recalculated_count"] == 0
