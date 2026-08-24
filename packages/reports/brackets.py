@@ -14,6 +14,8 @@ from reportlab.pdfgen import canvas  # type: ignore[import-untyped]
 
 from engine.domain import Team, TournamentResult
 
+from .flags import flag_rects
+
 BRACKET_RENDERER_VERSION = "4.0.0"
 BRACKET_SCOPE = "SF_AND_FINAL"
 SIGNATURE_VERSION = "decisive-v1"
@@ -103,6 +105,37 @@ def _box_name_size(box: _MatchBox, scale: float) -> int:
     if box.round_name in DISPLAY_ROUNDS:
         return _decisive_name_size(scale)
     return max(6, int(box.height * 0.30))
+
+
+def _row_flag_geometry(box: _MatchBox, row: int) -> tuple[float, float, float, float]:
+    """(x, y, width, height) for the small flag block in one row of a match box."""
+    flag_height = box.height * 0.30
+    flag_width = flag_height * 1.5
+    flag_x = box.x + max(3.0, box.height * 0.08)
+    flag_y = box.y + box.height * (0.10 if row == 0 else 0.58)
+    return flag_x, flag_y, flag_width, flag_height
+
+
+def _trophy_rects(x: float, y: float, width: float, height: float) -> list[tuple[float, float, float, float]]:
+    """Rect-only, original abstract trophy silhouette: bowl, handles, stem, base."""
+    bowl_height = height * 0.32
+    stem_height = height * 0.38
+    base_height = height * 0.14
+    handle_width = width * 0.14
+    handle_height = height * 0.16
+    stem_width = width * 0.22
+    stem_x = x + (width - stem_width) / 2
+    stem_y = y + bowl_height
+    base_width = width * 0.55
+    base_x = x + (width - base_width) / 2
+    base_y = stem_y + stem_height
+    return [
+        (x, y, width, bowl_height),
+        (x - handle_width * 0.55, y + bowl_height * 0.15, handle_width, handle_height),
+        (x + width - handle_width * 0.45, y + bowl_height * 0.15, handle_width, handle_height),
+        (stem_x, stem_y, stem_width, stem_height),
+        (base_x, base_y, base_width, base_height),
+    ]
 
 
 def _winner_probability(match: Any) -> float:
@@ -257,7 +290,7 @@ def _champion_box(layout: dict[str, list[_MatchBox]], spec: BracketExportSpec) -
         x=final.x,
         y=final.y + final.height + 42 * scale,
         width=final.width,
-        height=final.height * 0.68,
+        height=final.height * 0.92,
     )
 
 
@@ -373,10 +406,18 @@ def _svg(
                 (1, match.away_id, match.away_goals),
             ):
                 color = COLORS["winner"] if match.winner_id == team_id else COLORS["muted"]
-                name = _fit_text(teams[team_id].team, box.width - 3 * box_padding, box_name_size)
+                flag_x, flag_y, flag_width, flag_height = _row_flag_geometry(box, row)
+                elements.extend(
+                    f'<rect x="{rx:.1f}" y="{ry:.1f}" width="{rw:.1f}" height="{rh:.1f}" fill="{fill}"/>'
+                    for rx, ry, rw, rh, fill in flag_rects(flag_x, flag_y, flag_width, flag_height, team_id)
+                )
+                text_x = flag_x + flag_width + max(3.0, box.height * 0.06)
+                name = _fit_text(
+                    teams[team_id].team, box.right - box_padding - text_x, box_name_size
+                )
                 baseline_y = box.y + box.height * (0.34 if row == 0 else 0.82)
                 elements.append(
-                    f'<text x="{box.x + box_padding:.1f}" y="{baseline_y:.1f}" fill="{color}" font-family="Arial" font-size="{box_name_size}" font-weight="bold">{html.escape(name)}</text>'
+                    f'<text x="{text_x:.1f}" y="{baseline_y:.1f}" fill="{color}" font-family="Arial" font-size="{box_name_size}" font-weight="bold">{html.escape(name)}</text>'
                 )
                 elements.append(
                     f'<text x="{box.right - box_padding:.1f}" y="{baseline_y:.1f}" fill="{color}" text-anchor="end" font-family="Arial" font-size="{box_name_size}" font-weight="bold">{goals}</text>'
@@ -389,11 +430,32 @@ def _svg(
     champion_name = _fit_text(
         teams[result.champion_id].team, champion.width - 30 * scale, name_size
     )
+    trophy_width = champion.width * 0.30
+    trophy_height = champion.height * 0.40
+    trophy_x = champion.x + (champion.width - trophy_width) / 2
+    trophy_y = champion.y + champion.height * 0.05
+    champion_flag_height = champion.height * 0.15
+    champion_flag_width = champion_flag_height * 1.5
+    champion_flag_x = champion.x + (champion.width - champion_flag_width) / 2
+    champion_flag_y = champion.y + champion.height * 0.50
+    elements.append(
+        f'<rect data-role="champion" x="{champion.x:.1f}" y="{champion.y:.1f}" width="{champion.width:.1f}" height="{champion.height:.1f}" rx="{max(4, 18 * scale):.1f}" fill="{COLORS["gold"]}"/>'
+    )
+    elements.extend(
+        f'<rect x="{tx:.1f}" y="{ty:.1f}" width="{tw:.1f}" height="{th:.1f}" fill="{COLORS["background"]}"/>'
+        for tx, ty, tw, th in _trophy_rects(trophy_x, trophy_y, trophy_width, trophy_height)
+    )
+    elements.extend(
+        f'<rect x="{rx:.1f}" y="{ry:.1f}" width="{rw:.1f}" height="{rh:.1f}" fill="{fill}"/>'
+        for rx, ry, rw, rh, fill in flag_rects(
+            champion_flag_x, champion_flag_y, champion_flag_width, champion_flag_height,
+            result.champion_id,
+        )
+    )
     elements.extend(
         [
-            f'<rect data-role="champion" x="{champion.x:.1f}" y="{champion.y:.1f}" width="{champion.width:.1f}" height="{champion.height:.1f}" rx="{max(4, 18 * scale):.1f}" fill="{COLORS["gold"]}"/>',
-            f'<text x="{champion.x + champion.width / 2:.1f}" y="{champion.y + champion.height * 0.36:.1f}" fill="{COLORS["background"]}" text-anchor="middle" font-family="Arial" font-size="{max(9, int(18 * scale))}" font-weight="bold">CAMPEÓN</text>',
-            f'<text x="{champion.x + champion.width / 2:.1f}" y="{champion.y + champion.height * 0.72:.1f}" fill="{COLORS["background"]}" text-anchor="middle" font-family="Georgia" font-size="{name_size}" font-weight="bold">{html.escape(champion_name)}</text>',
+            f'<text x="{champion.x + champion.width / 2:.1f}" y="{champion.y + champion.height * 0.66:.1f}" fill="{COLORS["background"]}" text-anchor="middle" font-family="Arial" font-size="{max(9, int(18 * scale))}" font-weight="bold">CAMPEÓN</text>',
+            f'<text x="{champion.x + champion.width / 2:.1f}" y="{champion.y + champion.height * 0.90:.1f}" fill="{COLORS["background"]}" text-anchor="middle" font-family="Georgia" font-size="{name_size}" font-weight="bold">{html.escape(champion_name)}</text>',
         ]
     )
     footer_y = spec.height - spec.margin - 105 * scale
@@ -436,9 +498,13 @@ def _draw_match_png(
         (1, match.away_id, match.away_goals),
     ):
         color = COLORS["winner"] if match.winner_id == team_id else COLORS["muted"]
-        name = _fit_text(teams[team_id].team, box.width - 3 * padding, name_size)
+        flag_x, flag_y, flag_width, flag_height = _row_flag_geometry(box, row)
+        for rx, ry, rw, rh, fill in flag_rects(flag_x, flag_y, flag_width, flag_height, team_id):
+            draw.rectangle((rx, ry, rx + rw, ry + rh), fill=fill)
+        text_x = flag_x + flag_width + max(3.0, box.height * 0.06)
+        name = _fit_text(teams[team_id].team, box.right - padding - text_x, name_size)
         y = box.y + box.height * (0.29 if row == 0 else 0.76)
-        draw.text((box.x + padding, y), name, fill=color, font=_font(name_size, True), anchor="lm")
+        draw.text((text_x, y), name, fill=color, font=_font(name_size, True), anchor="lm")
         draw.text(
             (box.right - padding, y),
             str(goals),
@@ -533,19 +599,34 @@ def _png(
         radius=max(4, int(18 * scale)),
         fill=COLORS["gold"],
     )
+    trophy_width = champion.width * 0.30
+    trophy_height = champion.height * 0.40
+    trophy_x = champion.x + (champion.width - trophy_width) / 2
+    trophy_y = champion.y + champion.height * 0.05
+    for tx, ty, tw, th in _trophy_rects(trophy_x, trophy_y, trophy_width, trophy_height):
+        draw.rectangle((tx, ty, tx + tw, ty + th), fill=COLORS["background"])
+    champion_flag_height = champion.height * 0.15
+    champion_flag_width = champion_flag_height * 1.5
+    champion_flag_x = champion.x + (champion.width - champion_flag_width) / 2
+    champion_flag_y = champion.y + champion.height * 0.50
+    for rx, ry, rw, rh, fill in flag_rects(
+        champion_flag_x, champion_flag_y, champion_flag_width, champion_flag_height,
+        result.champion_id,
+    ):
+        draw.rectangle((rx, ry, rx + rw, ry + rh), fill=fill)
     name_size = max(12, int(31 * scale))
     champion_name = _fit_text(
         teams[result.champion_id].team, champion.width - 30 * scale, name_size
     )
     draw.text(
-        (champion.x + champion.width / 2, champion.y + champion.height * 0.30),
+        (champion.x + champion.width / 2, champion.y + champion.height * 0.66),
         "CAMPEÓN",
         fill=COLORS["background"],
         font=_font(max(9, int(18 * scale)), True),
         anchor="mm",
     )
     draw.text(
-        (champion.x + champion.width / 2, champion.y + champion.height * 0.68),
+        (champion.x + champion.width / 2, champion.y + champion.height * 0.90),
         champion_name,
         fill=COLORS["background"],
         font=_font(name_size, True),
@@ -596,10 +677,15 @@ def _pdf_match(
         (1, match.away_id, match.away_goals),
     ):
         color = COLORS["winner"] if match.winner_id == team_id else COLORS["muted"]
+        flag_x, flag_y, flag_width, flag_height = _row_flag_geometry(box, row)
+        for rx, ry, rw, rh, fill in flag_rects(flag_x, flag_y, flag_width, flag_height, team_id):
+            pdf.setFillColor(fill)
+            pdf.rect(rx, spec.height - ry - rh, rw, rh, fill=1, stroke=0)
         pdf.setFillColor(color)
-        name = _fit_text(teams[team_id].team, box.width - 3 * padding, name_size)
+        text_x = flag_x + flag_width + max(3.0, box.height * 0.06)
+        name = _fit_text(teams[team_id].team, box.right - padding - text_x, name_size)
         y = pdf_y + box.height * (0.67 if row == 0 else 0.18)
-        pdf.drawString(box.x + padding, y, name)
+        pdf.drawString(text_x, y, name)
         pdf.drawRightString(box.right - padding, y, str(goals))
     if not decisive:
         return
@@ -679,6 +765,23 @@ def _pdf(
         fill=1,
         stroke=0,
     )
+    trophy_width = champion.width * 0.30
+    trophy_height = champion.height * 0.40
+    trophy_x = champion.x + (champion.width - trophy_width) / 2
+    trophy_y = champion.y + champion.height * 0.05
+    pdf.setFillColor(COLORS["background"])
+    for tx, ty, tw, th in _trophy_rects(trophy_x, trophy_y, trophy_width, trophy_height):
+        pdf.rect(tx, spec.height - ty - th, tw, th, fill=1, stroke=0)
+    champion_flag_height = champion.height * 0.15
+    champion_flag_width = champion_flag_height * 1.5
+    champion_flag_x = champion.x + (champion.width - champion_flag_width) / 2
+    champion_flag_y = champion.y + champion.height * 0.50
+    for rx, ry, rw, rh, fill in flag_rects(
+        champion_flag_x, champion_flag_y, champion_flag_width, champion_flag_height,
+        result.champion_id,
+    ):
+        pdf.setFillColor(fill)
+        pdf.rect(rx, spec.height - ry - rh, rw, rh, fill=1, stroke=0)
     name_size = max(12, 31 * scale)
     champion_name = _fit_text(
         teams[result.champion_id].team, champion.width - 30 * scale, name_size
@@ -686,11 +789,11 @@ def _pdf(
     pdf.setFillColor(COLORS["background"])
     pdf.setFont("Helvetica-Bold", max(9, 18 * scale))
     pdf.drawCentredString(
-        champion.x + champion.width / 2, champion_pdf_y + champion.height * 0.64, "CAMPEÓN"
+        champion.x + champion.width / 2, champion_pdf_y + champion.height * 0.34, "CAMPEÓN"
     )
     pdf.setFont("Helvetica-Bold", name_size)
     pdf.drawCentredString(
-        champion.x + champion.width / 2, champion_pdf_y + champion.height * 0.25, champion_name
+        champion.x + champion.width / 2, champion_pdf_y + champion.height * 0.10, champion_name
     )
     footer_y = spec.height - spec.margin - 105 * scale
     footer_title = (

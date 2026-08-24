@@ -26,16 +26,40 @@ TECHNIQUE_TERMS: dict[str, re.Pattern[str]] = {
         r"\b(carta\s+(?:de la\s+)?(?:afa|federaci[oó]n)|federaci[oó]n)\b", re.I
     ),
     "captain_chart": re.compile(r"\b(capit[aá]n|messi natal|carta natal)\b", re.I),
+    "coach_natal": re.compile(
+        r"\b(?:dt|t[eé]cnico|entrenador)\s+natal\b|\bnatal\s+del\s+(?:dt|t[eé]cnico|entrenador)\b",
+        re.I,
+    ),
     "solar_return": re.compile(r"\brevoluci[oó]n solar\b|\bRS\b", re.I),
     "lunar_return": re.compile(r"\brevoluci[oó]n lunar\b|\bRL\b", re.I),
     "primary_directions": re.compile(r"\bdirecciones primarias\b", re.I),
     "progressions": re.compile(r"\bprogresiones\b", re.I),
+    "proluna": re.compile(r"\bproluna\b", re.I),
     "transits": re.compile(r"\btr[aá]nsitos?\b", re.I),
+    "dignities_receptions": re.compile(r"\bdignidades?\b|\brecepci[oó]n(?:es)?\b", re.I),
+    "solar_lunar_factors": re.compile(
+        r"\bposici[oó]n del sol\b|\bposici[oó]n de la luna\b|\bsol[-/ ]luna\b", re.I
+    ),
     "antiscia": re.compile(r"\bcontra-?antiscias?|antiscias?\b", re.I),
-    "eclipse": re.compile(r"\beclipses?\b", re.I),
+    "demi_lunar": re.compile(r"\bdemi-?lunar\b", re.I),
+    "quarti_lunar": re.compile(r"\bcuarti-?lunar\b", re.I),
+    "eclipse": re.compile(
+        r"\beclipses?\b|\blunaci[oó]n(?:es)?\b|\bingreso\s+planetario\b|\bingreso\s+de\s+\w+\s+en\b",
+        re.I,
+    ),
+    "harmonics": re.compile(r"\barm[oó]nicas?\b", re.I),
     "fixed_stars": re.compile(r"\bestrellas? fijas?\b", re.I),
     "arabic_parts": re.compile(
         r"\b(parte de (?:fortuna|victoria|esp[ií]ritu)|partes? ar[aá]bigas?)\b", re.I
+    ),
+    "kickoff_chart": re.compile(r"\bcarta del (?:kick-?off|partido|inicio del partido)\b", re.I),
+    "houses_i_vii": re.compile(r"\b[Cc]asas?\s+(?:I|VII|1|7)\b"),
+    "rulers_mc_moon": re.compile(r"\bregentes?\b|\bmedio\s*cielo\b|\bMC\b"),
+    "modality": re.compile(r"\bmodalidad\s+(?:cardinal|fija|mutable)\b", re.I),
+    "critical_minutes": re.compile(
+        r"\bminutos?\s+(?:cr[ií]ticos?|de los? goles?)\b"
+        r"|\bventanas?\s+de\s+(?:minutos?|activaci[oó]n)\b",
+        re.I,
     ),
 }
 
