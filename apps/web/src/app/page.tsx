@@ -132,6 +132,11 @@ export default function Home() {
     () => [...teams].sort((a, b) => b.projected_elo - a.projected_elo).slice(0, 12),
     [teams]
   );
+  const probableGroups = useMemo(
+    () => (prediction?.argentina_groups ?? []).slice(0, 10),
+    [prediction]
+  );
+  const maxGroupFrequency = Math.max(1e-9, ...probableGroups.map((row) => Number(row["Frecuencia %"])));
   const scenarioSource = sources.find((source) => source.source_id === "scenario");
   const modelSource = sources.find((source) => source.source_id !== "scenario") ?? scenarioSource;
   const argentinaGroup = Object.entries(draw).find(([, members]) =>
@@ -325,9 +330,36 @@ export default function Home() {
                 <div className="groups-grid">{Object.entries(draw).map(([group, members]) => <div key={group}><b>Grupo {group}</b>{members.map((team) => <span key={team.team_id}>{team.team_id} · {team.team}</span>)}</div>)}</div>
               </article>
               <article className="panel">
-                <div className="panel-title"><div><p>ARGENTINA</p><h3>Grupo actual y familias frecuentes</h3></div></div>
-                {argentinaGroup ? <div className="focus-group"><b>Grupo {argentinaGroup[0]}</b>{argentinaGroup[1].map((team) => <span key={team.team_id}>{team.team}</span>)}</div> : null}
-                <DataTable rows={prediction?.argentina_groups ?? []} empty="Ejecutá una actualización para estimar familias." />
+                <div className="panel-title"><div><p>ARGENTINA</p><h3>Los 10 grupos más probables</h3></div></div>
+                {probableGroups.length ? (
+                  <div className="probable-groups">
+                    {probableGroups.map((row, index) => (
+                      <div className="probable-group-row" key={String(row["Otros tres equipos"])}>
+                        <b>{String(index + 1).padStart(2, "0")}</b>
+                        <span>Argentina · {String(row["Otros tres equipos"])}</span>
+                        <div className="bar">
+                          <i
+                            style={{
+                              width: `${Math.max(6, (Number(row["Frecuencia %"]) / maxGroupFrequency) * 100)}%`
+                            }}
+                          />
+                        </div>
+                        <code>{Number(row["Frecuencia %"]).toFixed(3)}%</code>
+                      </div>
+                    ))}
+                  </div>
+                ) : (
+                  <p className="empty">Ejecutá una actualización para estimar familias.</p>
+                )}
+                {argentinaGroup ? (
+                  <div className="focus-group-example">
+                    <small>Ejemplo de sorteo reproducible (semilla fija) · no es una predicción</small>
+                    <div className="focus-group">
+                      <b>Grupo {argentinaGroup[0]}</b>
+                      {argentinaGroup[1].map((team) => <span key={team.team_id}>{team.team}</span>)}
+                    </div>
+                  </div>
+                ) : null}
               </article>
             </div>
 
