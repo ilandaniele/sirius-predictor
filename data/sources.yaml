@@ -1411,3 +1411,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Rafael Márquez como seleccionador de México (26/9/2026, M&T Bank Stadium, Baltimore, vs Colombia, amistoso del MexTour). Fixture oficial con fecha y horario ya confirmados; aún no disputado a la fecha de esta carga. Técnica "coach_cycle".
   enabled: true
+- id: events_par_coach_debut
+  name: Debut de Gustavo Alfaro como seleccionador de Paraguay — La Nación
+  grade: B
+  kind: local_team_events
+  url: https://www.lanacion.com.ar/deportes/futbol/a-que-hora-juega-uruguay-vs-paraguay-por-las-eliminatorias-sudamericanas-2026-nid06092024/
+  local_path: data/events_par_coach_debut.json
+  terms_url: https://www.lanacion.com.ar/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Gustavo Alfaro como seleccionador de Paraguay (6/9/2024, Estadio Centenario, Montevideo, vs Uruguay). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_rsa_coach_debut
+  name: Debut de Hugo Broos como seleccionador de Sudáfrica — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/601982/zimbabwe-sudafrica
+  local_path: data/events_rsa_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hugo Broos como seleccionador de Sudáfrica (3/9/2021, Estadio Nacional de Harare, vs Zimbabue). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_hon_coach_debut
+  name: Debut de José Francisco Molina como seleccionador de Honduras — Tiempo.hn
+  grade: B
+  kind: local_team_events
+  url: https://tiempo.hn/cronometro/2026/03/31/jose-francisco-molina-demostramos-caracter-fuerza-me-voy-contento-pero-hay-que-mejorar/
+  local_path: data/events_hon_coach_debut.json
+  terms_url: https://tiempo.hn/aviso-legal/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de José Francisco Molina como seleccionador de Honduras (31/3/2026, Estadio Municipal de Butarque, Leganés, vs Perú — el mismo partido en el que Perú, con Mano Menezes, jugó su segundo encuentro). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true

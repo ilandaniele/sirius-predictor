@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "HON",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2026-03-31T19:00:00+02:00",
+      "location": {
+        "latitude": 40.335,
+        "longitude": -3.7639,
+        "name": "Estadio Municipal de Butarque, Leganés, España"
+      },
+      "label": "Honduras 2-2 Perú, debut de José Francisco Molina como seleccionador",
+      "coach_name": "José Francisco Molina"
+    }
+  ]
+}
