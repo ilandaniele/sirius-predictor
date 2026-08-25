@@ -1181,3 +1181,13 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Hong Myung-bo en su segunda etapa como seleccionador de Corea del Sur (5/9/2024, Seoul World Cup Stadium, vs Palestina). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_can_coach_debut
+  name: Debut de Jesse Marsch como seleccionador de Canadá — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/700290/canada-paises-bajos
+  local_path: data/events_can_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jesse Marsch como seleccionador de Canadá (6/6/2024, De Kuip, Róterdam, vs Países Bajos). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
