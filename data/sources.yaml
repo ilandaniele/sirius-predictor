@@ -1311,3 +1311,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Julen Lopetegui como seleccionador de Qatar (5/6/2025, Jassim Bin Hamad, Doha, vs Irán). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_crc_coach_debut
+  name: Debut de Fernando Batista como seleccionador de Costa Rica — La Nación
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/401862038/costa-rica-jordania
+  local_path: data/events_crc_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Fernando Batista como seleccionador de Costa Rica (27/3/2026, Mardan Sports Complex, Antalya, vs Jordania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_tun_coach_debut
+  name: Debut de Hervé Renard como seleccionador de Túnez — FIFA
+  grade: B
+  kind: local_team_events
+  url: https://www.fifa.com/es/match-centre/match/17/285023/289273/400021475
+  local_path: data/events_tun_coach_debut.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hervé Renard como seleccionador de Túnez (20/6/2026, Estadio BBVA, Monterrey, vs Japón, el partido número 1000 de la historia de los Mundiales). Asumió en pleno Mundial 2026 tras la salida de Sabri Lamouchi, sin partidos previos de preparación. Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cmr_coach_debut
+  name: Debut de David Pagou como seleccionador de Camerún — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/732141/gabon-camerun
+  local_path: data/events_cmr_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de David Pagou como seleccionador de Camerún (24/12/2025, Stade Adrar, Agadir, vs Gabón, Copa Africana de Naciones 2025). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
