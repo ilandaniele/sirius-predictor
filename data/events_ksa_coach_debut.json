@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "KSA",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2026-05-30T19:30:00-04:00",
+      "location": {
+        "latitude": 40.7368,
+        "longitude": -74.15,
+        "name": "Sports Illustrated Stadium, Harrison, Nueva Jersey, Estados Unidos"
+      },
+      "label": "Ecuador 2-1 Arabia Saudita, debut de Georgios Donis como seleccionador (no confundir con el debut mundialista vs Uruguay el 15/6)",
+      "coach_name": "Georgios Donis"
+    }
+  ]
+}

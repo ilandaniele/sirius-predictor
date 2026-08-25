@@ -1271,3 +1271,43 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Thomas Christiansen como seleccionador de Panamá (10/10/2020, Estadio Nacional, San José, vs Costa Rica). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_uzb_coach_debut
+  name: Debut de Fabio Cannavaro como seleccionador de Uzbekistán — Kursiv Media
+  grade: B
+  kind: local_team_events
+  url: https://uz.kursiv.media/en/2025-10-10/uzbekistan-defeat-kuwait-2-0-under-fabio-cannavaros-leadership/
+  local_path: data/events_uzb_coach_debut.json
+  terms_url: https://uz.kursiv.media/en/terms/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Fabio Cannavaro como seleccionador de Uzbekistán (9/10/2025, Estadio Olímpico, Taskent, vs Kuwait). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_ksa_coach_debut
+  name: Debut de Georgios Donis como seleccionador de Arabia Saudita — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/401869431/saudi-arabia-ecuador
+  local_path: data/events_ksa_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Georgios Donis como seleccionador de Arabia Saudita (30/5/2026, Sports Illustrated Stadium, Harrison NJ, vs Ecuador — no confundir con el debut mundialista vs Uruguay del 15/6/2026, ya jugado bajo su mandato pero no su debut real). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_aus_coach_debut
+  name: Debut de Tony Popovic como seleccionador de Australia — Socceroos
+  grade: B
+  kind: local_team_events
+  url: https://socceroos.com.au/news/popovic-era-begins-3-1-victory-over-china-pr-adelaide-oval
+  local_path: data/events_aus_coach_debut.json
+  terms_url: https://www.footballaustralia.com.au/terms-of-use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Tony Popovic como seleccionador de Australia (10/10/2024, Adelaide Oval, vs China). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_qat_coach_debut
+  name: Debut de Julen Lopetegui como seleccionador de Qatar — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.co.uk/football/match/_/gameId/710510/iran-qatar
+  local_path: data/events_qat_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Julen Lopetegui como seleccionador de Qatar (5/6/2025, Jassim Bin Hamad, Doha, vs Irán). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
