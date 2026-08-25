@@ -291,15 +291,15 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Paraguay. Hora desconocida, nunca imputada.
   enabled: true
-- id: natal_martinez_roberto
-  name: Roberto Martínez Montoliu — Wikipedia (biografía)
+- id: natal_jorge_jesus
+  name: Jorge Jesus — Wikipedia (biografía)
   grade: B
   kind: local_natal_data
-  url: https://es.wikipedia.org/wiki/Roberto_Mart%C3%ADnez_Montoliu
-  local_path: data/natal_martinez_roberto.json
+  url: https://en.wikipedia.org/wiki/Jorge_Jesus
+  local_path: data/natal_jorge_jesus.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Portugal. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Portugal (corrige a Roberto Martínez, quien dejó el cargo tras la eliminación en octavos de final del Mundial 2026 ante España; Jorge Jesús asumió el 10/7/2026 hasta el Mundial 2030). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_ronaldo
   name: Cristiano Ronaldo — Wikipedia (biografía)
@@ -1149,7 +1149,7 @@
   local_path: data/events_por_coach_debut.json
   terms_url: https://www.thenationalnews.com/terms-and-conditions/
   robots_policy: curated_local_file_cites_public_record
-  use: Carta del momento exacto del debut de Roberto Martínez como seleccionador de Portugal (23/3/2023, Estádio José Alvalade, Lisboa, vs Liechtenstein — no confundir con el partido de Portugal en el Mundial 2026, ya que Martínez asumió el cargo en enero de 2023). Evento real con hora documentada, técnica "coach_cycle".
+  use: Carta del momento exacto del debut de Roberto Martínez como seleccionador de Portugal (23/3/2023, Estádio José Alvalade, Lisboa, vs Liechtenstein). Ciclo histórico, ya no vigente — Martínez dejó el cargo tras el Mundial 2026 y Jorge Jesús asumió el 10/7/2026; el debut de Jesús está programado para el 24/9/2026 (aún no ocurrido) y se agregará como evento propio cuando se dispute. Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
 - id: events_mar_coach_debut
   name: Debut de Mohamed Ouahbi como seleccionador de Marruecos — beIN Sports
