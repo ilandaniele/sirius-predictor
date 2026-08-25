@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Marc Anthony Klok",
+      "birth_date": "1993-04-20",
+      "birth_time": null,
+      "timezone": "Europe/Amsterdam",
+      "place": "Países Bajos",
+      "latitude": 52.3676,
+      "longitude": 4.9041,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Johann Sidaner",
+      "birth_date": "1977-05-30",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Francia",
+      "latitude": 46.2276,
+      "longitude": 2.2137,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

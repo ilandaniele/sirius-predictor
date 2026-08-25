@@ -399,7 +399,7 @@
   local_path: data/natal_dalic.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Croacia. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de los Emiratos Árabes Unidos (dejó Croacia tras la eliminación en dieciseisavos ante Portugal y fue nombrado por la UAEFA a inicios de agosto de 2026; corrige la asociación previa con la selección de Croacia). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_modric
   name: Luka Modrić — Wikipedia (biografía)
@@ -1000,4 +1000,94 @@
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de la República Democrática del Congo. Se usa la fecha oficial determinada por la investigación de la FIFA (08/08/1994) entre varios registros contradictorios. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_khaseif
+  name: Ali Khaseif — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ali_Khasif
+  local_path: data/natal_khaseif.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de los Emiratos Árabes Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bilic
+  name: Slaven Bilić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Slaven_Bili%C4%87
+  local_path: data/natal_bilic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Croacia (nombrado a mediados de julio de 2026, tras la dimisión de Zlatko Dalić; Modrić continúa como capitán, sin cambios). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_shao_jiayi
+  name: Shao Jiayi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Shao_Jiayi
+  local_path: data/natal_shao_jiayi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de China (desde 2025). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_sellami
+  name: Jamal Sellami — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jamal_Sellami
+  local_path: data/natal_sellami.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Jordania. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_al_tamari
+  name: Mousa Al-Tamari — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Musa_Al-Taamari
+  local_path: data/natal_al_tamari.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Jordania (primera participación mundialista histórica del país). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_herdman
+  name: John Herdman — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/John_Herdman
+  local_path: data/natal_herdman.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Indonesia (nombrado el 03/01/2026, contrato hasta 2028, sucedió a Patrick Kluivert). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_klok
+  name: Marc Klok — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q15729575
+  local_path: data/natal_klok.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Indonesia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_sidaner
+  name: Johann Sidaner — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Johann_Sidaner
+  local_path: data/natal_sidaner.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nueva Caledonia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_zeoula
+  name: César Zeoula — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q1150736
+  local_path: data/natal_zeoula.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nueva Caledonia. Hora desconocida, nunca imputada.
   enabled: true
