@@ -1111,3 +1111,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Lionel Scaloni como DT interino de Argentina (7/9/2018, Los Angeles Memorial Coliseum, vs Guatemala) — el equivalente real y verificable a la "carta del ciclo Scaloni" que cita Sirius, sin usar su hora de nacimiento personal (que él mismo declara no tener).
   enabled: true
+- id: events_esp_coach_debut
+  name: Debut de Luis de la Fuente como seleccionador de España — RFEF
+  grade: B
+  kind: local_team_events
+  url: https://rfef.es/es/noticias/cronica-espana-noruega-la-rosaleda
+  local_path: data/events_esp_coach_debut.json
+  terms_url: https://rfef.es/es/aviso-legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Luis de la Fuente como seleccionador de España (25/3/2023, La Rosaleda, Málaga, vs Noruega). Evento real con hora documentada, técnica "coach_cycle" de la metodología pública de Sirius.
+  enabled: true
+- id: events_bra_coach_debut
+  name: Debut de Carlo Ancelotti como DT de Brasil — Infobae
+  grade: B
+  kind: local_team_events
+  url: https://www.infobae.com/colombia/deportes/2025/06/05/ecuador-vs-brasil-hora-y-donde-ver-en-colombia-el-debut-de-carlo-ancelotti-por-la-fecha-15-de-las-eliminatorias-sudamericanas-2026/
+  local_path: data/events_bra_coach_debut.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Carlo Ancelotti como DT de Brasil (6/6/2025, Estadio Banco Pichincha, Guayaquil, vs Ecuador). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_eng_coach_debut
+  name: Debut de Thomas Tuchel como seleccionador de Inglaterra — Sky Sports
+  grade: B
+  kind: local_team_events
+  url: https://www.skysports.com/football/news/12098/13331110/england-2-0-albania-thomas-tuchels-team-assessed-after-world-cup-qualifier-win-at-wembley
+  local_path: data/events_eng_coach_debut.json
+  terms_url: https://www.skysports.com/termsandconditions
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Thomas Tuchel como seleccionador de Inglaterra (21/3/2025, Wembley, vs Albania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
