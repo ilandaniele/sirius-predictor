@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "André Jason Blake",
+      "birth_date": "1990-11-21",
+      "birth_time": null,
+      "timezone": "America/Jamaica",
+      "place": "May Pen, Jamaica",
+      "latitude": 17.9651,
+      "longitude": -77.2451,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

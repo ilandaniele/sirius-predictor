@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Luiz Antônio Venker de Menezes (Mano Menezes)",
+      "birth_date": "1962-06-11",
+      "birth_time": null,
+      "timezone": "America/Sao_Paulo",
+      "place": "Brasil",
+      "latitude": -30.0346,
+      "longitude": -51.2177,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -671,3 +671,113 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Austria. Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_montella
+  name: Vincenzo Montella — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Vincenzo_Montella
+  local_path: data/natal_montella.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Turquía. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_calhanoglu
+  name: Hakan Çalhanoğlu — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hakan_%C3%87alhano%C4%9Flu
+  local_path: data/natal_calhanoglu.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Turquía. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_paunovic
+  name: Veljko Paunović — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Veljko_Paunovi%C4%87
+  local_path: data/natal_paunovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Serbia (contrato confirmado hasta 2030). Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_rebrov
+  name: Serhii Rebrov — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q296992
+  local_path: data/natal_rebrov.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Ucrania. Capitanía no incluida a propósito (Zinchenko, capitán histórico, sufrió una rotura de ligamento cruzado en febrero de 2026 y su estatus como capitán no está confirmado para agosto de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_vidal
+  name: Arturo Vidal — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Arturo_Vidal
+  local_path: data/natal_vidal.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Chile. DT no incluido a propósito (fuentes contradictorias sobre si Ricardo Gareca seguía a cargo o fue reemplazado por un interinato de Nicolás Córdova hacia mediados de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_menezes
+  name: Mano Menezes — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mano_Menezes
+  local_path: data/natal_menezes.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Perú (confirmado en el cargo para agosto de 2026, tras el paso de Jorge Fossati). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_batista
+  name: Fernando Batista — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Fernando_Batista
+  local_path: data/natal_batista.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Costa Rica (asumió en febrero de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_galo
+  name: Orlando Galo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Orlando_Galo
+  local_path: data/natal_galo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Costa Rica (designado por Fernando Batista). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_blake
+  name: André Blake — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andre_Blake
+  local_path: data/natal_blake.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Jamaica. DT no incluido a propósito (Rudolph Speid solo fue confirmado como interino para el repechaje intercontinental, sin confirmación de continuidad). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_renard
+  name: Hervé Renard — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q463158
+  local_path: data/natal_renard.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Túnez (asumió en junio de 2026, tras la destitución de Sabri Lamouchi en pleno Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_skhiri
+  name: Ellyes Skhiri — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ellyes_Skhiri
+  local_path: data/natal_skhiri.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Túnez (asumió tras la baja de Ferjani Sassi de la convocatoria). Hora desconocida, nunca imputada.
+  enabled: true

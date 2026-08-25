@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Vincenzo Montella",
+      "birth_date": "1974-06-18",
+      "birth_time": null,
+      "timezone": "Europe/Rome",
+      "place": "Pomigliano d'Arco, Nápoles, Italia",
+      "latitude": 40.9,
+      "longitude": 14.3833,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

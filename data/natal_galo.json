@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Orlando Moisés Galo Calderón",
+      "birth_date": "2000-08-11",
+      "birth_time": null,
+      "timezone": "America/Costa_Rica",
+      "place": "Puntarenas, Costa Rica",
+      "latitude": 9.9762,
+      "longitude": -84.8384,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

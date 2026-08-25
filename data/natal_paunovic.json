@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Veljko Paunović",
+      "birth_date": "1977-08-21",
+      "birth_time": null,
+      "timezone": "Europe/Skopje",
+      "place": "Strumica, Macedonia del Norte",
+      "latitude": 41.4372,
+      "longitude": 22.6433,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

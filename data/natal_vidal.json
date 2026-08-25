@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Arturo Erasmo Vidal Pardo",
+      "birth_date": "1987-05-22",
+      "birth_time": null,
+      "timezone": "America/Santiago",
+      "place": "San Joaquín, Santiago, Chile",
+      "latitude": -33.4926,
+      "longitude": -70.6183,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
