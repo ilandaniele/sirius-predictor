@@ -411,3 +411,123 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Croacia. Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_marquez_rafael
+  name: Rafael Márquez Álvarez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Rafael_M%C3%A1rquez
+  local_path: data/natal_marquez_rafael.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de México (asumió el cargo tras la eliminación de Javier Aguirre en el Mundial 2026). Capitanía no incluida a propósito (Aguirre rotaba el brazalete y no hay confirmación de un capitán fijo). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_thiaw
+  name: Pape Bouna Thiaw — CeroCero (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.ceroacero.es/entrenador/pape-thiaw/61906
+  local_path: data/natal_thiaw.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Senegal. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_koulibaly
+  name: Kalidou Koulibaly — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Kalidou_Koulibaly
+  local_path: data/natal_koulibaly.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Senegal (confirmado tras el retiro internacional de Sadio Mané). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_riemer
+  name: Brian Riemer — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Brian_Riemer
+  local_path: data/natal_riemer.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Dinamarca. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hjulmand
+  name: Morten Hjulmand — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Morten_Hjulmand
+  local_path: data/natal_hjulmand.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Dinamarca. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_yakin
+  name: Murat Yakin — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Murat_Yakin
+  local_path: data/natal_yakin.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Suiza. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_xhaka
+  name: Granit Xhaka — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Granit_Xhaka
+  local_path: data/natal_xhaka.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Suiza. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hong_myung_bo
+  name: Hong Myung-bo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hong_Myung-bo
+  local_path: data/natal_hong_myung_bo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Corea del Sur. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_son
+  name: Son Heung-min — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Son_Heung-min
+  local_path: data/natal_son.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Corea del Sur. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ghalenoei
+  name: Amir Ghalenoei — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Amir_Ghalenoei
+  local_path: data/natal_ghalenoei.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Irán. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_taremi
+  name: Mehdi Taremi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mehdi_Taremi
+  local_path: data/natal_taremi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Irán. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_marsch
+  name: Jesse Marsch — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jesse_Marsch
+  local_path: data/natal_marsch.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Canadá. Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true

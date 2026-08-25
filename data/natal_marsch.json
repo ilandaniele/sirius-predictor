@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jesse Marsch",
+      "birth_date": "1973-11-08",
+      "birth_time": null,
+      "timezone": "America/Chicago",
+      "place": "Racine, Wisconsin, Estados Unidos",
+      "latitude": 42.7261,
+      "longitude": -87.7829,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
