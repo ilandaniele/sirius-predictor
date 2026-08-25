@@ -1491,3 +1491,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Vladimir Petković como seleccionador de Argelia (22/3/2024, Estadio Nelson Mandela, Argel, vs Bolivia, remontada 3-2). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_sui_coach_debut
+  name: Debut de Murat Yakin como seleccionador de Suiza — Infobae
+  grade: B
+  kind: local_team_events
+  url: https://www.infobae.com/america/agencias/2021/09/01/2-1-grecia-cae-en-el-estreno-de-murat-yakin-como-nuevo-seleccionador-suizo/
+  local_path: data/events_sui_coach_debut.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Murat Yakin como seleccionador de Suiza (1/9/2021, St. Jakob-Park, Basilea, vs Grecia, 2-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cze_coach_debut
+  name: Debut de Ivan Hašek como seleccionador de Chequia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/694651/republica-checa-noruega
+  local_path: data/events_cze_coach_debut.json
+  terms_url: https://espndeportes.espn.com/page/terms-of-use/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ivan Hašek como seleccionador de Chequia (22/3/2024, Ullevaal Stadion, Oslo, vs Noruega, 2-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_civ_coach_debut
+  name: Debut de Emerse Faé como seleccionador de Costa de Marfil — France 24
+  grade: B
+  kind: local_team_events
+  url: https://www.france24.com/es/deportes/20240130-la-anfitriona-costa-de-marfil-elimina-al-actual-campe%C3%B3n-senegal-en-un-thriller-de-la-copa-africana
+  local_path: data/events_civ_coach_debut.json
+  terms_url: https://www.france24.com/es/conditions-dutilisation/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Emerse Faé como seleccionador interino de Costa de Marfil (29/1/2024, Stade Charles Konan Banny, Yamoussoukro, vs Senegal, 1-1, 5-4 en penales, octavos de la CAN 2024 que terminarían ganando). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
