@@ -1521,3 +1521,23 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Emerse Faé como seleccionador interino de Costa de Marfil (29/1/2024, Stade Charles Konan Banny, Yamoussoukro, vs Senegal, 1-1, 5-4 en penales, octavos de la CAN 2024 que terminarían ganando). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_jpn_coach_debut
+  name: Debut de Hajime Moriyasu como seleccionador de Japón — JFA / Japan Times
+  grade: B
+  kind: local_team_events
+  url: https://www.jfa.jp/eng/samuraiblue/news/00018066/
+  local_path: data/events_jpn_coach_debut.json
+  terms_url: https://www.jfa.jp/eng/aboutus/agreement.html
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hajime Moriyasu como seleccionador de Japón (11/9/2018, Panasonic Stadium Suita, Osaka, vs Costa Rica, 3-0, Kirin Challenge Cup 2018). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cod_coach_debut
+  name: Debut de Sébastien Desabre como seleccionador de RD Congo — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/654038/burkina-faso-rd-del-congo
+  local_path: data/events_cod_coach_debut.json
+  terms_url: https://www.espn.com/espn/page/terms
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Sébastien Desabre como seleccionador de RD Congo (23/9/2022, Stade Père-Jégo, Bobo-Dioulasso, vs Burkina Faso, 0-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
