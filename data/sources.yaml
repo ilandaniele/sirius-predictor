@@ -1441,3 +1441,23 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de José Francisco Molina como seleccionador de Honduras (31/3/2026, Estadio Municipal de Butarque, Leganés, vs Perú — el mismo partido en el que Perú, con Mano Menezes, jugó su segundo encuentro). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_gua_coach_debut
+  name: Debut de Luis Fernando Tena como seleccionador de Guatemala — Prensa Libre
+  grade: B
+  kind: local_team_events
+  url: https://www.prensalibre.com/deportes/futbol-nacional/guatemala-vs-cuba-cuando-y-a-que-hora-es-el-partido-de-la-eliminatoria-rumbo-a-qatar-2022/
+  local_path: data/events_gua_coach_debut.json
+  terms_url: https://www.prensalibre.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Luis Fernando Tena como seleccionador de Guatemala (24/3/2022, Estadio Pensativo, Antigua Guatemala, vs Cuba). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_idn_coach_debut
+  name: Debut de John Herdman como seleccionador de Indonesia — Suara Merdeka
+  grade: B
+  kind: local_team_events
+  url: https://www.suaramerdeka.com/bola/0416898561/jadwal-timnas-indonesia-di-fifa-series-2026-hadapi-saint-kitts-and-nevis-di-gbk
+  local_path: data/events_idn_coach_debut.json
+  terms_url: https://www.suaramerdeka.com/ketentuan-layanan
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de John Herdman como seleccionador de Indonesia (27/3/2026, Gelora Bung Karno, Yakarta, vs San Cristóbal y Nieves, FIFA Series 2026). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
