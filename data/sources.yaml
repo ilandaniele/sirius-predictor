@@ -1151,3 +1151,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Roberto Martínez como seleccionador de Portugal (23/3/2023, Estádio José Alvalade, Lisboa, vs Liechtenstein — no confundir con el partido de Portugal en el Mundial 2026, ya que Martínez asumió el cargo en enero de 2023). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_mar_coach_debut
+  name: Debut de Mohamed Ouahbi como seleccionador de Marruecos — beIN Sports
+  grade: B
+  kind: local_team_events
+  url: https://www.beinsports.com/es-us/football/amistosos/articles/marruecos-vs-ecuador-fecha-horario-y-todo-lo-que-debes-saber-del-amistoso-rumbo-al-mundial-2026-2026-03-27
+  local_path: data/events_mar_coach_debut.json
+  terms_url: https://www.beinsports.com/es-us/terms-and-conditions
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Mohamed Ouahbi como seleccionador de Marruecos (27/3/2026, Estadio Cívitas Metropolitano, Madrid, vs Ecuador). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_den_coach_debut
+  name: Debut de Brian Riemer como seleccionador de Dinamarca — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/698995/espana-dinamarca
+  local_path: data/events_den_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Brian Riemer como seleccionador de Dinamarca (15/11/2024, Parken, Copenhague, vs España). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_kor_coach_debut
+  name: Debut de Hong Myung-bo en su segunda etapa como seleccionador de Corea del Sur — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/710436/palestina-corea-del-sur
+  local_path: data/events_kor_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hong Myung-bo en su segunda etapa como seleccionador de Corea del Sur (5/9/2024, Seoul World Cup Stadium, vs Palestina). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
