@@ -1231,3 +1231,43 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Éric Chelle como seleccionador de Nigeria (21/3/2025, Estadio Amahoro, Kigali, vs Ruanda). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_aut_coach_debut
+  name: Debut de Ralf Rangnick como seleccionador de Austria — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/624022
+  local_path: data/events_aut_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ralf Rangnick como seleccionador de Austria (3/6/2022, Opus Arena, Osijek, vs Croacia). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_tur_coach_debut
+  name: Debut de Vincenzo Montella como seleccionador de Turquía — Fotmob/ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/655392
+  local_path: data/events_tur_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Vincenzo Montella como seleccionador de Turquía (12/10/2023, Opus Arena, Osijek, vs Croacia — no confundir con el partido de la Eurocopa 2024 vs Georgia, ya jugado bajo su mandato pero no su debut). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_ukr_coach_debut
+  name: Debut de Serhii Rebrov como seleccionador de Ucrania — Mediotiempo
+  grade: B
+  kind: local_team_events
+  url: https://www.mediotiempo.com/futbol/resumen-partido-alemania-vs-ucrania-amistoso-2023
+  local_path: data/events_ukr_coach_debut.json
+  terms_url: https://www.mediotiempo.com/aviso-legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Serhii Rebrov como seleccionador de Ucrania (12/6/2023, Weserstadion, Bremen, vs Alemania, el partido número 1000 de Alemania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_pan_coach_debut
+  name: Debut de Thomas Christiansen como seleccionador de Panamá — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/586120/panama-costa-rica
+  local_path: data/events_pan_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Thomas Christiansen como seleccionador de Panamá (10/10/2020, Estadio Nacional, San José, vs Costa Rica). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
