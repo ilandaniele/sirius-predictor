@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Carlos Manuel Brito Leal de Queiroz",
+      "birth_date": "1953-03-01",
+      "birth_time": null,
+      "timezone": "Africa/Maputo",
+      "place": "Angoche, Mozambique",
+      "latitude": -16.2333,
+      "longitude": 39.9,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

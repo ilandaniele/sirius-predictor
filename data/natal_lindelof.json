@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Victor Nilsson Lindelöf",
+      "birth_date": "1994-07-17",
+      "birth_time": null,
+      "timezone": "Europe/Stockholm",
+      "place": "Suecia",
+      "latitude": 63.8258,
+      "longitude": 20.263,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

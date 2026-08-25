@@ -781,3 +781,113 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Túnez (asumió tras la baja de Ferjani Sassi de la convocatoria). Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_pagou
+  name: David Pagou — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.besoccer.com/entrenador/david-pagou-79877
+  local_path: data/natal_pagou.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Camerún (asumió el cargo en diciembre de 2025 tras la renuncia de Marc Brys por salarios impagos). Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el ciclo de Vincent Aboubakar). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_queiroz
+  name: Carlos Queiroz — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Carlos_Queiroz
+  local_path: data/natal_queiroz.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Ghana (asumió en abril de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ayew
+  name: Jordan Ayew — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jordan_Ayew
+  local_path: data/natal_ayew.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Ghana. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lopetegui
+  name: Julen Lopetegui — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Julen_Lopetegui
+  local_path: data/natal_lopetegui.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Qatar (desde mayo de 2025). Capitanía no incluida a propósito (Akram Afif es la referencia técnica del equipo, pero sin confirmación de que porte el brazalete oficial). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_cannavaro
+  name: Fabio Cannavaro — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Fabio_Cannavaro
+  local_path: data/natal_cannavaro.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Uzbekistán (desde octubre de 2025, reemplazó a Timur Kapadze). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_arnold_graham
+  name: Graham Arnold — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Graham_Arnold
+  local_path: data/natal_arnold_graham.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Irak. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_jalal_hassan
+  name: Jalal Hassan — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jalal_Hassan
+  local_path: data/natal_jalal_hassan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Irak. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bazeley
+  name: Darren Bazeley — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Darren_Bazeley
+  local_path: data/natal_bazeley.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nueva Zelanda. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_wood_chris
+  name: Chris Wood — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Chris_Wood_(footballer,_born_1991)
+  local_path: data/natal_wood_chris.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nueva Zelanda. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_potter
+  name: Graham Potter — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Graham_Potter
+  local_path: data/natal_potter.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Suecia (nombrado el 20/10/2025, guió el repechaje ante Ucrania y Polonia). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lindelof
+  name: Victor Lindelöf — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Victor_Lindel%C3%B6f
+  local_path: data/natal_lindelof.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Suecia. Hora desconocida, nunca imputada.
+  enabled: true

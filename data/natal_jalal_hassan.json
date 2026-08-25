@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jalal Hassan Hachim",
+      "birth_date": "1991-05-18",
+      "birth_time": null,
+      "timezone": "Asia/Baghdad",
+      "place": "Bagdad, Irak",
+      "latitude": 33.3152,
+      "longitude": 44.3661,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
