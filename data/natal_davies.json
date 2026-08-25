@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Alphonso Boyle Davies",
+      "birth_date": "2000-11-02",
+      "birth_time": null,
+      "timezone": "Africa/Accra",
+      "place": "Campo de refugiados de Buduburam, Gomoa East, Ghana",
+      "latitude": 5.4402,
+      "longitude": -0.4657,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

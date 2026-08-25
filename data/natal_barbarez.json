@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Sergej Barbarez",
+      "birth_date": "1971-09-17",
+      "birth_time": null,
+      "timezone": "Europe/Sarajevo",
+      "place": "Mostar, Bosnia y Herzegovina",
+      "latitude": 43.3438,
+      "longitude": 17.8078,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

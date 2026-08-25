@@ -121,6 +121,26 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Fecha de nacimiento del seleccionador de Francia (asumió el cargo el 28/07/2026, contrato hasta 2030). Hora desconocida, nunca imputada a las 12:00.
   enabled: true
+- id: natal_bubista
+  name: Pedro Leitão Brito "Bubista" — Coaches' Voice (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://es.coachesvoice.com/cv/bubista-alma-humildade-e-coragem-cabo-verde/
+  local_path: data/natal_bubista.json
+  terms_url: https://es.coachesvoice.com/terms-of-use/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Cabo Verde, que clasificó al país por primera vez a un Mundial (13/10/2025). No forma parte todavía del roster de 64 selecciones de teams.csv (equipo real de la Copa del Mundo 2026, pendiente decisión sobre incorporarlo al escenario hipotético 2030). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_mendes_ryan
+  name: Ryan Mendes — FIFA.com / Infobae (perfil oficial)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/ryan-mendes-reaccion-empate-historico-para-cabo-verde
+  local_path: data/natal_mendes_ryan.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán oficial de Cabo Verde en el Mundial 2026 (máximo goleador histórico del equipo). Corrige una atribución inicial errónea a Roberto Lopes (defensor convocado, pero no capitán — la prensa deportiva lo mencionaba como "capitán" en un sentido informal/de liderazgo, no el brazalete oficial confirmado por la convocatoria de la FIFA). Cabo Verde no forma parte todavía del roster de 64 selecciones de teams.csv (ver natal_bubista). Hora desconocida, nunca imputada.
+  enabled: true
 - id: natal_mbappe
   name: Kylian Mbappé — Wikipedia (biografía)
   grade: B
@@ -419,7 +439,17 @@
   local_path: data/natal_marquez_rafael.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de México (asumió el cargo tras la eliminación de Javier Aguirre en el Mundial 2026). Capitanía no incluida a propósito (Aguirre rotaba el brazalete y no hay confirmación de un capitán fijo). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de México (asumió el cargo tras la eliminación de Javier Aguirre en el Mundial 2026). Capitán ver natal_montes_cesar (César Montes, brazalete confirmado en el Mundial 2026).
+  enabled: true
+- id: natal_montes_cesar
+  name: César Montes — Wikipedia / Excélsior (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/C%C3%A9sar_Montes
+  local_path: data/natal_montes_cesar.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de México en el Mundial 2026 (portó el brazalete en el debut vs Sudáfrica y en los octavos vs Inglaterra, pese a que Aguirre rotaba el brazalete en amistosos previos). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_thiaw
   name: Pape Bouna Thiaw — CeroCero (biografía)
@@ -529,7 +559,17 @@
   local_path: data/natal_marsch.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Canadá. Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el Mundial 2026). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Canadá. Capitán ver natal_davies (Alphonso Davies, brazalete confirmado en el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_davies
+  name: Alphonso Davies — beIN Sports / MLSSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.mlssoccer.com/news/refugee-to-canada-captain-alphonso-davies-enters-copa-america-spotlight
+  local_path: data/natal_davies.json
+  terms_url: https://www.mlssoccer.com/mls-digital-privacy-policy/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Canadá; portó el brazalete en el Mundial 2026. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_chelle
   name: Éric Sékou Chelle — Wikipedia (biografía)
@@ -569,7 +609,17 @@
   local_path: data/natal_petkovic.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Argelia. Capitanía no incluida a propósito (Riyad Mahrez se retiró de la selección tras la eliminación en el Mundial 2026; sin sucesor confirmado). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Argelia. Capitán ver natal_mahrez (Riyad Mahrez, brazalete en el Mundial 2026; anunció su retiro de la selección el 2/7/2026 tras la eliminación ante Suiza — dato histórico, ya no vigente hacia adelante pero real para el ciclo mundialista).
+  enabled: true
+- id: natal_mahrez
+  name: Riyad Mahrez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Riyad_Mahrez
+  local_path: data/natal_mahrez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Argelia durante el Mundial 2026; se retiró de la selección el 2/7/2026 tras la eliminación en dieciseisavos ante Suiza. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_popovic
   name: Tony Popovic — Wikipedia (biografía)
@@ -819,7 +869,17 @@
   local_path: data/natal_lopetegui.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Qatar (desde mayo de 2025). Capitanía no incluida a propósito (Akram Afif es la referencia técnica del equipo, pero sin confirmación de que porte el brazalete oficial). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Qatar (desde mayo de 2025). Capitán ver natal_al_haydos (Hassan Al-Haydos, brazalete oficial confirmado en la convocatoria del Mundial 2026; Akram Afif es la figura ofensiva pero no el capitán oficial).
+  enabled: true
+- id: natal_al_haydos
+  name: Hassan Al-Haydos — beIN Sports / Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/julen-lopetegui-s-official-squad-for-qatar-at-the-2026-fifa-world-cup-2026-06-01
+  local_path: data/natal_al_haydos.json
+  terms_url: https://www.beinsports.com/es-us/terms-and-conditions
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán oficial de Qatar en el Mundial 2026 (confirmado en la convocatoria oficial de Julen Lopetegui). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_cannavaro
   name: Fabio Cannavaro — Wikipedia (biografía)
@@ -829,7 +889,17 @@
   local_path: data/natal_cannavaro.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Uzbekistán (desde octubre de 2025, reemplazó a Timur Kapadze). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Uzbekistán (desde octubre de 2025, reemplazó a Timur Kapadze). Capitán ver natal_shomurodov (Eldor Shomurodov, capitán en la primera clasificación mundialista histórica del país).
+  enabled: true
+- id: natal_shomurodov
+  name: Eldor Shomurodov — Wikipedia / FIFA.com (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/eldor-shomurodov-uzbekistan-interview
+  local_path: data/natal_shomurodov.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Uzbekistán, que llevó al país a su primer Mundial de la historia. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_arnold_graham
   name: Graham Arnold — Wikipedia (biografía)
@@ -1540,4 +1610,84 @@
   terms_url: https://www.espn.com/espn/page/terms
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Sébastien Desabre como seleccionador de RD Congo (23/9/2022, Stade Père-Jégo, Bobo-Dioulasso, vs Burkina Faso, 0-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: natal_advocaat
+  name: Dick Advocaat — FIFA.com (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/dick-advocaat-entrenador-curazao-viaje-emocional-copa-mundial
+  local_path: data/natal_advocaat.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Curazao (clasificó al país por primera vez a un Mundial; renunció en febrero de 2026 por motivos familiares y regresó en mayo de 2026 para dirigir el Mundial 2026, con 78 años). Continuidad tras el Mundial no confirmada en fuentes disponibles a agosto 2026 — se documenta como último dato confirmado. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bacuna
+  name: Leandro Bacuna — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Leandro_Bacuna
+  local_path: data/natal_bacuna.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Curazao en el Mundial 2026 (nación más pequeña en clasificar a un Mundial, ~160.000 habitantes). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_badia_david
+  name: David Badía Cequier — Haitian Times (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://haitiantimes.com/2026/08/23/grenadye-alaso-men-mwen-spanish-coach-david-badia-takes-charge-of-haiti/
+  local_path: data/natal_badia_david.json
+  terms_url: https://haitiantimes.com/terms-of-service/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador actual de Haití, nombrado el 22/8/2026 en reemplazo de Sébastien Migné (quien clasificó y dirigió al equipo en el Mundial 2026, su primera participación en 52 años, y dejó el cargo en julio de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_placide
+  name: Johny Placide — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Johny_Placide
+  local_path: data/natal_placide.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán (arquero) de Haití en el Mundial 2026, primera participación del país en 52 años. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_clarke_steve
+  name: Steve Clarke — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Steve_Clarke
+  local_path: data/natal_clarke_steve.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Escocia (en el cargo desde mayo de 2019; clasificó al país a su primer Mundial desde 1998). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_robertson_andy
+  name: Andy Robertson — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andrew_Robertson_(footballer)
+  local_path: data/natal_robertson_andy.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Escocia en el Mundial 2026. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_barbarez
+  name: Sergej Barbarez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Sergej_Barbarez
+  local_path: data/natal_barbarez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Bosnia y Herzegovina (nombrado en abril de 2024; clasificó al país a su segundo Mundial de la historia tras vencer a Italia en penales en la repesca). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_dzeko
+  name: Edin Džeko — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Edin_D%C5%BEeko
+  local_path: data/natal_dzeko.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Bosnia y Herzegovina en el Mundial 2026, máximo goleador histórico del equipo (6 goles en esta clasificación, a los 39-40 años). Hora desconocida, nunca imputada.
   enabled: true

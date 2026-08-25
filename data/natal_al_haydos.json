@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hassan Khalid Al-Haydos",
+      "birth_date": "1990-12-11",
+      "birth_time": null,
+      "timezone": "Asia/Qatar",
+      "place": "Doha, Qatar",
+      "latitude": 25.2854,
+      "longitude": 51.531,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
