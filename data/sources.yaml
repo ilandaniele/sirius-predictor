@@ -1191,3 +1191,43 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Jesse Marsch como seleccionador de Canadá (6/6/2024, De Kuip, Róterdam, vs Países Bajos). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_swe_coach_debut
+  name: Debut de Graham Potter como seleccionador de Suecia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/724897/suecia-suiza
+  local_path: data/events_swe_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Graham Potter como seleccionador de Suecia (15/11/2025, Stade de Genève, vs Suiza). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_pol_coach_debut
+  name: Debut de Jan Urban como seleccionador de Polonia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/724978/polonia-paises-bajos
+  local_path: data/events_pol_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jan Urban como seleccionador de Polonia (4/9/2025, De Kuip, Róterdam, vs Países Bajos). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_gre_coach_debut
+  name: Debut de Ivan Jovanović como seleccionador de Grecia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/698905/finlandia-grecia
+  local_path: data/events_gre_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ivan Jovanović como seleccionador de Grecia (7/9/2024, Georgios Karaiskakis, El Pireo, vs Finlandia). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_nga_coach_debut
+  name: Debut de Éric Chelle como seleccionador de Nigeria — Soccernet NG
+  grade: B
+  kind: local_team_events
+  url: https://soccernet.ng/2025/03/rwanda-vs-nigeria-super-eagles.html
+  local_path: data/events_nga_coach_debut.json
+  terms_url: https://soccernet.ng/about
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Éric Chelle como seleccionador de Nigeria (21/3/2025, Estadio Amahoro, Kigali, vs Ruanda). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
