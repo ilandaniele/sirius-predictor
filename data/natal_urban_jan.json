@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jan Urban",
+      "birth_date": "1962-05-14",
+      "birth_time": null,
+      "timezone": "Europe/Warsaw",
+      "place": "Jaworzno, Polonia",
+      "latitude": 50.2044,
+      "longitude": 19.2755,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

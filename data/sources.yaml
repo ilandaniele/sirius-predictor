@@ -891,3 +891,113 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Suecia. Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_urban_jan
+  name: Jan Urban — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q562409
+  local_path: data/natal_urban_jan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Polonia (nombrado el 16/07/2025, tras la destitución de Probierz). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lewandowski
+  name: Robert Lewandowski — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Robert_Lewandowski
+  local_path: data/natal_lewandowski.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Polonia (recuperó el brazalete con la llegada de Jan Urban, tras el conflicto con el DT anterior). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_koubek
+  name: Miroslav Koubek — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Miroslav_Koubek
+  local_path: data/natal_koubek.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Chequia (nombrado el 19/12/2025, clasificó al equipo tras 20 años de ausencia mundialista). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_soucek
+  name: Tomáš Souček — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Sou%C4%8Dek
+  local_path: data/natal_soucek.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Chequia. Fuentes contradictorias mencionan también a Ladislav Krejčí; se optó por Souček por ser la referencia mayoritaria y coincidir con el dato del jugador del West Ham United. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_jovanovic
+  name: Ivan Jovanović — Wikipedia serbia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://sr.wikipedia.org/sr-el/%D0%98%D0%B2%D0%B0%D0%BD_%D0%88%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%9B
+  local_path: data/natal_jovanovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Grecia. Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_molina
+  name: José Francisco Molina — Transfermarkt (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.transfermarkt.us/jose-francisco-molina/profil/trainer/19302
+  local_path: data/natal_molina.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Honduras (asumió en marzo de 2026, proyecto de cuatro años rumbo al Mundial 2030). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_tena
+  name: Luis Fernando Tena — Transfermarkt (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.transfermarkt.us/luis-fernando-tena/profil/trainer/3718
+  local_path: data/natal_tena.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Guatemala (continuidad confirmada para el proceso 2026-2030). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_broos
+  name: Hugo Broos — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hugo_Broos
+  local_path: data/natal_broos.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Sudáfrica (en el cargo desde mayo de 2021). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_williams_ronwen
+  name: Ronwen Williams — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ronwen_Williams
+  local_path: data/natal_williams_ronwen.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Sudáfrica. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_desabre
+  name: Sébastien Desabre — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/S%C3%A9bastien_Desabre
+  local_path: data/natal_desabre.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de la República Democrática del Congo. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_mbemba
+  name: Chancel Mbemba — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Chancel_Mbemba
+  local_path: data/natal_mbemba.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de la República Democrática del Congo. Se usa la fecha oficial determinada por la investigación de la FIFA (08/08/1994) entre varios registros contradictorios. Hora desconocida, nunca imputada.
+  enabled: true
