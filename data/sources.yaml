@@ -1141,3 +1141,13 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Thomas Tuchel como seleccionador de Inglaterra (21/3/2025, Wembley, vs Albania). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_por_coach_debut
+  name: Debut de Roberto Martínez como seleccionador de Portugal — The National
+  grade: B
+  kind: local_team_events
+  url: https://www.thenationalnews.com/sport/2023/03/22/roberto-martinez-starts-portugal-reign-with-shadow-of-cristiano-ronaldo-looming-large/
+  local_path: data/events_por_coach_debut.json
+  terms_url: https://www.thenationalnews.com/terms-and-conditions/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Roberto Martínez como seleccionador de Portugal (23/3/2023, Estádio José Alvalade, Lisboa, vs Liechtenstein — no confundir con el partido de Portugal en el Mundial 2026, ya que Martínez asumió el cargo en enero de 2023). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
