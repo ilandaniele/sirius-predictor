@@ -1461,3 +1461,33 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de John Herdman como seleccionador de Indonesia (27/3/2026, Gelora Bung Karno, Yakarta, vs San Cristóbal y Nieves, FIFA Series 2026). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_irn_coach_debut
+  name: Debut de Amir Ghalenoei como seleccionador de Irán — HispanTV
+  grade: B
+  kind: local_team_events
+  url: https://www.hispantv.com/noticias/deporte/562737/iran-rusia-futbol-amistoso
+  local_path: data/events_irn_coach_debut.json
+  terms_url: https://www.hispantv.com/paginas/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Amir Ghalenoei como seleccionador de Irán, segundo ciclo tras 16 años (23/3/2023, Azadi Stadium, Teherán, vs Rusia, 1-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_egy_coach_debut
+  name: Debut de Hossam Hassan como seleccionador de Egipto — TUDN
+  grade: B
+  kind: local_team_events
+  url: https://www.tudn.com/futbol/amistoso/egipto-vs-nueva-zelanda-amistosos-internacionales-2024-03-22
+  local_path: data/events_egy_coach_debut.json
+  terms_url: https://www.tudn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hossam Hassan como seleccionador de Egipto (22/3/2024, New Administrative Capital Stadium, El Cairo, vs Nueva Zelanda, 1-0). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_alg_coach_debut
+  name: Debut de Vladimir Petković como seleccionador de Argelia — 365Scores
+  grade: B
+  kind: local_team_events
+  url: https://www.365scores.com/es/football/match/friendly-international-570/algeria-bolivia-5077-5109-570
+  local_path: data/events_alg_coach_debut.json
+  terms_url: https://www.365scores.com/es/terms-of-use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Vladimir Petković como seleccionador de Argelia (22/3/2024, Estadio Nelson Mandela, Argel, vs Bolivia, remontada 3-2). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true

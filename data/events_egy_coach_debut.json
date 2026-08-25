@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "EGY",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-03-22T16:00:00+02:00",
+      "location": {
+        "latitude": 30.0294,
+        "longitude": 31.7422,
+        "name": "New Administrative Capital Stadium, El Cairo, Egipto"
+      },
+      "label": "Egipto 1-0 Nueva Zelanda, debut de Hossam Hassan como seleccionador (gol de penal de Mostafa Mohamed)",
+      "coach_name": "Hossam Hassan"
+    }
+  ]
+}

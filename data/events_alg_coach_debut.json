@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ALG",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-03-22T22:00:00+01:00",
+      "location": {
+        "latitude": 36.6672,
+        "longitude": 3.1424,
+        "name": "Estadio Nelson Mandela, Baraki, Argel, Argelia"
+      },
+      "label": "Argelia 3-2 Bolivia, debut de Vladimir Petković como seleccionador (remontada)",
+      "coach_name": "Vladimir Petković"
+    }
+  ]
+}
