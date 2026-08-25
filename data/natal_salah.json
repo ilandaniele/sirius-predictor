@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mohamed Salah",
+      "birth_date": "1992-06-15",
+      "birth_time": null,
+      "timezone": "Africa/Cairo",
+      "place": "Nagrig, Basyoun, Egipto",
+      "latitude": 30.9333,
+      "longitude": 30.9667,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

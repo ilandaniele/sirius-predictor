@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Aníbal Cesis Godoy Lemus",
+      "birth_date": "1990-02-10",
+      "birth_time": null,
+      "timezone": "America/Panama",
+      "place": "Ciudad de Panamá, Panamá",
+      "latitude": 8.9824,
+      "longitude": -79.5199,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

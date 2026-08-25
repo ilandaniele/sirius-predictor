@@ -531,3 +531,143 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Fecha de nacimiento del seleccionador de Canadá. Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el Mundial 2026). Hora desconocida, nunca imputada.
   enabled: true
+- id: natal_chelle
+  name: Éric Sékou Chelle — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/%C3%89ric_Chelle
+  local_path: data/natal_chelle.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nigeria. Capitanía no incluida a propósito (William Troost-Ekong se retiró de la selección tras la eliminatoria; sin sucesor confirmado). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hossam_hassan
+  name: Hossam Hassan — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.besoccer.com/coach/hossam-hassan-1862
+  local_path: data/natal_hossam_hassan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Egipto. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_salah
+  name: Mohamed Salah — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mohamed_Salah
+  local_path: data/natal_salah.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Egipto. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_petkovic
+  name: Vladimir Petković — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q123937
+  local_path: data/natal_petkovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Argelia. Capitanía no incluida a propósito (Riyad Mahrez se retiró de la selección tras la eliminación en el Mundial 2026; sin sucesor confirmado). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_popovic
+  name: Tony Popovic — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Tony_Popovic
+  local_path: data/natal_popovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Australia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ryan_mat
+  name: Mathew Ryan — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mathew_Ryan
+  local_path: data/natal_ryan_mat.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Australia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_donis
+  name: Georgios Donis — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Georgios_Donis
+  local_path: data/natal_donis.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Arabia Saudita (nombrado el 23/04/2026 tras la destitución de Hervé Renard). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_al_dawsari
+  name: Salem Al-Dawsari — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Salem_Al-Dawsari
+  local_path: data/natal_al_dawsari.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Arabia Saudita. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_christiansen
+  name: Thomas Christiansen — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Thomas_Christiansen
+  local_path: data/natal_christiansen.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Panamá. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_godoy
+  name: Aníbal Godoy — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Anibal_Godoy
+  local_path: data/natal_godoy.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Panamá. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_fae
+  name: Emerse Faé — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Emerse_Fa%C3%A9
+  local_path: data/natal_fae.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Costa de Marfil. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_kessie
+  name: Franck Kessié — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Franck_Kessi%C3%A9
+  local_path: data/natal_kessie.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Costa de Marfil. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_rangnick
+  name: Ralf Rangnick — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ralf_Rangnick
+  local_path: data/natal_rangnick.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Austria. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_alaba
+  name: David Alaba — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/David_Alaba
+  local_path: data/natal_alaba.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Austria. Hora desconocida, nunca imputada.
+  enabled: true

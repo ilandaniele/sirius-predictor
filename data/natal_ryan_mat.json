@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mathew David Ryan",
+      "birth_date": "1992-04-08",
+      "birth_time": null,
+      "timezone": "Australia/Sydney",
+      "place": "Plumpton, Australia",
+      "latitude": -33.7333,
+      "longitude": 150.8333,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
