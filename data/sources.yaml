@@ -1371,3 +1371,43 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Mano Menezes como seleccionador de Perú (28/3/2026, Stade de France, vs Senegal). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
+- id: events_fra_coach_debut
+  name: Debut programado de Zinedine Zidane como seleccionador de Francia — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.sofascore.com/football/match/turkiye-france/GObsaUb
+  local_path: data/events_fra_coach_debut.json
+  terms_url: https://www.sofascore.com/terms
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Zinedine Zidane como seleccionador de Francia (25/9/2026, Estadio de Kocaeli, vs Turquía). Fixture oficial de la UEFA Nations League con fecha y horario ya confirmados por la organización; el partido aún no se ha disputado a la fecha de esta carga, pero el momento está fijado, no es una hora imputada. Técnica "coach_cycle".
+  enabled: true
+- id: events_ger_coach_debut
+  name: Debut programado de Jürgen Klopp como seleccionador de Alemania — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.mx/futbol/partido/_/juegoId/401861041/alemania-paises-bajos
+  local_path: data/events_ger_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jürgen Klopp como seleccionador de Alemania (24/9/2026, Johan Cruijff Arena, Ámsterdam, vs Países Bajos). Fixture oficial de la UEFA Nations League con fecha y horario ya confirmados; aún no disputado a la fecha de esta carga, pero el momento está fijado. Técnica "coach_cycle".
+  enabled: true
+- id: events_ned_coach_debut
+  name: Debut programado de Xavi Hernández como seleccionador de Países Bajos — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.mx/futbol/partido/_/juegoId/401861041/alemania-paises-bajos
+  local_path: data/events_ned_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Xavi Hernández como seleccionador de Países Bajos (24/9/2026, Johan Cruijff Arena, Ámsterdam, vs Alemania — el mismo partido en el que debuta Klopp). Fixture oficial con fecha y horario ya confirmados. Técnica "coach_cycle".
+  enabled: true
+- id: events_mex_coach_debut
+  name: Debut programado de Rafael Márquez como seleccionador de México — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.baltimoresun.com/2026/07/30/mexico-colombia-soccer-match-mt-bank-stadium-baltimore/
+  local_path: data/events_mex_coach_debut.json
+  terms_url: https://www.baltimoresun.com/terms-of-service/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Rafael Márquez como seleccionador de México (26/9/2026, M&T Bank Stadium, Baltimore, vs Colombia, amistoso del MexTour). Fixture oficial con fecha y horario ya confirmados; aún no disputado a la fecha de esta carga. Técnica "coach_cycle".
+  enabled: true
