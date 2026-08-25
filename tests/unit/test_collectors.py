@@ -6,6 +6,8 @@ import pytest
 
 from collectors.common.base import ImmutableSnapshotStore
 from collectors.common.records import BirthRecord
+from collectors.events import team_event_collector_from_config
+from collectors.events.parser import parse_team_event_records
 from collectors.fifa.ranking import (
     FifaRankingCollector,
     latest_approved_schedule,
@@ -252,3 +254,133 @@ def test_all_curated_natal_data_files_parse_and_never_impute_a_time() -> None:
         assert record.timezone
         assert record.latitude is not None
         assert record.longitude is not None
+
+
+def test_team_event_record_requires_a_timezone_aware_moment() -> None:
+    with pytest.raises(ValueError, match="UTC offset"):
+        parse_team_event_records(
+            json.dumps(
+                {
+                    "schema_version": "sirius-team-events-v1",
+                    "team_code": "ARG",
+                    "events": [
+                        {
+                            "event_type": "world_cup_debut",
+                            "occurred_at": "1930-07-15T16:00:00",
+                            "location": {"latitude": -34.9011, "longitude": -56.1645},
+                            "label": "sin offset",
+                        }
+                    ],
+                }
+            ).encode()
+        )
+
+
+def test_coach_debut_event_requires_a_coach_name() -> None:
+    with pytest.raises(ValueError, match="must name the coach"):
+        parse_team_event_records(
+            json.dumps(
+                {
+                    "schema_version": "sirius-team-events-v1",
+                    "team_code": "ARG",
+                    "events": [
+                        {
+                            "event_type": "coach_debut",
+                            "occurred_at": "2018-08-14T20:00:00-03:00",
+                            "location": {"latitude": -34.6037, "longitude": -58.3816},
+                            "label": "sin nombre de DT",
+                        }
+                    ],
+                }
+            ).encode()
+        )
+
+
+def test_team_event_collector_publishes_a_known_time_chart(tmp_path: Path) -> None:
+    data_path = tmp_path / "events.json"
+    data_path.write_text(
+        json.dumps(
+            {
+                "schema_version": "sirius-team-events-v1",
+                "team_code": "ARG",
+                "events": [
+                    {
+                        "event_type": "world_cup_debut",
+                        "occurred_at": "1930-07-15T16:00:00-03:00",
+                        "location": {
+                            "latitude": -34.9011,
+                            "longitude": -56.1645,
+                            "name": "Montevideo, Uruguay",
+                        },
+                        "label": "Argentina vs Francia, debut mundialista 1930",
+                    },
+                    {
+                        "event_type": "coach_debut",
+                        "occurred_at": "2018-08-14T20:00:00-03:00",
+                        "location": {
+                            "latitude": -34.6037,
+                            "longitude": -58.3816,
+                            "name": "Buenos Aires, Argentina",
+                        },
+                        "label": "Primer partido de Scaloni al mando de Argentina",
+                        "coach_name": "Lionel Scaloni",
+                    },
+                ],
+            }
+        ),
+        encoding="utf-8",
+    )
+    collector = team_event_collector_from_config(
+        {
+            "id": "events_arg",
+            "url": "https://es.wikipedia.org/wiki/Selecci%C3%B3n_de_f%C3%BAtbol_de_Argentina",
+            "grade": "B",
+            "local_path": "events.json",
+            "terms_url": "https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use",
+            "robots_policy": "curated_local_file_cites_public_record",
+        },
+        tmp_path,
+    )
+    payload = collector.fetch()
+    claims = collector.parse(payload, datetime(2026, 8, 25, tzinfo=UTC))
+    assert len(claims) == 2
+    debut, coach = claims
+    assert debut.entity_type == "WorldCupDebutEvent"
+    assert debut.entity_key == "ARG:world_cup_debut"
+    assert debut.value["chart_request"]["moment"] == "1930-07-15T16:00:00-03:00"
+    assert coach.entity_type == "CoachDebutEvent"
+    assert coach.entity_key == "ARG:Lionel Scaloni"
+
+    from sqlalchemy import create_engine
+    from sqlalchemy.orm import Session as OrmSession
+
+    from db.base import Base
+    from packages.astrology import ephemeris_available
+
+    engine = create_engine(f"sqlite:///{(tmp_path / 'astro.db').as_posix()}")
+    Base.metadata.create_all(engine)
+    with OrmSession(engine) as session:
+        report = recalculate_accepted_charts(session, claims)
+    if ephemeris_available():
+        assert report.failed == []
+        assert report.skipped == []
+        assert len(report.recalculated) == 2
+    else:
+        # Houses require Swiss Ephemeris; environments without the optional
+        # astro dependency installed fail loudly rather than skip the
+        # location silently, matching test_astrology.py's tolerance for
+        # either provider being present.
+        assert len(report.failed) == 2
+        assert all("Swiss Ephemeris" in item["reason"] for item in report.failed)
+
+
+def test_all_curated_team_event_files_have_known_utc_offset_moments() -> None:
+    events_dir = Path(__file__).resolve().parents[2] / "data"
+    paths = sorted(events_dir.glob("events_*.json"))
+    for path in paths:
+        team_code, records = parse_team_event_records(path.read_bytes())
+        assert team_code
+        assert records
+        for record in records:
+            assert record.occurred_at.utcoffset() is not None
+            assert record.label

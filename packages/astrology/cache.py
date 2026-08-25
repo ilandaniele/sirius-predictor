@@ -28,7 +28,9 @@ from .sensitivity import birth_time_sensitivity
 
 CHART_CACHE_SCHEMA = "astrology-chart-cache-v1"
 TIME_SENSITIVITY_SCHEMA = "astrology-time-sensitivity-cache-v1"
-CHART_ENTITY_TYPES = frozenset({"BirthData", "Fixture", "CoachDebutEvent"})
+CHART_ENTITY_TYPES = frozenset(
+    {"BirthData", "Fixture", "CoachDebutEvent", "FederationEvent", "WorldCupDebutEvent"}
+)
 
 
 @dataclass(frozen=True, slots=True)

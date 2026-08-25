@@ -1091,3 +1091,23 @@
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Nueva Caledonia. Hora desconocida, nunca imputada.
   enabled: true
+- id: events_arg_world_cup_debut
+  name: Argentina — debut mundialista 1930 (Wikipedia)
+  grade: B
+  kind: local_team_events
+  url: https://es.wikipedia.org/wiki/Anexo:Partidos_de_la_selecci%C3%B3n_de_f%C3%BAtbol_de_Argentina
+  local_path: data/events_arg_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Argentina (15/7/1930, 16hs, Montevideo vs Francia), tal como la cita Juan Cruz Sirius en su metodología pública ("carta debut de Argentina en los mundiales"). Evento real con hora documentada, no una carta natal personal.
+  enabled: true
+- id: events_arg_coach_debut
+  name: Debut de Lionel Scaloni como DT de Argentina — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.ar/futbol/guatemala/nota/_/id/11383599/amistoso-guatemala-marco-inicio-lionel-scaloni-argentina-convertirse-campen-del-mundo
+  local_path: data/events_arg_coach_debut.json
+  terms_url: https://espn.com.ar/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Lionel Scaloni como DT interino de Argentina (7/9/2018, Los Angeles Memorial Coliseum, vs Guatemala) — el equivalente real y verificable a la "carta del ciclo Scaloni" que cita Sirius, sin usar su hora de nacimiento personal (que él mismo declara no tener).
+  enabled: true
