@@ -14,7 +14,7 @@ UR,Uruguay,CONMEBOL,1,1,1875,42,0.0,0.0,host_assumption,Diego Martín Forlán Co
 MEX,México,CONCACAF,0,1,1780,55,0.0,0.0,projected,Rafael Márquez Álvarez,Por definir,scenario,2026-08-17
 USA,Estados Unidos,CONCACAF,0,1,1790,52,0.0,0.0,projected,Mauricio Pochettino Trossero,Timothy Michael Ream,scenario,2026-08-17
 JPN,Japón,AFC,0,1,1815,45,0.0,0.0,projected,Hajime Moriyasu,Kō Itakura,scenario,2026-08-17
-SEN,Senegal,CAF,0,1,1785,50,0.0,0.0,projected,Pape Bouna Thiaw,Kalidou Koulibaly,scenario,2026-08-17
+SEN,Senegal,CAF,0,1,1785,50,0.0,0.0,projected,Patrick Vieira,Kalidou Koulibaly,scenario,2026-08-17
 ITA,Italia,UEFA,0,2,1845,48,0.0,0.0,projected,Por definir,Por definir,scenario,2026-08-17
 CRO,Croacia,UEFA,0,2,1815,50,0.0,0.0,projected,Slaven Bilić,Luka Modrić,scenario,2026-08-17
 COL,Colombia,CONMEBOL,0,2,1835,45,0.0,0.0,projected,Néstor Gabriel Lorenzo,James David Rodríguez Rubio,scenario,2026-08-17
@@ -24,23 +24,23 @@ SUI,Suiza,UEFA,0,2,1795,48,0.0,0.0,projected,Murat Yakin,Granit Xhaka,scenario,2
 KOR,Corea del Sur,AFC,0,2,1755,50,0.0,0.0,projected,Por definir,Son Heung-min,scenario,2026-08-17
 IRN,Irán,AFC,0,2,1740,52,0.0,0.0,projected,Amir Ghalenoei,Mehdi Taremi,scenario,2026-08-17
 CAN,Canadá,CONCACAF,0,2,1735,58,0.0,0.0,projected,Jesse Marsch,Alphonso Boyle Davies,scenario,2026-08-17
-NGA,Nigeria,CAF,0,2,1745,60,0.0,0.0,projected,Éric Sékou Chelle,Por definir,scenario,2026-08-17
+NGA,Nigeria,CAF,0,2,1745,60,0.0,0.0,projected,Éric Sékou Chelle,Wilfred Ndidi,scenario,2026-08-17
 EGY,Egipto,CAF,0,2,1730,55,0.0,0.0,projected,Hossam Hassan,Mohamed Salah,scenario,2026-08-17
-ALG,Argelia,CAF,0,2,1720,58,0.0,0.0,projected,Vladimir Petković,Por definir,scenario,2026-08-17
+ALG,Argelia,CAF,0,2,1720,58,0.0,0.0,projected,Por definir,Por definir,scenario,2026-08-17
 AUS,Australia,AFC,0,2,1715,52,0.0,0.0,projected,Tony Popovic,Mathew David Ryan,scenario,2026-08-17
 KSA,Arabia Saudita,AFC,0,2,1675,60,0.0,0.0,projected,Georgios Donis,Salem Al-Dawsari,scenario,2026-08-17
 PAN,Panamá,CONCACAF,0,2,1685,58,0.0,0.0,projected,Thomas Christiansen Tarín,Aníbal Cesis Godoy Lemus,scenario,2026-08-17
-CIV,Costa de Marfil,CAF,0,2,1735,58,0.0,0.0,projected,Emerse Faé,Franck Kessié,scenario,2026-08-17
+CIV,Costa de Marfil,CAF,0,2,1735,58,0.0,0.0,projected,Hervé Renard,Franck Kessié,scenario,2026-08-17
 AUT,Austria,UEFA,0,3,1765,50,0.0,0.0,projected,Ralf Rangnick,David Alaba,scenario,2026-08-17
 TUR,Turquía,UEFA,0,3,1745,58,0.0,0.0,projected,Vincenzo Montella,Hakan Çalhanoğlu,scenario,2026-08-17
-SRB,Serbia,UEFA,0,3,1715,58,0.0,0.0,projected,Veljko Paunović,Por definir,scenario,2026-08-17
+SRB,Serbia,UEFA,0,3,1715,58,0.0,0.0,projected,Veljko Paunović,Aleksandar Mitrović,scenario,2026-08-17
 NOR,Noruega,UEFA,0,3,1770,55,0.0,0.0,projected,Ståle Solbakken,Erling Braut Haaland,scenario,2026-08-17
-UKR,Ucrania,UEFA,0,3,1705,62,0.0,0.0,projected,Serhii Rebrov,Por definir,scenario,2026-08-17
+UKR,Ucrania,UEFA,0,3,1705,62,0.0,0.0,projected,Andrea Maldera,Mykola Matviyenko,scenario,2026-08-17
 CHI,Chile,CONMEBOL,0,3,1685,65,0.0,0.0,projected,Por definir,Arturo Erasmo Vidal Pardo,scenario,2026-08-17
 PER,Perú,CONMEBOL,0,3,1640,68,0.0,0.0,projected,Luiz Antônio Venker de Menezes (Mano Menezes),Por definir,scenario,2026-08-17
 CRC,Costa Rica,CONCACAF,0,3,1645,65,0.0,0.0,projected,Fernando Ariel Batista,Orlando Moisés Galo Calderón,scenario,2026-08-17
 JAM,Jamaica,CONCACAF,0,3,1625,68,0.0,0.0,projected,Por definir,André Jason Blake,scenario,2026-08-17
-TUN,Túnez,CAF,0,3,1665,60,0.0,0.0,projected,Hervé Renard,Ellyes Joris Skhiri,scenario,2026-08-17
+TUN,Túnez,CAF,0,3,1665,60,0.0,0.0,projected,Mouin Chaâbani,Ellyes Joris Skhiri,scenario,2026-08-17
 CMR,Camerún,CAF,0,3,1710,62,0.0,0.0,projected,David Pagou,Por definir,scenario,2026-08-17
 GHA,Ghana,CAF,0,3,1655,65,0.0,0.0,projected,Por definir,Jordan Ayew,scenario,2026-08-17
 MLI,Mali,CAF,0,3,1690,62,0.0,0.0,projected,Por definir,Por definir,scenario,2026-08-17
@@ -51,14 +51,14 @@ NZL,Nueva Zelanda,OFC,0,4,1575,68,0.0,0.0,projected,Darren Shaun Bazeley,Christo
 SWE,Suecia,UEFA,0,4,1695,62,0.0,0.0,projected,Graham Stephen Potter,Victor Nilsson Lindelöf,scenario,2026-08-17
 POL,Polonia,UEFA,0,4,1675,65,0.0,0.0,projected,Jan Urban,Robert Lewandowski,scenario,2026-08-17
 CZE,Chequia,UEFA,0,4,1680,62,0.0,0.0,projected,Santi Denia,Ladislav Krejčí,scenario,2026-08-17
-GRE,Grecia,UEFA,0,4,1645,65,0.0,0.0,projected,Ivan Jovanović,Por definir,scenario,2026-08-17
+GRE,Grecia,UEFA,0,4,1645,65,0.0,0.0,projected,Ivan Jovanović,Anastasios Bakasetas,scenario,2026-08-17
 HON,Honduras,CONCACAF,0,4,1535,75,0.0,0.0,projected,José Francisco Molina Jiménez,Por definir,scenario,2026-08-17
 GUA,Guatemala,CONCACAF,0,4,1515,78,0.0,0.0,projected,Luis Fernando Tena Garduño,Por definir,scenario,2026-08-17
-RSA,Sudáfrica,CAF,0,4,1600,68,0.0,0.0,projected,Hugo Henri Broos,Ronwen Hayden Williams,scenario,2026-08-17
+RSA,Sudáfrica,CAF,0,4,1600,68,0.0,0.0,projected,Pitso Mosimane,Ronwen Hayden Williams,scenario,2026-08-17
 COD,República Democrática del Congo,CAF,0,4,1595,72,0.0,0.0,projected,Sébastien Serge Louis Desabre,Chancel Mbemba,scenario,2026-08-17
 UAE,Emiratos Árabes Unidos,AFC,0,4,1570,70,0.0,0.0,projected,Zlatko Dalić,Ali Khaseif Humaid Khaseif Al Hosani,scenario,2026-08-17
 JOR,Jordania,AFC,0,4,1585,68,0.0,0.0,projected,Badou Zaki,Mousa Al-Tamari,scenario,2026-08-17
-CPV,Cabo Verde,CAF,0,4,1650,65,0.0,0.0,projected,Pedro Leitão Brito (Bubista),Ryan Mendes,real_qualifier_2026,2026-08-25
+CPV,Cabo Verde,CAF,0,4,1650,65,0.0,0.0,projected,Humberto Bettencourt,Ryan Mendes,real_qualifier_2026,2026-08-25
 CUW,Curazao,CONCACAF,0,4,1540,72,0.0,0.0,projected,Dick Advocaat,Leandro Bacuna,real_qualifier_2026,2026-08-25
 HAI,Haití,CONCACAF,0,4,1520,75,0.0,0.0,projected,David Badía,Johny Placide,real_qualifier_2026,2026-08-25
 SCO,Escocia,UEFA,0,4,1700,58,0.0,0.0,projected,Sébastien Pocognoli,Andy Robertson,real_qualifier_2026,2026-08-25

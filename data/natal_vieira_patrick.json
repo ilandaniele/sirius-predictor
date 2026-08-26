@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Patrick Paul Vieira",
+      "birth_date": "1976-06-23",
+      "birth_time": null,
+      "timezone": "Africa/Dakar",
+      "place": "Dakar, Senegal",
+      "latitude": 14.6928,
+      "longitude": -17.4467,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

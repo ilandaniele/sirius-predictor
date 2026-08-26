@@ -129,7 +129,7 @@
   local_path: data/natal_bubista.json
   terms_url: https://es.coachesvoice.com/terms-of-use/
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Cabo Verde, que clasificó al país por primera vez a un Mundial (13/10/2025). No forma parte todavía del roster de 64 selecciones de teams.csv (equipo real de la Copa del Mundo 2026, pendiente decisión sobre incorporarlo al escenario hipotético 2030). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Cabo Verde — histórico, ya no vigente. Clasificó al país por primera vez a un Mundial (13/10/2025) y lo dirigió allí; dejó el cargo tras la eliminación en octavos ante Argentina para dirigir al RS Berkane (Marruecos); reemplazado por su exasistente Humberto Bettencourt (ver natal_bettencourt) el 19/8/2026. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_mendes_ryan
   name: Ryan Mendes — FIFA.com / Infobae (perfil oficial)
@@ -139,7 +139,17 @@
   local_path: data/natal_mendes_ryan.json
   terms_url: https://www.fifa.com/es/legal
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán oficial de Cabo Verde en el Mundial 2026 (máximo goleador histórico del equipo). Corrige una atribución inicial errónea a Roberto Lopes (defensor convocado, pero no capitán — la prensa deportiva lo mencionaba como "capitán" en un sentido informal/de liderazgo, no el brazalete oficial confirmado por la convocatoria de la FIFA). Cabo Verde no forma parte todavía del roster de 64 selecciones de teams.csv (ver natal_bubista). Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del capitán oficial de Cabo Verde en el Mundial 2026 (máximo goleador histórico del equipo). Corrige una atribución inicial errónea a Roberto Lopes (defensor convocado, pero no capitán — la prensa deportiva lo mencionaba como "capitán" en un sentido informal/de liderazgo, no el brazalete oficial confirmado por la convocatoria de la FIFA). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bettencourt
+  name: Humberto Bettencourt — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Humberto_Bettencourt
+  local_path: data/natal_bettencourt.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Cabo Verde (nombrado el 19/8/2026, exasistente de Bubista, promovido tras su salida al RS Berkane). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_mbappe
   name: Kylian Mbappé — Wikipedia (biografía)
@@ -459,7 +469,17 @@
   local_path: data/natal_thiaw.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Senegal. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Senegal — histórico, ya no vigente. Removido tras la eliminación en octavos del Mundial 2026; reemplazado por Patrick Vieira (ver natal_vieira_patrick) el 18/8/2026.
+  enabled: true
+- id: natal_vieira_patrick
+  name: Patrick Vieira — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Patrick_Vieira
+  local_path: data/natal_vieira_patrick.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Senegal (nombrado el 18/8/2026, contrato de 4 años; exinternacional francés nacido en Dakar).
   enabled: true
 - id: natal_koulibaly
   name: Kalidou Koulibaly — Wikipedia (biografía)
@@ -579,7 +599,17 @@
   local_path: data/natal_chelle.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Nigeria. Capitanía no incluida a propósito (William Troost-Ekong se retiró de la selección tras la eliminatoria; sin sucesor confirmado). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Nigeria (continúa en el cargo; renovación contractual a largo plazo aún sin firmar en agosto de 2026, pero sin reemplazo nombrado). Capitán ver natal_ndidi (Wilfred Ndidi, tomó el brazalete tras el retiro de William Troost-Ekong en diciembre de 2025).
+  enabled: true
+- id: natal_ndidi
+  name: Wilfred Ndidi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Wilfred_Ndidi
+  local_path: data/natal_ndidi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nigeria (desde diciembre de 2025, tras el retiro internacional de William Troost-Ekong). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_hossam_hassan
   name: Hossam Hassan — BeSoccer (biografía)
@@ -609,7 +639,7 @@
   local_path: data/natal_petkovic.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Argelia. Capitán ver natal_mahrez (Riyad Mahrez, brazalete en el Mundial 2026; anunció su retiro de la selección el 2/7/2026 tras la eliminación ante Suiza — dato histórico, ya no vigente hacia adelante pero real para el ciclo mundialista).
+  use: Fecha de nacimiento del exseleccionador de Argelia — histórico, ya no vigente. Destituido el 4/8/2026 tras la eliminación en octavos ante Suiza; al 25/8/2026 la prensa argelina reporta el proceso de sucesión como no resuelto (varios nombres rumoreados — Chelle, Xavi, Belhocine, Antar Yahia — ninguno confirmado oficialmente por la FAF; una atribución inicial a "Paulo Pinto" no pudo verificarse en ninguna fuente y se descarta). Sin sucesor confirmado (vacante). Capitán ver natal_mahrez (Riyad Mahrez, brazalete en el Mundial 2026; anunció su retiro de la selección el 2/7/2026 tras la eliminación ante Suiza — dato histórico, ya no vigente hacia adelante pero real para el ciclo mundialista); tampoco tiene sucesor confirmado (Ramy Bensebaini es el favorito extraoficial).
   enabled: true
 - id: natal_mahrez
   name: Riyad Mahrez — Wikipedia (biografía)
@@ -689,7 +719,7 @@
   local_path: data/natal_fae.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Costa de Marfil. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Costa de Marfil — histórico, ya no vigente. Su contrato no fue renovado (venció el 31/7/2026) tras la eliminación en octavos ante Noruega; reemplazado por Hervé Renard (ver natal_renard), en su segundo ciclo al frente del equipo.
   enabled: true
 - id: natal_kessie
   name: Franck Kessié — Wikipedia (biografía)
@@ -749,7 +779,37 @@
   local_path: data/natal_paunovic.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Serbia (contrato confirmado hasta 2030). Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el Mundial 2026). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Serbia (contrato confirmado hasta 2030). Capitán ver natal_mitrovic (Aleksandar Mitrović, máximo goleador histórico del equipo).
+  enabled: true
+- id: natal_mitrovic
+  name: Aleksandar Mitrović — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
+  local_path: data/natal_mitrovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Serbia, máximo goleador histórico de la selección (64 goles). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_maldera
+  name: Andrea Maldera — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andrea_Maldera
+  local_path: data/natal_maldera.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Ucrania (nombrado el 18/5/2026, primer técnico extranjero en el cargo, contrato de 2 años con opción de extensión).
+  enabled: true
+- id: natal_matviyenko
+  name: Mykola Matviyenko — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mykola_Matviyenko
+  local_path: data/natal_matviyenko.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán habitual de Ucrania. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_rebrov
   name: Serhii Rebrov — Wikidata (biografía)
@@ -759,7 +819,7 @@
   local_path: data/natal_rebrov.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Ucrania. Capitanía no incluida a propósito (Zinchenko, capitán histórico, sufrió una rotura de ligamento cruzado en febrero de 2026 y su estatus como capitán no está confirmado para agosto de 2026). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Ucrania — histórico, ya no vigente. Su contrato fue rescindido de mutuo acuerdo tras no clasificar Ucrania al Mundial 2026; reemplazado por Andrea Maldera (ver natal_maldera) el 18/5/2026. Capitán ver natal_matviyenko (Mykola Matviyenko; Zinchenko, capitán histórico, no recuperó el puesto tras su lesión de ligamento cruzado de febrero de 2026).
   enabled: true
 - id: natal_vidal
   name: Arturo Vidal — Wikipedia (biografía)
@@ -819,7 +879,7 @@
   local_path: data/natal_renard.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Túnez (asumió en junio de 2026, tras la destitución de Sabri Lamouchi en pleno Mundial 2026). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Costa de Marfil (segundo ciclo; asumió el 4/8/2026, tras dejar Túnez sin ganar un partido del Mundial 2026, reemplazando a Emerse Faé — ver natal_fae). Corrige la asociación previa con la selección de Túnez, cargo que dejó vacante para tomar este. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_skhiri
   name: Ellyes Skhiri — Wikipedia (biografía)
@@ -830,6 +890,16 @@
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Túnez (asumió tras la baja de Ferjani Sassi de la convocatoria). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_chaabani
+  name: Mouin Chaâbani — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mo%C3%AFne_Cha%C3%A2bani
+  local_path: data/natal_chaabani.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Túnez (nombrado el 28/7/2026, reemplazando a Hervé Renard, quien se fue a dirigir a Costa de Marfil — ver natal_renard). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_pagou
   name: David Pagou — BeSoccer (biografía)
@@ -1029,7 +1099,17 @@
   local_path: data/natal_jovanovic.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Grecia. Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del seleccionador de Grecia (extendió contrato en mayo de 2025 hasta 2028). Capitán ver natal_bakasetas (Anastasios Bakasetas).
+  enabled: true
+- id: natal_bakasetas
+  name: Anastasios Bakasetas — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Anastasios_Bakasetas
+  local_path: data/natal_bakasetas.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Grecia. Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_molina
   name: José Francisco Molina — Transfermarkt (biografía)
@@ -1059,7 +1139,17 @@
   local_path: data/natal_broos.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Sudáfrica (en el cargo desde mayo de 2021). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Sudáfrica (en el cargo desde mayo de 2021) — histórico, ya no vigente. Anunció su salida el 10/7/2026 tras el Mundial; reemplazado por Pitso Mosimane (ver natal_mosimane), aprobado por la SAFA el 8/8/2026 (segundo ciclo).
+  enabled: true
+- id: natal_mosimane
+  name: Pitso Mosimane — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Pitso_Mosimane
+  local_path: data/natal_mosimane.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Sudáfrica (segundo ciclo, aprobado por la SAFA el 8/8/2026). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_williams_ronwen
   name: Ronwen Williams — Wikipedia (biografía)
@@ -1439,7 +1529,7 @@
   local_path: data/events_tun_coach_debut.json
   terms_url: https://www.fifa.com/es/legal
   robots_policy: curated_local_file_cites_public_record
-  use: Carta del momento exacto del debut de Hervé Renard como seleccionador de Túnez (20/6/2026, Estadio BBVA, Monterrey, vs Japón, el partido número 1000 de la historia de los Mundiales). Asumió en pleno Mundial 2026 tras la salida de Sabri Lamouchi, sin partidos previos de preparación. Evento real con hora documentada, técnica "coach_cycle".
+  use: Carta del momento exacto del debut de Hervé Renard como seleccionador de Túnez (20/6/2026, Estadio BBVA, Monterrey, vs Japón, el partido número 1000 de la historia de los Mundiales). Asumió en pleno Mundial 2026 tras la salida de Sabri Lamouchi, sin partidos previos de preparación. Ciclo histórico, ya no vigente — dejó Túnez el 4/8/2026 para asumir en Costa de Marfil (ver natal_renard). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
 - id: events_cmr_coach_debut
   name: Debut de David Pagou como seleccionador de Camerún — ESPN
@@ -1629,7 +1719,7 @@
   local_path: data/events_civ_coach_debut.json
   terms_url: https://www.france24.com/es/conditions-dutilisation/
   robots_policy: curated_local_file_cites_public_record
-  use: Carta del momento exacto del debut de Emerse Faé como seleccionador interino de Costa de Marfil (29/1/2024, Stade Charles Konan Banny, Yamoussoukro, vs Senegal, 1-1, 5-4 en penales, octavos de la CAN 2024 que terminarían ganando). Evento real con hora documentada, técnica "coach_cycle".
+  use: Carta del momento exacto del debut de Emerse Faé como seleccionador interino de Costa de Marfil (29/1/2024, Stade Charles Konan Banny, Yamoussoukro, vs Senegal, 1-1, 5-4 en penales, octavos de la CAN 2024 que terminarían ganando). Ciclo histórico, ya no vigente — no renovado tras el Mundial 2026, reemplazado por Hervé Renard el 4/8/2026 (ver natal_renard). Evento real con hora documentada, técnica "coach_cycle".
   enabled: true
 - id: events_jpn_coach_debut
   name: Debut de Hajime Moriyasu como seleccionador de Japón — JFA / Japan Times
