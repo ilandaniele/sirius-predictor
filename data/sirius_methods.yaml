@@ -75,7 +75,15 @@ public_method_registry:
     - part_of_victory
     - part_of_spirit
     - fixed_mutable_cardinal_modality
-    - historical_moon_sign_stats
+    - id: historical_moon_sign_stats
+      implemented: true
+      note: >
+        Implemented in engine/sirius.py (MOON_SIGN_RECORDS, moon_sign_signal) using
+        Argentina's real win/draw/loss-by-Moon-sign World Cup record as Sirius himself
+        published it across his 2026 World Cup posts (his single most publicly validated
+        technique). Only activates for matches with a real kickoff datetime and a team/sign
+        pair with recorded evidence (currently Argentina, 7 of 12 signs) — every other
+        case stays neutral rather than being imputed, per the project's sourcing policy.
     - critical_minutes
 rules:
   unknown_birth_time: marginalize_or_omit_angles

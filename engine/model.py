@@ -37,7 +37,28 @@ def _poisson_mass(lam: float, maximum: int = 10) -> np.ndarray:
 
 
 class FootballMatchModel:
-    """Versioned Elo-Poisson football baseline with an optional bounded Sirius layer."""
+    """Versioned Elo-Poisson football baseline with an optional bounded Sirius layer.
+
+    Two football-analytics adjustments, independent of the Sirius layer:
+
+    - ``host_advantage_elo``: host nations have historically outperformed their
+      pre-tournament seeding by a wide margin (6 of ~22 World Cups were won by
+      the host; studies of major-tournament home advantage put the effect in
+      the neighborhood of 100 Elo points for a single host). This scenario has
+      six co-hosts, which dilutes the effect (crowd support is still real in a
+      host's own cities, but the classic single-host travel/altitude/logistics
+      advantage is shared across six countries rather than concentrated in
+      one), so the default here is roughly half the single-host estimate.
+    - ``penalty_skill_weight``: shootout research (e.g. Bar-Eli et al. on
+      penalty psychology) finds outcomes are close to a coin flip regardless
+      of overall team quality — pressure and individual randomness dominate
+      far more than in 90 minutes of open play. The Elo-implied skill edge is
+      therefore heavily dampened toward 0.5 rather than applied at full
+      strength.
+    """
+
+    HOST_ADVANTAGE_ELO = 65.0
+    PENALTY_SKILL_WEIGHT = 0.35
 
     def __init__(
         self,
@@ -61,6 +82,12 @@ class FootballMatchModel:
         self.sirius = sirius
         self.mode = normalized_mode
         self.total_goals = float(total_goals)
+
+    def _host_bonus(self, team_id: str) -> float:
+        if self.mode == ModelMode.SIRIUS_ONLY:
+            return 0.0
+        team = self.teams.get(team_id)
+        return self.HOST_ADVANTAGE_ELO if team is not None and team.host else 0.0
 
     def expected_goals(self, home_rating: float, away_rating: float) -> tuple[float, float]:
         share = 1.0 / (1.0 + 10.0 ** ((away_rating - home_rating) / 800.0))
@@ -87,14 +114,18 @@ class FootballMatchModel:
         kickoff: datetime | None = None,
         round_name: str | None = None,
     ) -> MatchProbabilities:
-        baseline = self.probabilities_from_ratings(ratings[home_id], ratings[away_id])
+        home_host_bonus = self._host_bonus(home_id)
+        away_host_bonus = self._host_bonus(away_id)
+        baseline = self.probabilities_from_ratings(
+            ratings[home_id] + home_host_bonus, ratings[away_id] + away_host_bonus
+        )
         adjustment = 0.0
         if self.mode != ModelMode.FOOTBALL_ONLY:
             adjustment = self.sirius.matchup_delta(
                 self.teams[home_id], self.teams[away_id], kickoff, round_name
             )
-        model_home = ratings[home_id]
-        model_away = ratings[away_id]
+        model_home = ratings[home_id] + home_host_bonus
+        model_away = ratings[away_id] + away_host_bonus
         if self.mode == ModelMode.SIRIUS_ONLY:
             model_home = 1500.0
             model_away = 1500.0
@@ -125,8 +156,8 @@ class FootballMatchModel:
     ) -> MatchResult:
         probabilities = self.probabilities(home_id, away_id, ratings, kickoff, round_name)
         adjustment = probabilities.sirius_adjustment
-        model_home = ratings[home_id]
-        model_away = ratings[away_id]
+        model_home = ratings[home_id] + self._host_bonus(home_id)
+        model_away = ratings[away_id] + self._host_bonus(away_id)
         if self.mode == ModelMode.SIRIUS_ONLY:
             model_home = 1500.0
             model_away = 1500.0
@@ -156,10 +187,11 @@ class FootballMatchModel:
                 winner = away_id
                 decided_by = "extra_time"
             else:
-                penalty_probability = elo_expectation(
+                skill_probability = elo_expectation(
                     model_home + adjustment / 2,
                     model_away - adjustment / 2,
                 )
+                penalty_probability = 0.5 + (skill_probability - 0.5) * self.PENALTY_SKILL_WEIGHT
                 winner = home_id if rng.random() < penalty_probability else away_id
                 decided_by = "penalties"
         return MatchResult(
