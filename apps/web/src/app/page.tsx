@@ -475,6 +475,32 @@ export default function Home() {
               {backtest ? <><p className="micro">{backtest.matches} partidos · disponibles {backtest.available_editions.join(", ")}{backtest.missing_editions.length ? ` · sin datos: ${backtest.missing_editions.join(", ")}` : ""}</p><DataTable rows={backtest.metrics} empty="Sin métricas." /><h3 className="subheading">Ablaciones</h3><DataTable rows={backtest.ablations} empty="Sin ablaciones." /></> : <p className="empty">Ejecutá scripts/release_acceptance.py; el dashboard no inventa resultados ausentes.</p>}
             </article>
 
+            <article className="panel wide calibration-panel">
+              <div className="panel-title"><div><p>CALIBRACIÓN EMPÍRICA</p><h3>Ningún parámetro se supone: se ajusta contra Mundiales reales</h3></div></div>
+              {backtest?.next_edition_calibration ? <>
+                <p className="micro">
+                  Cada parámetro de ajuste (ventaja de local, peso de la señal lunar Sirius) se recalcula en cada corrida
+                  con una búsqueda grid walk-forward que minimiza log-loss sólo contra ediciones anteriores a la que se evalúa,
+                  sin fuga temporal. El valor de abajo es el entrenado con {backtest.available_editions.join(", ")} — el que
+                  se usa para simular un Mundial todavía no jugado.
+                </p>
+                <div className="calibration-values">
+                  <div>
+                    <small>Ventaja de local</small>
+                    <b>+{backtest.next_edition_calibration.host_bonus_elo.toFixed(0)} Elo</b>
+                    <span>Sur 2010 y Qatar 2022 rindieron por debajo como anfitriones; Brasil 2014 y Rusia 2018, por encima. Se cancelan: sin evidencia histórica de una ventaja sistemática.</span>
+                  </div>
+                  <div>
+                    <small>Peso señal lunar (Sirius)</small>
+                    <b>{backtest.next_edition_calibration.alpha.toFixed(2)}</b>
+                    <span>Se aplica sólo con evidencia lunar publicada por Sirius (hoy, Argentina); el resto de las selecciones queda neutral hasta tener datos propios.</span>
+                  </div>
+                </div>
+                <h3 className="subheading">Historia de calibración por edición (walk-forward)</h3>
+                <DataTable rows={backtest.calibration_manifest} empty="Sin historial de calibración." />
+              </> : <p className="empty">Sin calibración persistida todavía.</p>}
+            </article>
+
             <SectionHeading
               id="configuracion"
               title="Configuración"

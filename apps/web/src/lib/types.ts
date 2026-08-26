@@ -222,6 +222,7 @@ export type BacktestResult = {
   round_accuracy: Array<Record<string, string | number>>;
   ablations: Array<Record<string, string | number | null>>;
   calibration_manifest: Array<Record<string, string | number | number[] | boolean>>;
+  next_edition_calibration?: { alpha: number; host_bonus_elo: number };
 };
 
 export type UpdateEvent = {
