@@ -519,7 +519,7 @@
   local_path: data/natal_hong_myung_bo.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Corea del Sur. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Corea del Sur — histórico, ya no vigente. Renunció tras la eliminación en fase de grupos del Mundial 2026; la KFA está en un proceso abierto de búsqueda de un DT interino/permanente y no hay sucesor confirmado (vacante). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_son
   name: Son Heung-min — Wikipedia (biografía)
@@ -849,7 +849,7 @@
   local_path: data/natal_queiroz.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Ghana (asumió en abril de 2026). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Ghana (asumió en abril de 2026) — histórico, ya no vigente. Su contrato (con cláusula de renovación solo si Ghana llegaba a cuartos del Mundial 2026, lo cual no ocurrió) venció el 31/7/2026; las negociaciones de renovación con la GFA se rompieron por diferencias salariales y no hay sucesor confirmado (vacante). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_ayew
   name: Jordan Ayew — Wikipedia (biografía)
@@ -989,7 +989,17 @@
   local_path: data/natal_koubek.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Chequia (nombrado el 19/12/2025, clasificó al equipo tras 20 años de ausencia mundialista). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Chequia (nombrado el 19/12/2025, clasificó al equipo tras 20 años de ausencia mundialista) — histórico, ya no vigente. Dejó el cargo tras terminar último en su grupo del Mundial 2026; reemplazado por Santi Denia (ver natal_denia_santi) el 31/7/2026, primer extranjero en dirigir a la selección checa.
+  enabled: true
+- id: natal_denia_santi
+  name: Santi Denia — Infobae / Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.infobae.com/espana/agencias/2026/07/31/santi-denia-nuevo-entrenador-de-la-seleccion-checa-de-futbol/
+  local_path: data/natal_denia_santi.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Chequia (nombrado el 31/7/2026, primer técnico extranjero en el cargo; contrato de 2 años con opción a 2 más). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_soucek
   name: Tomáš Souček — Wikipedia (biografía)
@@ -999,7 +1009,17 @@
   local_path: data/natal_soucek.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán de Chequia. Fuentes contradictorias mencionan también a Ladislav Krejčí; se optó por Souček por ser la referencia mayoritaria y coincidir con el dato del jugador del West Ham United. Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del excapitán de Chequia — histórico, ya no vigente. Perdió el brazalete en marzo de 2026 por un problema disciplinario (el plantel no saludó a los hinchas tras un partido en noviembre de 2025); reemplazado por Ladislav Krejčí (ver natal_krejci_ladislav), quien fue capitán durante todo el repechaje y el Mundial 2026. Esto resuelve la ambigüedad marcada anteriormente entre ambos nombres — los dos fueron correctos, en momentos distintos.
+  enabled: true
+- id: natal_krejci_ladislav
+  name: Ladislav Krejčí — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Ladislav_Krej%C4%8D%C3%AD_(futbolista_nacido_en_1999)
+  local_path: data/natal_krejci_ladislav.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Chequia (desde marzo de 2026, tras la pérdida del brazalete de Tomáš Souček). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_jovanovic
   name: Ivan Jovanović — Wikipedia serbia (biografía)
@@ -1109,7 +1129,17 @@
   local_path: data/natal_sellami.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Jordania. Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Jordania — histórico, ya no vigente. Dejó el cargo aproximadamente una semana después de la eliminación en fase de grupos del Mundial 2026; reemplazado por Badou Zaki (ver natal_zaki_badou).
+  enabled: true
+- id: natal_zaki_badou
+  name: Badou Zaki (Ezzaki Badou) — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Ezzaki_Badou
+  local_path: data/natal_zaki_badou.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Jordania (nombrado julio de 2026, contrato de un año). Exarquero y capitán histórico de la selección de Marruecos (Mundial 1986), Balón de Oro africano 1986.
   enabled: true
 - id: natal_al_tamari
   name: Mousa Al-Tamari — Wikipedia (biografía)
@@ -1669,7 +1699,17 @@
   local_path: data/natal_clarke_steve.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Fecha de nacimiento del seleccionador de Escocia (en el cargo desde mayo de 2019; clasificó al país a su primer Mundial desde 1998). Hora desconocida, nunca imputada.
+  use: Fecha de nacimiento del exseleccionador de Escocia (en el cargo desde mayo de 2019; clasificó al país a su primer Mundial desde 1998) — histórico, ya no vigente. Renunció tras la eliminación en fase de grupos del Mundial 2026, apenas 30 días después de firmar una extensión de contrato hasta 2030; reemplazado por Sébastien Pocognoli (ver natal_pocognoli).
+  enabled: true
+- id: natal_pocognoli
+  name: Sébastien Pocognoli — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.besoccer.com/entrenador/sebastien-pocognoli/63761
+  local_path: data/natal_pocognoli.json
+  terms_url: https://es.besoccer.com/aviso-legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Escocia (exentrenador del Union Saint-Gilloise y del Mónaco). Hora desconocida, nunca imputada.
   enabled: true
 - id: natal_robertson_andy
   name: Andy Robertson — Wikipedia (biografía)
