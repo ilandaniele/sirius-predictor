@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "MAR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1970-06-03T16:00:00-06:00",
+      "location": {
+        "latitude": 21.1355,
+        "longitude": -101.7226,
+        "name": "Estadio Nou Camp, León, México"
+      },
+      "label": "Alemania Occidental 2-1 Marruecos, debut mundialista de Marruecos, Mundial 1970",
+      "coach_name": null
+    }
+  ]
+}

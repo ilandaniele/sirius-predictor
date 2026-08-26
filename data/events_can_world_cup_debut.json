@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CAN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1986-06-01T16:00:00-06:00",
+      "location": {
+        "latitude": 21.1355,
+        "longitude": -101.7226,
+        "name": "Estadio Nou Camp, León, México"
+      },
+      "label": "Francia 1-0 Canadá, debut mundialista de Canadá, Mundial 1986",
+      "coach_name": null
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "SUI",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1934-05-27T16:00:00+01:00",
+      "location": {
+        "latitude": 45.4781,
+        "longitude": 9.1240,
+        "name": "Stadio San Siro, Milán, Italia"
+      },
+      "label": "Suiza 3-2 Países Bajos, debut mundialista de Suiza, Mundial 1934",
+      "coach_name": null
+    }
+  ]
+}

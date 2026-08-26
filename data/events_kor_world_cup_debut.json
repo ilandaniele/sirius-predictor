@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "KOR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1954-06-17T18:00:00+01:00",
+      "location": {
+        "latitude": 47.3897,
+        "longitude": 8.5142,
+        "name": "Estadio Hardturm, Zúrich, Suiza"
+      },
+      "label": "Hungría 9-0 Corea del Sur, debut mundialista de Corea del Sur, Mundial 1954",
+      "coach_name": null
+    }
+  ]
+}

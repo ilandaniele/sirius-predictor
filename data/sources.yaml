@@ -1191,6 +1191,16 @@
   robots_policy: curated_local_file_cites_public_record
   use: Carta del momento exacto del debut de Luis de la Fuente como seleccionador de España (25/3/2023, La Rosaleda, Málaga, vs Noruega). Evento real con hora documentada, técnica "coach_cycle" de la metodología pública de Sirius.
   enabled: true
+- id: events_esp_world_cup_debut
+  name: Debut mundialista de España — Mundial 1934 (Los Mundiales de Fútbol / RFEF)
+  grade: B
+  kind: local_team_events
+  url: https://www.losmundialesdefutbol.com/partidos/1934_espana_brasil.php
+  local_path: data/events_esp_world_cup_debut.json
+  terms_url: https://www.losmundialesdefutbol.com/aviso-legal.php
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de España (27/5/1934, Estadio Luigi Ferraris, Génova, vs Brasil, 3-1, octavos de final del Mundial 1934). Evento real con hora documentada (15:30), técnica "wc_debut" de la metodología pública de Sirius.
+  enabled: true
 - id: events_bra_coach_debut
   name: Debut de Carlo Ancelotti como DT de Brasil — Infobae
   grade: B
@@ -1690,4 +1700,404 @@
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
   use: Dato histórico de nacimiento del capitán de Bosnia y Herzegovina en el Mundial 2026, máximo goleador histórico del equipo (6 goles en esta clasificación, a los 39-40 años). Hora desconocida, nunca imputada.
+  enabled: true
+- id: events_fra_world_cup_debut
+  name: Debut mundialista de Francia — Wikipedia (Mundial 1930, Grupo 1)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_1
+  local_path: data/events_fra_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Francia (13/7/1930, Estadio Pocitos, Montevideo, vs México, 4-1, hora oficial UYT histórica de Uruguay UTC-3:30). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ger_world_cup_debut
+  name: Debut mundialista de Alemania — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_ger_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Alemania (27/5/1934, Stadio Giovanni Berta, Florencia, vs Bélgica, 5-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_ned_world_cup_debut
+  name: Debut mundialista de Países Bajos — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_ned_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Países Bajos (27/5/1934, Stadio San Siro, Milán, vs Suiza, derrota 2-3). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_aut_world_cup_debut
+  name: Debut mundialista de Austria — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_aut_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Austria (27/5/1934, Stadio Benito Mussolini, Turín, vs Francia, 3-2 en prórroga). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_sui_world_cup_debut
+  name: Debut mundialista de Suiza — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_sui_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Suiza (27/5/1934, Stadio San Siro, Milán, vs Países Bajos, 3-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_swe_world_cup_debut
+  name: Debut mundialista de Suecia — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_swe_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Suecia (27/5/1934, Stadio Littoriale, Bolonia, vs Argentina, 3-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_pol_world_cup_debut
+  name: Debut mundialista de Polonia — Wikipedia (Brasil vs Polonia 1938)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/Brazil_v_Poland_(1938_FIFA_World_Cup)
+  local_path: data/events_pol_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Polonia (5/6/1938, Stade de la Meinau, Estrasburgo, vs Brasil, derrota 5-6 en prórroga). Evento real con hora documentada (17:00, confirmada por relato del árbitro), técnica "wc_debut".
+  enabled: true
+- id: events_alg_world_cup_debut
+  name: Debut mundialista de Argelia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_2
+  local_path: data/events_alg_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Argelia (16/6/1982, El Molinón, Gijón, vs Alemania Occidental, 2-1 (el 'Milagro de Gijón')). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_aus_world_cup_debut
+  name: Debut mundialista de Australia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1974_FIFA_World_Cup_Group_1
+  local_path: data/events_aus_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Australia (14/6/1974, Volksparkstadion, Hamburgo, vs Alemania Oriental, derrota 0-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_bra_world_cup_debut
+  name: Debut mundialista de Brasil — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_2
+  local_path: data/events_bra_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Brasil (14/7/1930, Estadio Parque Central, Montevideo, vs Yugoslavia, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_can_world_cup_debut
+  name: Debut mundialista de Canadá — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_C
+  local_path: data/events_can_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Canadá (1/6/1986, Estadio Nou Camp, León, vs Francia, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_civ_world_cup_debut
+  name: Debut mundialista de Costa de Marfil — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_C
+  local_path: data/events_civ_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Costa de Marfil (10/6/2006, Volksparkstadion, Hamburgo, vs Argentina, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cmr_world_cup_debut
+  name: Debut mundialista de Camerún — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_1
+  local_path: data/events_cmr_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Camerún (19/6/1982, Estadio Riazor, La Coruña, vs Polonia, empate 0-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cod_world_cup_debut
+  name: Debut mundialista de República Democrática del Congo — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1974_FIFA_World_Cup_Group_2
+  local_path: data/events_cod_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de República Democrática del Congo (14/6/1974, Westfalenstadion, Dortmund, vs Escocia, derrota 0-2, bajo el nombre Zaire (misma federación continua, renombrada RD Congo en 1997)). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_col_world_cup_debut
+  name: Debut mundialista de Colombia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1962_FIFA_World_Cup_Group_1
+  local_path: data/events_col_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Colombia (30/5/1962, Estadio Carlos Dittborn, Arica, vs Uruguay, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_crc_world_cup_debut
+  name: Debut mundialista de Costa Rica — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1990_FIFA_World_Cup_Group_C
+  local_path: data/events_crc_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Costa Rica (11/6/1990, Estadio Luigi Ferraris, Génova, vs Escocia, victoria 1-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cze_world_cup_debut
+  name: Debut mundialista de Chequia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_E
+  local_path: data/events_cze_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Chequia (12/6/2006, Arena AufSchalke, Gelsenkirchen, vs Estados Unidos, victoria 3-0, de la Chequia moderna (federación distinta de Checoslovaquia, disuelta en 1993)). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_den_world_cup_debut
+  name: Debut mundialista de Dinamarca — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_E
+  local_path: data/events_den_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Dinamarca (4/6/1986, Estadio Neza 86, Ciudad Nezahualcóyotl, vs Escocia, victoria 1-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_egy_world_cup_debut
+  name: Debut mundialista de Egipto — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup
+  local_path: data/events_egy_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Egipto (27/5/1934, Stadio Giorgio Ascarelli, Nápoles, vs Hungría, derrota 2-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_eng_world_cup_debut
+  name: Debut mundialista de Inglaterra — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1950_FIFA_World_Cup_Group_2
+  local_path: data/events_eng_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Inglaterra (25/6/1950, Estadio do Maracaná, Río de Janeiro, vs Chile, victoria 2-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_gre_world_cup_debut
+  name: Debut mundialista de Grecia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_D
+  local_path: data/events_gre_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Grecia (21/6/1994, Estadio Foxboro, Foxborough, vs Argentina, derrota 0-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_hon_world_cup_debut
+  name: Debut mundialista de Honduras — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_5
+  local_path: data/events_hon_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Honduras (16/6/1982, Estadio Luis Casanova, Valencia, vs España, empate 1-1, partido inaugural del Mundial 1982). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_irn_world_cup_debut
+  name: Debut mundialista de Irán — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1978_FIFA_World_Cup_Group_4
+  local_path: data/events_irn_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Irán (3/6/1978, Estadio Ciudad de Mendoza, Mendoza, vs Países Bajos, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_irq_world_cup_debut
+  name: Debut mundialista de Irak — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_B
+  local_path: data/events_irq_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Irak (4/6/1986, Estadio Toluca 70-86, Toluca, vs Paraguay, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_jpn_world_cup_debut
+  name: Debut mundialista de Japón — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_H
+  local_path: data/events_jpn_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Japón (14/6/1998, Stade de Toulouse, Toulouse, vs Argentina, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_kor_world_cup_debut
+  name: Debut mundialista de Corea del Sur — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1954_FIFA_World_Cup_Group_2
+  local_path: data/events_kor_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Corea del Sur (17/6/1954, Estadio Hardturm, Zúrich, vs Hungría, derrota 0-9). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ksa_world_cup_debut
+  name: Debut mundialista de Arabia Saudita — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_F
+  local_path: data/events_ksa_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Arabia Saudita (20/6/1994, RFK Stadium, Washington D.C., vs Países Bajos, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_mar_world_cup_debut
+  name: Debut mundialista de Marruecos — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1970_FIFA_World_Cup_Group_4
+  local_path: data/events_mar_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Marruecos (3/6/1970, Estadio Nou Camp, León, vs Alemania Occidental, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_mex_world_cup_debut
+  name: Debut mundialista de México — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/France_v_Mexico_(1930_FIFA_World_Cup)
+  local_path: data/events_mex_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de México (13/7/1930, Estadio Pocitos, Montevideo, vs Francia, derrota 1-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_nga_world_cup_debut
+  name: Debut mundialista de Nigeria — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_D
+  local_path: data/events_nga_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Nigeria (21/6/1994, Cotton Bowl, Dallas, vs Bulgaria, victoria 3-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_pan_world_cup_debut
+  name: Debut mundialista de Panamá — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_Group_G
+  local_path: data/events_pan_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Panamá (18/6/2018, Estadio Olímpico Fisht, Sochi, vs Bélgica, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_par_world_cup_debut
+  name: Debut mundialista de Paraguay — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_4
+  local_path: data/events_par_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Paraguay (17/7/1930, Estadio Gran Parque Central, Montevideo, vs Estados Unidos, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_per_world_cup_debut
+  name: Debut mundialista de Perú — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_3
+  local_path: data/events_per_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Perú (14/7/1930, Estadio Pocitos, Montevideo, vs Rumania, derrota 1-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_por_world_cup_debut
+  name: Debut mundialista de Portugal — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1966_FIFA_World_Cup_Group_3
+  local_path: data/events_por_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Portugal (13/7/1966, Old Trafford, Mánchester, vs Hungría, victoria 3-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_qat_world_cup_debut
+  name: Debut mundialista de Qatar — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://www.fifa.com/en/articles/qatar-v-ecuador-to-kick-off-fifa-world-cup-2022-tm-on-20-november
+  local_path: data/events_qat_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Qatar (20/11/2022, Estadio Al Bayt, Al Khor, vs Ecuador, derrota 0-2, partido inaugural del Mundial 2022 como anfitrión). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_rsa_world_cup_debut
+  name: Debut mundialista de Sudáfrica — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_C
+  local_path: data/events_rsa_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Sudáfrica (12/6/1998, Stade Vélodrome, Marsella, vs Francia, derrota 0-3, primera participación tras el fin del apartheid). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_tun_world_cup_debut
+  name: Debut mundialista de Túnez — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1978_FIFA_World_Cup_Group_2
+  local_path: data/events_tun_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Túnez (2/6/1978, Estadio Gigante de Arroyito, Rosario, vs México, victoria 3-1, primera victoria mundialista de un equipo africano). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_tur_world_cup_debut
+  name: Debut mundialista de Turquía — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1954_FIFA_World_Cup_Group_2
+  local_path: data/events_tur_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Turquía (17/6/1954, Estadio Wankdorf, Berna, vs Alemania Occidental, derrota 1-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ukr_world_cup_debut
+  name: Debut mundialista de Ucrania — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_H
+  local_path: data/events_ukr_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Ucrania (14/6/2006, Zentralstadion, Leipzig, vs España, derrota 0-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_uzb_world_cup_debut
+  name: Debut mundialista de Uzbekistán — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_K
+  local_path: data/events_uzb_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Uzbekistán (17/6/2026, Estadio Azteca, Ciudad de México, vs Colombia, derrota 1-3, primera clasificación histórica del país). Evento real con hora documentada, técnica "wc_debut".
   enabled: true

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "COD",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1974-06-14T19:30:00+01:00",
+      "location": {
+        "latitude": 51.4926,
+        "longitude": 7.4517,
+        "name": "Westfalenstadion, Dortmund, Alemania Occidental"
+      },
+      "label": "Zaire 0-2 Escocia, debut mundialista del país (bajo el nombre Zaire; misma federación continua, renombrada RD Congo en 1997), Mundial 1974",
+      "coach_name": null
+    }
+  ]
+}

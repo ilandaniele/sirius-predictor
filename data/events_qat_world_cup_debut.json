@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "QAT",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "2022-11-20T19:00:00+03:00",
+      "location": {
+        "latitude": 25.6759,
+        "longitude": 51.4919,
+        "name": "Estadio Al Bayt, Al Khor, Qatar"
+      },
+      "label": "Qatar 0-2 Ecuador, debut mundialista de Qatar (partido inaugural del Mundial 2022, como anfitrión)",
+      "coach_name": null
+    }
+  ]
+}

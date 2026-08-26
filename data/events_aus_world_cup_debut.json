@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "AUS",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1974-06-14T19:30:00+02:00",
+      "location": {
+        "latitude": 53.5866,
+        "longitude": 9.8983,
+        "name": "Volksparkstadion, Hamburgo, Alemania Occidental"
+      },
+      "label": "Alemania Oriental 2-0 Australia, debut mundialista de Australia, Mundial 1974",
+      "coach_name": null
+    }
+  ]
+}
