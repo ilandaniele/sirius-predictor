@@ -70,6 +70,7 @@ def build_backtest_artifact(state_path: Path) -> dict[str, Any]:
         "ablations": _records(backtest.ablations),
         "leakage_audit": _records(backtest.leakage_audit),
         "calibration_manifest": _records(backtest.calibration_manifest),
+        "next_edition_calibration": backtest.next_edition_calibration,
     }
     validate_backtest_artifact(artifact)
     return artifact

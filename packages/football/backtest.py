@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import math
 from collections import defaultdict
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 from datetime import UTC, datetime
 from typing import TypedDict
 
@@ -18,6 +18,16 @@ BACKTEST_MODELS = (
     "SIRIUS_CALIBRATED",
     "HYBRID",
 )
+# Real host nations per historical World Cup edition (post-alias team names, matching
+# engine.backtest.ALIASES). 2026 is co-hosted by three countries.
+HOST_NATIONS: dict[int, frozenset[str]] = {
+    2010: frozenset({"South Africa"}),
+    2014: frozenset({"Brazil"}),
+    2018: frozenset({"Russia"}),
+    2022: frozenset({"Qatar"}),
+    2026: frozenset({"USA", "Mexico", "Canada"}),
+}
+HOST_BONUS_CANDIDATES = tuple(range(0, 210, 10))
 ABLATION_FEATURES = (
     "coach_cycle",
     "world_cup_debut",
@@ -42,12 +52,18 @@ class FullBacktestResult:
     ablations: pd.DataFrame
     leakage_audit: pd.DataFrame
     calibration_manifest: pd.DataFrame
+    # alpha/host_bonus_elo trained on every available historical edition (not just
+    # "all editions before the most recent one" like the last calibration_manifest
+    # row) — this is the value that should inform a forecast for a tournament that
+    # hasn't happened yet, e.g. the live 2030 scenario simulation.
+    next_edition_calibration: dict[str, float] = field(default_factory=dict)
 
 
 class CalibrationRecord(TypedDict):
     home_rating: float
     away_rating: float
     moon_delta: float
+    host_indicator: float
     actual_index: int
 
 
@@ -85,6 +101,39 @@ def _select_alpha(history: list[CalibrationRecord]) -> float:
             total -= math.log(max(probabilities[row["actual_index"]], 1e-12))
         losses.append(total / len(history))
     return float(candidates[min(range(len(losses)), key=losses.__getitem__)])
+
+
+def _host_indicator(edition: int, home: str, away: str) -> float:
+    """+1 if the home side is (one of) the edition's real host nation(s), -1 if the
+    away side is, 0 otherwise (including the rare host-vs-host case, which cancels)."""
+
+    hosts = HOST_NATIONS.get(edition, frozenset())
+    return float(home in hosts) - float(away in hosts)
+
+
+def _select_beta(history: list[CalibrationRecord]) -> float:
+    """Empirically calibrate the host-advantage Elo bonus against real World Cup
+    results, exactly the way _select_alpha calibrates the Moon-sign weight: a
+    prequential (walk-forward, no future data) grid search minimizing log-loss.
+    Defaults to 0 (no assumed host advantage) until there is prior-edition
+    evidence to justify one — deliberately more conservative than alpha's
+    default, since host advantage isn't given the benefit of the doubt the way
+    the pre-existing moon-sign formula's alpha=1.0 default is.
+    """
+
+    if not history:
+        return 0.0
+    losses = []
+    for beta in HOST_BONUS_CANDIDATES:
+        total = 0.0
+        for row in history:
+            probabilities = _probabilities(
+                row["home_rating"] + beta * row["host_indicator"] / 2,
+                row["away_rating"] - beta * row["host_indicator"] / 2,
+            )
+            total -= math.log(max(probabilities[row["actual_index"]], 1e-12))
+        losses.append(total / len(history))
+    return float(HOST_BONUS_CANDIDATES[min(range(len(losses)), key=losses.__getitem__)])
 
 
 def _metrics(predictions: pd.DataFrame) -> pd.DataFrame:
@@ -161,10 +210,12 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
     for edition in sorted(by_edition):
         edition_matches = by_edition[edition]
         alpha = _select_alpha(calibration_history)
+        beta = _select_beta(calibration_history)
         calibration_rows.append(
             {
                 "edition": edition,
                 "alpha": alpha,
+                "host_bonus_elo": beta,
                 "trained_on_editions": previous_editions.copy(),
                 "same_edition_excluded": True,
             }
@@ -212,16 +263,23 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                 home_rate = (sum(home_records) + 1.0) / (len(home_records) + 2.0)
                 away_rate = (sum(away_records) + 1.0) / (len(away_records) + 2.0)
                 moon_delta = 40.0 * (home_rate - away_rate)
+            host_indicator = _host_indicator(edition, match.home, match.away)
+            # Host advantage is a football effect, not astrology: it belongs in the
+            # football-only baseline (matching how engine.model.FootballMatchModel
+            # applies it in FOOTBALL_ONLY and HYBRID, but not the SIRIUS_ONLY ablation).
             probabilities = {
-                "FOOTBALL_ONLY": _probabilities(home_rating, away_rating),
+                "FOOTBALL_ONLY": _probabilities(
+                    home_rating + beta * host_indicator / 2,
+                    away_rating - beta * host_indicator / 2,
+                ),
                 "SIRIUS_PURIST": _probabilities(1500 + moon_delta / 2, 1500 - moon_delta / 2),
                 "SIRIUS_CALIBRATED": _probabilities(
                     1500 + alpha * moon_delta / 2,
                     1500 - alpha * moon_delta / 2,
                 ),
                 "HYBRID": _probabilities(
-                    home_rating + alpha * moon_delta / 2,
-                    away_rating - alpha * moon_delta / 2,
+                    home_rating + beta * host_indicator / 2 + alpha * moon_delta / 2,
+                    away_rating - beta * host_indicator / 2 - alpha * moon_delta / 2,
                 ),
             }
             cutoff = (
@@ -251,6 +309,8 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                         "correct": int(_argmax(forecast) == actual_index),
                         "alpha": alpha,
                         "moon_delta": moon_delta,
+                        "beta": beta,
+                        "host_indicator": host_indicator,
                     }
                 )
             leakage_rows.append(
@@ -275,12 +335,19 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                     "home_rating": home_rating,
                     "away_rating": away_rating,
                     "moon_delta": moon_delta,
+                    "host_indicator": host_indicator,
                     "actual_index": actual_index,
                 }
             )
         calibration_history.extend(edition_calibration)
         previous_editions.append(edition)
 
+    # Trained on every edition seen (not "all but the most recent"), unlike each
+    # calibration_manifest row — this is the value for a not-yet-played tournament.
+    next_edition_calibration = {
+        "alpha": _select_alpha(calibration_history),
+        "host_bonus_elo": _select_beta(calibration_history),
+    }
     predictions = pd.DataFrame(prediction_rows)
     metrics = _metrics(predictions)
     round_accuracy = (
@@ -321,5 +388,6 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
         round_accuracy=round_accuracy,
         ablations=pd.DataFrame(ablation_rows),
         leakage_audit=pd.DataFrame(leakage_rows),
+        next_edition_calibration=next_edition_calibration,
         calibration_manifest=pd.DataFrame(calibration_rows),
     )

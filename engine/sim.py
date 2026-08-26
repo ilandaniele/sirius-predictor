@@ -94,6 +94,8 @@ def _sensitivity_table(
     scenario: Scenario,
     mode: str | ModelMode,
     reviewed_observations_path: str | Path | None = None,
+    host_advantage_elo: float | None = None,
+    penalty_skill_weight: float | None = None,
 ) -> pd.DataFrame:
     if pair is None:
         return pd.DataFrame()
@@ -101,7 +103,13 @@ def _sensitivity_table(
     layer = SiriusExperimentalLayer(
         scenario.models.max_sirius_elo_adjustment, assessments=assessments
     )
-    model = FootballMatchModel(teams, layer, mode=mode)
+    model = FootballMatchModel(
+        teams,
+        layer,
+        mode=mode,
+        host_advantage_elo=host_advantage_elo,
+        penalty_skill_weight=penalty_skill_weight,
+    )
     ratings = {team.team_id: team.projected_elo for team in teams}
     team_map = {team.team_id: team.team for team in teams}
     base_date = datetime.fromisoformat(scenario.final.local_date)
@@ -145,6 +153,8 @@ def run_engine(
     progress=None,
     top_bracket_limit: int = 5,
     reviewed_observations_path: str | Path | None = None,
+    host_advantage_elo: float | None = None,
+    penalty_skill_weight: float | None = None,
 ) -> SimulationBundle:
     if n <= 0:
         raise ValueError("n must be positive")
@@ -155,7 +165,13 @@ def run_engine(
     layer = SiriusExperimentalLayer(
         scenario.models.max_sirius_elo_adjustment, assessments=assessments
     )
-    model = FootballMatchModel(teams, layer, mode=mode)
+    model = FootballMatchModel(
+        teams,
+        layer,
+        mode=mode,
+        host_advantage_elo=host_advantage_elo,
+        penalty_skill_weight=penalty_skill_weight,
+    )
     rng = np.random.default_rng(seed)
     draw_rng = random.Random(seed ^ 0x5F3759DF)
     team_map = {team.team_id: team for team in teams}

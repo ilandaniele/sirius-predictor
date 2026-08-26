@@ -41,23 +41,30 @@ class FootballMatchModel:
 
     Two football-analytics adjustments, independent of the Sirius layer:
 
-    - ``host_advantage_elo``: host nations have historically outperformed their
-      pre-tournament seeding by a wide margin (6 of ~22 World Cups were won by
-      the host; studies of major-tournament home advantage put the effect in
-      the neighborhood of 100 Elo points for a single host). This scenario has
-      six co-hosts, which dilutes the effect (crowd support is still real in a
-      host's own cities, but the classic single-host travel/altitude/logistics
-      advantage is shared across six countries rather than concentrated in
-      one), so the default here is roughly half the single-host estimate.
+    - ``host_advantage_elo``: the intuitive claim ("hosts overperform their
+      seeding") does NOT survive contact with the real prequential backtest in
+      packages/football/backtest.py, which calibrates this exact parameter
+      against every real World Cup from 2010-2022 (walk-forward, no leakage):
+      South Africa 2010 and Qatar 2022 both underperformed as hosts, canceling
+      out Brazil 2014's and Russia 2018's overperformance, so the
+      evidence-backed value is 0.0 — not the ~100 Elo figure often cited for
+      generic tournament home advantage. The default here follows that
+      calibration rather than the folklore estimate; see
+      packages/football/backtest.py::HOST_BONUS_CANDIDATES /
+      _select_beta for how to recompute it as new World Cups complete.
     - ``penalty_skill_weight``: shootout research (e.g. Bar-Eli et al. on
       penalty psychology) finds outcomes are close to a coin flip regardless
       of overall team quality — pressure and individual randomness dominate
       far more than in 90 minutes of open play. The Elo-implied skill edge is
       therefore heavily dampened toward 0.5 rather than applied at full
       strength.
+
+    Both are constructor parameters, not just class constants, so a caller
+    (e.g. the publish pipeline) can pass in a freshly recalibrated value
+    without touching this file.
     """
 
-    HOST_ADVANTAGE_ELO = 65.0
+    HOST_ADVANTAGE_ELO = 0.0
     PENALTY_SKILL_WEIGHT = 0.35
 
     def __init__(
@@ -66,6 +73,8 @@ class FootballMatchModel:
         sirius: SiriusExperimentalLayer,
         mode: str | ModelMode = ModelMode.HYBRID,
         total_goals: float = 2.65,
+        host_advantage_elo: float | None = None,
+        penalty_skill_weight: float | None = None,
     ):
         aliases = {
             "baseline": ModelMode.FOOTBALL_ONLY,
@@ -82,6 +91,16 @@ class FootballMatchModel:
         self.sirius = sirius
         self.mode = normalized_mode
         self.total_goals = float(total_goals)
+        self.HOST_ADVANTAGE_ELO = (
+            float(host_advantage_elo)
+            if host_advantage_elo is not None
+            else type(self).HOST_ADVANTAGE_ELO
+        )
+        self.PENALTY_SKILL_WEIGHT = (
+            float(penalty_skill_weight)
+            if penalty_skill_weight is not None
+            else type(self).PENALTY_SKILL_WEIGHT
+        )
 
     def _host_bonus(self, team_id: str) -> float:
         if self.mode == ModelMode.SIRIUS_ONLY:

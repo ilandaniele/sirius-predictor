@@ -204,7 +204,7 @@ def main() -> None:
     if not api_key:
         raise RuntimeError("Falta SIRIUS_API_KEY en .env")
     headers = {"X-API-Key": api_key}
-    print("1/7 · Fly prepara y congela fuentes e inputs livianos…", flush=True)
+    print("1/8 · Fly prepara y congela fuentes e inputs livianos…", flush=True)
     prepared_response = requests.post(
         _api_url(args.server, "local-simulation-inputs"),
         headers={**headers, "Content-Type": "application/json"},
@@ -223,7 +223,7 @@ def main() -> None:
         return
 
     scenario_path, teams_path, teams = _validate_frozen_input(prepared)
-    print(f"2/7 · Input {prepared['input_id'][:12]} validado contra el código local.", flush=True)
+    print(f"2/8 · Input {prepared['input_id'][:12]} validado contra el código local.", flush=True)
     timestamp = datetime.now(UTC).strftime("%Y%m%dT%H%M%S%fZ")
     work = (
         args.output.resolve()
@@ -244,7 +244,25 @@ def main() -> None:
             reviewed_path.write_bytes(reviewed_payload)
 
         print(
-            f"3/7 · HYBRID primero · {args.iterations:,} simulaciones locales…",
+            "3/8 · Calibrando contra Mundiales reales (2010-2026, walk-forward)…",
+            flush=True,
+        )
+        _write_status(work, "backtesting", "Ejecutando backtesting y auditoría de leakage")
+        backtest = build_backtest_artifact(ROOT / "state")
+        (work / "backtest.json").write_text(
+            json.dumps(backtest, ensure_ascii=False, indent=2),
+            encoding="utf-8",
+        )
+        next_calibration = backtest["next_edition_calibration"]
+        host_advantage_elo = float(next_calibration["host_bonus_elo"])
+        print(
+            f"Ventaja de local calibrada con datos reales: +{host_advantage_elo:.0f} Elo "
+            f"(entrenado con {', '.join(str(e) for e in sorted(backtest['available_editions']))}).",
+            flush=True,
+        )
+
+        print(
+            f"4/8 · HYBRID primero · {args.iterations:,} simulaciones locales…",
             flush=True,
         )
         _write_status(work, "simulating_hybrid", "Ejecutando HYBRID")
@@ -258,6 +276,7 @@ def main() -> None:
                 final_hour=args.final_hour,
                 workers=args.workers,
                 reviewed_observations_path=reviewed_path,
+                host_advantage_elo=host_advantage_elo,
             )
         }
         hybrid_result = raw_results[ModelMode.HYBRID]
@@ -268,7 +287,7 @@ def main() -> None:
         print(f"Sirius: {application['label']}.", flush=True)
 
         print(
-            "4/7 · Generando cinco imágenes de semifinales, final y campeón…",
+            "5/8 · Generando cinco imágenes de semifinales, final y campeón…",
             flush=True,
         )
         bracket_directory = work / "brackets"
@@ -292,7 +311,7 @@ def main() -> None:
             start=1,
         ):
             print(
-                f"5/7 · Modelo de control {index}/2: {mode.value} · "
+                f"6/8 · Modelo de control {index}/2: {mode.value} · "
                 f"{args.iterations:,} simulaciones locales…",
                 flush=True,
             )
@@ -306,16 +325,11 @@ def main() -> None:
                 final_hour=args.final_hour,
                 workers=args.workers,
                 reviewed_observations_path=reviewed_path,
+                host_advantage_elo=host_advantage_elo,
             )
 
         simulations = {mode.value: _simulation_summary(raw_results[mode]) for mode in ModelMode}
-        print("6/7 · Ejecutando backtesting temporal y armando el bundle…", flush=True)
-        _write_status(work, "backtesting", "Ejecutando backtesting y auditoría de leakage")
-        backtest = build_backtest_artifact(ROOT / "state")
-        (work / "backtest.json").write_text(
-            json.dumps(backtest, ensure_ascii=False, indent=2),
-            encoding="utf-8",
-        )
+        print("7/8 · Armando el bundle…", flush=True)
         results = {
             "schema_version": RESULT_SCHEMA,
             "input_id": prepared["input_id"],
@@ -346,11 +360,11 @@ def main() -> None:
                 brackets_path=str(bracket_directory),
                 sirius_application=application,
             )
-            print("7/7 · Listo. Subida omitida por --no-upload.")
+            print("8/8 · Listo. Subida omitida por --no-upload.")
             return
 
         print(
-            "7/7 · Subiendo resultados, backtest e imágenes; Fly valida antes de publicar…",
+            "8/8 · Subiendo resultados, backtest e imágenes; Fly valida antes de publicar…",
             flush=True,
         )
         _write_status(work, "uploading", "Subiendo bundle verificado a Fly")
