@@ -254,12 +254,16 @@ def main() -> None:
             encoding="utf-8",
         )
         next_calibration = backtest["next_edition_calibration"]
-        host_advantage_elo = float(next_calibration["host_bonus_elo"])
+        calibrated_host_bonus = float(next_calibration["host_bonus_elo"])
         print(
-            f"Ventaja de local calibrada con datos reales: +{host_advantage_elo:.0f} Elo "
-            f"(entrenado con {', '.join(str(e) for e in sorted(backtest['available_editions']))}).",
+            f"Ventaja de local calibrada con datos reales: +{calibrated_host_bonus:.0f} Elo "
+            f"(entrenado con {', '.join(str(e) for e in sorted(backtest['available_editions']))}) "
+            "— no se aplica: Sirius mismo descarta la condición de local como factor "
+            "(ver su análisis de Brasil vs Croacia, Mundial 2014). Se deja publicado sólo "
+            "como referencia diagnóstica.",
             flush=True,
         )
+        host_advantage_elo = 0.0
 
         print(
             f"4/8 · HYBRID primero · {args.iterations:,} simulaciones locales…",

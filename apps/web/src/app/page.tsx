@@ -479,16 +479,16 @@ export default function Home() {
               <div className="panel-title"><div><p>CALIBRACIÓN EMPÍRICA</p><h3>Ningún parámetro se supone: se ajusta contra Mundiales reales</h3></div></div>
               {backtest?.next_edition_calibration ? <>
                 <p className="micro">
-                  Cada parámetro de ajuste (ventaja de local, peso de la señal lunar Sirius) se recalcula en cada corrida
-                  con una búsqueda grid walk-forward que minimiza log-loss sólo contra ediciones anteriores a la que se evalúa,
-                  sin fuga temporal. El valor de abajo es el entrenado con {backtest.available_editions.join(", ")} — el que
-                  se usa para simular un Mundial todavía no jugado.
+                  Cada parámetro se recalcula en cada corrida con una búsqueda grid walk-forward que minimiza log-loss
+                  sólo contra ediciones anteriores a la que se evalúa, sin fuga temporal. El valor de abajo es el
+                  entrenado con {backtest.available_editions.join(", ")}. Se publica siempre, aunque no se aplique,
+                  para que la calibración sea auditable.
                 </p>
                 <div className="calibration-values">
                   <div>
-                    <small>Ventaja de local</small>
+                    <small>Ventaja de local · calibrada, NO aplicada</small>
                     <b>+{backtest.next_edition_calibration.host_bonus_elo.toFixed(0)} Elo</b>
-                    <span>Sur 2010 y Qatar 2022 rindieron por debajo como anfitriones; Brasil 2014 y Rusia 2018, por encima. Se cancelan: sin evidencia histórica de una ventaja sistemática.</span>
+                    <span>Sirius mismo descarta la condición de local como factor: en Brasil vs Croacia (Mundial 2014, debut del anfitrión) se preguntó explícitamente si debía favorecer a Brasil por jugar en casa y decidió que no — y acertó, Brasil no ganó. Por eso el motor no aplica este número aunque el ajuste empírico lo sugiera; queda sólo como referencia diagnóstica.</span>
                   </div>
                   <div>
                     <small>Peso señal lunar (Sirius)</small>

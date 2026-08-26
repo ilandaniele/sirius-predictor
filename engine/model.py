@@ -45,18 +45,19 @@ class FootballMatchModel:
       seeding") does NOT survive contact with the real prequential backtest in
       packages/football/backtest.py, which calibrates this exact parameter
       by grid-searching log-loss against every real World Cup, walk-forward
-      with no leakage. The evidence-backed value moves as more editions are
-      played — South Africa 2010 and Qatar 2022 both underperformed as
-      hosts while Brazil 2014 and Russia 2018 overperformed, so a fit
-      trained only through 2022 lands at 0.0, while the fit trained through
-      2026 (the one actually used to forecast a not-yet-played tournament)
-      lands at +50 — well below the ~100 Elo figure often cited for generic
-      tournament home advantage. The class-level default of 0.0 here is
-      just the conservative fallback for callers that skip calibration
-      entirely (e.g. unit tests); real runs always pass in a freshly
-      computed value. See packages/football/backtest.py::HOST_BONUS_CANDIDATES
-      / _select_beta / next_edition_calibration for how to recompute it as
-      new World Cups complete.
+      with no leakage. That fit is unstable on this little data — trained
+      through 2022 it lands at 0.0 (South Africa 2010 and Qatar 2022
+      underperformed as hosts, canceling Brazil 2014's and Russia 2018's
+      overperformance), but adding just one more edition (2026) swings it to
+      +50. The publish pipeline computes and publishes this fit for
+      transparency (packages/football/backtest.py::HOST_BONUS_CANDIDATES /
+      _select_beta / next_edition_calibration) but deliberately does NOT
+      apply it: Sirius's own archive shows him explicitly weighing and
+      rejecting host status as a factor (his Brazil vs Croatia post, 2014
+      opener — he asks himself whether to favor the host, decides not to,
+      and is right when Brazil doesn't win). The class-level default of 0.0
+      is therefore both the safe fallback for callers that skip calibration
+      and, currently, the value real runs pass in too.
     - ``penalty_skill_weight``: shootout research (e.g. Bar-Eli et al. on
       penalty psychology) finds outcomes are close to a coin flip regardless
       of overall team quality — pressure and individual randomness dominate
