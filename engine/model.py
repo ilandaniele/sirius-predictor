@@ -44,14 +44,19 @@ class FootballMatchModel:
     - ``host_advantage_elo``: the intuitive claim ("hosts overperform their
       seeding") does NOT survive contact with the real prequential backtest in
       packages/football/backtest.py, which calibrates this exact parameter
-      against every real World Cup from 2010-2022 (walk-forward, no leakage):
-      South Africa 2010 and Qatar 2022 both underperformed as hosts, canceling
-      out Brazil 2014's and Russia 2018's overperformance, so the
-      evidence-backed value is 0.0 — not the ~100 Elo figure often cited for
-      generic tournament home advantage. The default here follows that
-      calibration rather than the folklore estimate; see
-      packages/football/backtest.py::HOST_BONUS_CANDIDATES /
-      _select_beta for how to recompute it as new World Cups complete.
+      by grid-searching log-loss against every real World Cup, walk-forward
+      with no leakage. The evidence-backed value moves as more editions are
+      played — South Africa 2010 and Qatar 2022 both underperformed as
+      hosts while Brazil 2014 and Russia 2018 overperformed, so a fit
+      trained only through 2022 lands at 0.0, while the fit trained through
+      2026 (the one actually used to forecast a not-yet-played tournament)
+      lands at +50 — well below the ~100 Elo figure often cited for generic
+      tournament home advantage. The class-level default of 0.0 here is
+      just the conservative fallback for callers that skip calibration
+      entirely (e.g. unit tests); real runs always pass in a freshly
+      computed value. See packages/football/backtest.py::HOST_BONUS_CANDIDATES
+      / _select_beta / next_edition_calibration for how to recompute it as
+      new World Cups complete.
     - ``penalty_skill_weight``: shootout research (e.g. Bar-Eli et al. on
       penalty psychology) finds outcomes are close to a coin flip regardless
       of overall team quality — pressure and individual randomness dominate
