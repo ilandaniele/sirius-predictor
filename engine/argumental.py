@@ -14,6 +14,7 @@ from packages.astrology.techniques import (
     sign_name,
     solar_return,
 )
+from packages.common.config import ROOT
 
 # Astrología Argumental (Santiago Rodríguez Spuch, astrologiaargumental.blogspot.com) is
 # the second independent astrology source in this project, distinct from Sirius. His
@@ -45,7 +46,7 @@ from packages.astrology.techniques import (
 # Argentina para ganar el Mundial 2026"). Real result: España won. Treat this module's
 # output with the same caution that outcome implies.
 
-DATA_DIR = Path(__file__).resolve().parent.parent / "data"
+DATA_DIR = ROOT / "data"
 
 _ES_BODY = {
     "Sun": "Sol",
