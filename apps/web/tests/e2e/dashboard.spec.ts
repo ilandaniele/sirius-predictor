@@ -20,6 +20,8 @@ test("exposes the guarded Sirius and Astrología Argumental human review workflo
   await expect(siriusQueue.getByLabel("API key de revisión")).toHaveAttribute("type", "password");
   await expect(siriusQueue.getByRole("button", { name: "Sincronizar archivo" })).toBeVisible();
 
+  await page.getByRole("button", { name: /análisis complementarios/i }).click();
+
   const argumentalQueue = page.locator("article.review-queue", {
     hasText: "ASTROLOGÍA ARGUMENTAL",
   });
