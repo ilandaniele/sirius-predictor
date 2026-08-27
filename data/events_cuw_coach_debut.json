@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CUW",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-06-05T19:30:00-04:00",
+      "location": {
+        "latitude": 12.1528,
+        "longitude": -68.8881,
+        "name": "Stadion Ergilio Hato, Willemstad, Curazao"
+      },
+      "label": "Curazao 4-1 Barbados, debut de Dick Advocaat como seleccionador",
+      "coach_name": "Dick Advocaat"
+    }
+  ]
+}
