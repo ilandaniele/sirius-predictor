@@ -106,6 +106,37 @@ export type SiriusAssessment = {
   explanation: string;
 };
 
+export type TrackRecordMatch = {
+  round: string;
+  post_url: string;
+  published_at: string;
+  claim: string;
+  outcome: "correct" | "incorrect";
+  note?: string;
+};
+
+export type TrackRecordAstrologer = {
+  source_id: string;
+  astrologer: string;
+  self_reported_summary: string;
+  self_reported_url: string;
+  verifiability: "verifiable_from_dated_posts" | "unverifiable_from_archive";
+  matches: TrackRecordMatch[];
+  verifiability_note?: string;
+};
+
+export type TrackRecordAudit = {
+  edition: number;
+  consulted_at: string;
+  methodology_note: string;
+  astrologers: TrackRecordAstrologer[];
+  final_outcome: {
+    summary: string;
+    both_predicted: string;
+    both_wrong: boolean;
+  };
+};
+
 export type CycleFortune = {
   team_id: string;
   coach_name: string;

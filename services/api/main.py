@@ -33,6 +33,7 @@ from .catalog import (
     manifest_provenance,
     provenance,
     source_catalog,
+    track_record_audit,
 )
 from .local_compute import LocalComputeConflict, import_local_result, prepare_local_simulation
 from .schemas import (
@@ -195,6 +196,21 @@ def create_app() -> FastAPI:
     @application.get("/api/v1/sources", response_model=ApiEnvelope)
     def sources_view() -> ApiEnvelope:
         return ApiEnvelope(data=list(source_catalog().values()))
+
+    @application.get("/api/v1/audit/track-record", response_model=ApiEnvelope)
+    def track_record_view() -> ApiEnvelope:
+        audit = track_record_audit()
+        return ApiEnvelope(
+            data=audit,
+            provenance=[
+                provenance("sirius_blog", str(audit["consulted_at"])),
+                provenance("argumental_blog", str(audit["consulted_at"])),
+            ],
+            warnings=[
+                "Auditoría independiente de récords autoinformados; no afecta ningún cálculo "
+                "del motor ni del Monte Carlo."
+            ],
+        )
 
     @application.get("/api/v1/updates/latest", response_model=ApiEnvelope)
     def latest_update() -> ApiEnvelope:

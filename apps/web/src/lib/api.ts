@@ -14,6 +14,7 @@ import type {
   SiriusReviewStatus,
   SourceRecord,
   Team,
+  TrackRecordAudit,
   UpdateEvent
 } from "./types";
 
@@ -41,6 +42,7 @@ export const api = {
   draw: (seed = 2030, formatSize: 48 | 64 = 64) =>
     request<ApiEnvelope<Draw>>(`/draw?seed=${seed}&format_size=${formatSize}`),
   sources: () => request<ApiEnvelope<SourceRecord[]>>("/sources"),
+  trackRecordAudit: () => request<ApiEnvelope<TrackRecordAudit>>("/audit/track-record"),
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
   siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),

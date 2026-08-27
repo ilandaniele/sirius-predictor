@@ -3,6 +3,7 @@
 import { useEffect, useMemo, useState } from "react";
 
 import { AstrologiaPanel } from "@/components/AstrologiaPanel";
+import { AuditoriaPanel } from "@/components/AuditoriaPanel";
 import { MetricCard } from "@/components/MetricCard";
 import { SourceBadge } from "@/components/SourceBadge";
 import { HistoryChart } from "@/components/HistoryChart";
@@ -19,7 +20,7 @@ import type {
   UpdateEvent
 } from "@/lib/types";
 
-const tabs = ["Predicción", "Astrología", "Sistema"] as const;
+const tabs = ["Predicción", "Astrología", "Auditoría", "Sistema"] as const;
 
 const PREDICCION_SECTIONS = [
   { id: "resumen", label: "Resumen" },
@@ -452,6 +453,8 @@ export default function Home() {
             <AstrologiaPanel teams={teams} />
           </>
         ) : null}
+
+        {active === "Auditoría" ? <AuditoriaPanel /> : null}
 
         {active === "Sistema" ? (
           <>

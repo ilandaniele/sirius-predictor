@@ -1,0 +1,88 @@
+schema_version: track-record-audit-v1
+edition: 2026
+consulted_at: "2026-08-27"
+methodology_note: >
+  Both astrologers' full public blog archives (Blogger JSON feeds, the same source
+  already used for the review-queue collectors) were fetched and searched for their
+  2026 World Cup match-by-match predictions about Argentina. Sirius publishes one
+  dated post per Argentina match, each later edited in place with a real-time
+  "LA PRECISIÓN DE LA ASTROLOGÍA" confirmation once the match is played, so each
+  claim is directly auditable against his own dated, published text. Argumental's
+  self-reported tally could not be matched against any dated in-tournament match post
+  in his blog archive (his only 2026 World Cup post found is the final itself); that
+  asymmetry in verifiability is reported explicitly below rather than treated as
+  equivalent to Sirius's record.
+astrologers:
+  - source_id: sirius_blog
+    astrologer: "Juan Cruz Sirius"
+    self_reported_summary: >
+      "En los últimos dos Mundiales acerté 14 de los 15 partidos de Argentina,
+      lamentablemente no asi el último de hoy."
+    self_reported_url: "https://astrologiadeportivaa.blogspot.com/2026/07/dos-meses-antes-del-inicio-del-mundial.html"
+    verifiability: "verifiable_from_dated_posts"
+    matches:
+      - round: "Grupos · vs Argelia"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/06/argentina-vs-argelia-analisis.html"
+        published_at: "2026-06-15"
+        claim: "Argentina nunca perdió con Luna en Cáncer (histórico); dos de tres goles cayeron en los minutos señalados (actualización 17/6 en el mismo post)."
+        outcome: "correct"
+      - round: "Grupos · vs Austria"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/06/argentina-vs-austria-analisis.html"
+        published_at: "2026-06-20"
+        claim: "Anticipó partido más cerrado/difícil (Luna en oposición a Saturno); penal y gol de Messi cayeron en minutos señalados (actualización 22/6)."
+        outcome: "correct"
+      - round: "Grupos · vs Jordania"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/06/argentina-vs-jordania-analisis.html"
+        published_at: "2026-06-26"
+        claim: "Los cuatro goles del partido cayeron en minutos señalados, incluidos los anulados (actualización 28/6)."
+        outcome: "correct"
+      - round: "16vos · vs Cabo Verde"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/06/argentina-vs-cabo-verde-pronostico.html"
+        published_at: "2026-06-30"
+        claim: "\"Será Argentina quien avance de ronda según mi interpretación astrológica.\""
+        outcome: "correct"
+      - round: "8vos · vs Egipto"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/07/pronostico-astrologico-argentina-vs.html"
+        published_at: "2026-07-06"
+        claim: "\"Argentina lo eliminará y se clasificará a los 4tos de final del Mundial 2026.\""
+        outcome: "correct"
+      - round: "4tos · vs Suiza"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/07/argentina-vs-suiza-pronostico.html"
+        published_at: "2026-07-09"
+        claim: "\"Mi pronostico es que Argentina eliminará a Suiza, y estará en semifinales.\""
+        outcome: "correct"
+      - round: "Semifinal · vs Inglaterra"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/07/argentina-vs-inglaterra-pronostico.html"
+        published_at: "2026-07-13"
+        claim: "Comparó cartas de ambos ciclos (Scaloni vs Tuchel); interpretación favorable a Argentina para avanzar a la final."
+        outcome: "correct"
+      - round: "Final · vs España"
+        post_url: "https://astrologiadeportivaa.blogspot.com/2026/07/argentina-vs-espana-analisis.html"
+        published_at: "2026-07-17"
+        claim: "\"Considero mejor a la Selección Argentina para ganar el Mundial 2026.\""
+        outcome: "incorrect"
+        note: >
+          España ganó. Sirius publicó una autocrítica explícita al día siguiente,
+          citada en self_reported_summary — no editó ni borró el pronóstico original.
+  - source_id: argumental_blog
+    astrologer: "Astrología Argumental"
+    self_reported_summary: >
+      "Durante este Mundial, realizamos hasta el momento siete pronósticos sobre la
+      Selección Argentina y los siete fueron correctos, no solamente respecto del
+      resultado o la clasificación, sino también en relación con la dificultad de
+      los partidos, el pronóstico de los minutos de los goles."
+    self_reported_url: "https://astrologiaargumental.blogspot.com/2026/07/analisis-astrologico-final-del-mundial.html"
+    verifiability: "unverifiable_from_archive"
+    matches: []
+    verifiability_note: >
+      El archivo público del blog (40 posts totales, capturados en su totalidad) no
+      contiene ningún posteo individual fechado sobre partidos de Argentina en el
+      Mundial 2026 antes de la final — el único post encontrado sobre el torneo es
+      el análisis de la final en sí. Los "siete pronósticos" mencionados pudieron
+      publicarse en Instagram (@astrologia.argumental), canal que este proyecto no
+      puede scrapear por prohibición explícita de su robots.txt. La afirmación no
+      puede confirmarse ni refutarse con las fuentes disponibles.
+final_outcome:
+  summary: "España venció a Argentina en la final (0-0 en 90 minutos, definido después)."
+  both_predicted: "Argentina campeona"
+  both_wrong: true

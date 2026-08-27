@@ -21,6 +21,13 @@ def source_catalog() -> dict[str, dict[str, Any]]:
     return {str(record["id"]): record for record in records}
 
 
+@lru_cache(maxsize=1)
+def track_record_audit() -> dict[str, Any]:
+    path = ROOT / "data" / "track_record_audit.yaml"
+    data: dict[str, Any] = yaml.safe_load(path.read_text(encoding="utf-8"))
+    return data
+
+
 def provenance(source_id: str, consulted_at: str) -> ProvenanceView:
     source = source_catalog()[source_id]
     url = source.get("url")
