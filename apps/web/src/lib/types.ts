@@ -106,6 +106,22 @@ export type SiriusAssessment = {
   explanation: string;
 };
 
+export type CycleFortune = {
+  team_id: string;
+  coach_name: string;
+  debut_label: string;
+  solar_return_year: number;
+  solar_return_moment: string;
+  midheaven_sign: string;
+  midheaven_ruler: string;
+  midheaven_ruler_dignity: string;
+  midheaven_ruler_house_class: string;
+  favorable_testimonies: string[];
+  adverse_testimonies: string[];
+  fortune_index: number;
+  status: "computed" | "ephemeris_unavailable";
+};
+
 export type SiriusArchive = {
   source_name: string;
   source_url: string;

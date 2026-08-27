@@ -17,6 +17,7 @@ from sqlalchemy.orm import Session
 from collectors.argumental_archive import parse_archive_index as argumental_parse_archive_index
 from collectors.sirius_archive import parse_archive_index as sirius_parse_archive_index
 from db.session import get_session
+from engine.argumental import all_cycle_fortunes
 from engine.config import Scenario, load_scenario, load_teams, teams_for_scenario, validate_scenario
 from engine.domain import Team
 from engine.draw import draw_groups
@@ -383,6 +384,29 @@ def create_app() -> FastAPI:
                 if result
                 else [
                     "El archivo de Astrología Argumental todavía no fue capturado por ACTUALIZAR."
+                ]
+            ),
+        )
+
+    @application.get("/api/v1/argumental/cycle-fortune", response_model=ApiEnvelope)
+    def argumental_cycle_fortune(format_size: int = Query(default=64)) -> ApiEnvelope:
+        scenario, teams = _scenario_inputs(format_size)
+        year = int(scenario.final.local_date[:4])
+        fortunes = all_cycle_fortunes([team.team_id for team in teams], year)
+        unavailable = any(item.status == "ephemeris_unavailable" for item in fortunes.values())
+        return ApiEnvelope(
+            data={team_id: asdict(item) for team_id, item in fortunes.items()},
+            provenance=[provenance("argumental_blog", scenario.as_of)],
+            warnings=(
+                [
+                    "Cálculo propio aplicando la técnica pública de Astrología Argumental "
+                    "(revolución solar del ciclo del DT); no es un pronóstico suyo. "
+                    "Nunca influye en el Monte Carlo.",
+                    *(
+                        ["Swiss Ephemeris no disponible en este entorno: valores neutros."]
+                        if unavailable
+                        else []
+                    ),
                 ]
             ),
         )

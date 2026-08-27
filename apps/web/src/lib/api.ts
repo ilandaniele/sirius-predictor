@@ -3,6 +3,7 @@ import type {
   AstroSource,
   BacktestResult,
   CombinedAssessment,
+  CycleFortune,
   Draw,
   HistoryPoint,
   Prediction,
@@ -44,6 +45,10 @@ export const api = {
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
   siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),
   argumentalArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/argumental/archive"),
+  argumentalCycleFortune: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Record<string, CycleFortune>>>(
+      `/argumental/cycle-fortune?format_size=${formatSize}`
+    ),
   combinedAssessment: (formatSize: 48 | 64 = 64) =>
     request<ApiEnvelope<CombinedAssessment>>(
       `/astrology/combined-assessment?format_size=${formatSize}`
