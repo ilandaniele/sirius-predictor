@@ -98,6 +98,7 @@ class HistoricalMatch:
     penalty_home_goals: int | None = None
     penalty_away_goals: int | None = None
     source_sequence: int | None = None
+    venue: str | None = None
 
     @property
     def winner(self) -> str | None:
@@ -209,6 +210,9 @@ def parse_openfootball(text: str, edition: int, source_url: str) -> list[Histori
             if not before_venue:
                 continue
             away, penalty_home_goals, penalty_away_goals = _away_and_penalties(before_venue)
+        venue_parts = match_line[score_match.end() :].split("@", 1)
+        venue_text = venue_parts[1].split("#", 1)[0].strip() if len(venue_parts) > 1 else ""
+        venue = venue_text or None
         kickoff = None
         if current_date and time_match and time_match.group("utc_offset"):
             local_kickoff = datetime(
@@ -239,6 +243,7 @@ def parse_openfootball(text: str, edition: int, source_url: str) -> list[Histori
                 penalty_home_goals=penalty_home_goals,
                 penalty_away_goals=penalty_away_goals,
                 source_sequence=source_sequence,
+                venue=venue,
             )
         )
     return matches

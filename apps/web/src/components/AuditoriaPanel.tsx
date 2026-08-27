@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 
 import { api } from "@/lib/api";
-import type { TrackRecordAstrologer, TrackRecordAudit } from "@/lib/types";
+import type { BacktestResult, TrackRecordAstrologer, TrackRecordAudit } from "@/lib/types";
 
 const PENDING_COACH_DEBUTS: Array<{
   team: string;
@@ -65,7 +65,8 @@ function AstrologerCard({ data }: { data: TrackRecordAstrologer }) {
   );
 }
 
-export function AuditoriaPanel() {
+export function AuditoriaPanel({ backtest }: { backtest: BacktestResult | null }) {
+  const altitude = backtest?.altitude_diagnostic;
   const [audit, setAudit] = useState<TrackRecordAudit | null>(null);
   const [status, setStatus] = useState("Cargando auditoría…");
 
@@ -150,6 +151,48 @@ export function AuditoriaPanel() {
         saltó de 0 a +50 Elo con solo agregar una edición más). Pendiente: recolectar el historial de
         DTs 2010-2022 antes de calibrar esta señal — no se va a inventar un número mientras tanto.
       </p>
+
+      <SectionTitle
+        title="Altitud de la sede"
+        description="¿Jugar en altura cambia el partido? Se probó contra los 360 partidos reales de 2010-2026."
+      />
+      {altitude ? (
+        <>
+          <p className="micro">
+            {altitude.finding} Cobertura: {altitude.matches_mapped}/{altitude.matches_total}{" "}
+            partidos con sede identificada
+            {altitude.venues_unmapped.length
+              ? ` (${altitude.venues_unmapped.length} sin mapear)`
+              : " (100%)"}
+            .
+          </p>
+          <div className="altitude-grid">
+            {Object.entries(altitude.thresholds_m).map(([threshold, buckets]) => (
+              <div className="altitude-threshold" key={threshold}>
+                <b>≥ {threshold} m</b>
+                <div className="altitude-buckets">
+                  <div>
+                    <small>Altura</small>
+                    <span>
+                      {buckets.high_altitude.matches} partidos · {buckets.high_altitude.draw_rate}%
+                      empates · {buckets.high_altitude.avg_goals} goles/partido
+                    </span>
+                  </div>
+                  <div>
+                    <small>Resto</small>
+                    <span>
+                      {buckets.low_altitude.matches} partidos · {buckets.low_altitude.draw_rate}%
+                      empates · {buckets.low_altitude.avg_goals} goles/partido
+                    </span>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      ) : (
+        <p className="empty">Se calcula junto con el backtesting (pestaña Sistema).</p>
+      )}
     </div>
   );
 }

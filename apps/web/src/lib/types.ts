@@ -270,6 +270,20 @@ export type BacktestResult = {
   ablations: Array<Record<string, string | number | null>>;
   calibration_manifest: Array<Record<string, string | number | number[] | boolean>>;
   next_edition_calibration?: { alpha: number; host_bonus_elo: number };
+  altitude_diagnostic?: {
+    matches_total: number;
+    matches_mapped: number;
+    venues_unmapped: string[];
+    applied_to_model: boolean;
+    finding: string;
+    thresholds_m: Record<
+      string,
+      {
+        high_altitude: { matches: number; draws: number; draw_rate: number; avg_goals: number };
+        low_altitude: { matches: number; draws: number; draw_rate: number; avg_goals: number };
+      }
+    >;
+  };
 };
 
 export type UpdateEvent = {

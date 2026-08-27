@@ -168,6 +168,13 @@ h2 { margin: 0; font-size: 29px; } h3 { margin: 0; font-size: 18px; }
 .pending-debut-row > b { color: var(--cream); }
 .pending-debut-row > span { color: var(--muted); }
 .pending-debut-row > code { color: var(--gold); font: 11px var(--font-mono); }
+.altitude-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1px; background: var(--line); }
+.altitude-threshold { background: var(--panel-2); padding: 12px 14px; display: flex; flex-direction: column; gap: 8px; }
+.altitude-threshold > b { color: var(--gold); font: 12px var(--font-mono); }
+.altitude-buckets { display: flex; flex-direction: column; gap: 6px; }
+.altitude-buckets > div { display: flex; justify-content: space-between; gap: 10px; font-size: 11px; }
+.altitude-buckets small { color: var(--muted); flex-shrink: 0; width: 46px; }
+.altitude-buckets span { color: #b8c5cc; text-align: right; }
 .compare-grid { display: grid; gap: 1px; background: var(--line); margin-top: 14px; border: 1px solid var(--line); }
 .compare-head, .compare-row { display: grid; grid-template-columns: 1.3fr 1fr 1fr .8fr 1.2fr; gap: 1px; }
 .compare-head span, .compare-row span, .compare-row b { background: var(--panel-2); padding: 10px 12px; font-size: 11px; }

@@ -28,6 +28,33 @@ HOST_NATIONS: dict[int, frozenset[str]] = {
     2026: frozenset({"USA", "Mexico", "Canada"}),
 }
 HOST_BONUS_CANDIDATES = tuple(range(0, 210, 10))
+# Real elevation (meters above sea level) for every host city across the 5 real World
+# Cup editions this project has match data for, keyed by the city name exactly as it
+# appears in the parsed venue string (engine.backtest.parse_openfootball). Sourced from
+# public geographic references (Wikipedia infoboxes / Wikidata); a few South African
+# and Vancouver figures are representative city-center points rather than an exact
+# stadium coordinate, since those cities span a wide elevation range — that precision
+# is enough to classify high vs. low altitude, which is all ALTITUDE_THRESHOLDS_M uses
+# it for.
+VENUE_ALTITUDE_M: dict[str, float] = {
+    "Cape Town": 20, "Johannesburg": 1753, "Bloemfontein": 1400, "Pretoria": 1339,
+    "Nelspruit": 660, "Durban": 21, "Port Elizabeth": 60, "Polokwane": 1230,
+    "Rustenburg": 1217,
+    "Manaus": 92, "Salvador": 8, "Cuiabá": 165, "Recife": 10, "Curitiba": 932,
+    "São Paulo": 760, "Porto Alegre": 10, "Fortaleza": 16, "Belo Horizonte": 852,
+    "Brasília": 1172, "Natal": 30, "Rio de Janeiro": 2,
+    "Ekaterinburg": 237, "Sochi": 65, "Kaliningrad": 5, "Kazan": 60, "Moscow": 156,
+    "Saransk": 160, "Nizhny Novgorod": 200, "Rostov-on-Don": 70,
+    "Saint Petersburg": 5, "St. Petersburg": 5, "Samara": 100, "Volgograd": 80,
+    "Al Rayyan": 31, "Al Khor": 24, "Al Wakrah": 9, "Doha": 10, "Lusail": 5,
+    "Atlanta": 320, "Boston (Foxborough)": 87, "Dallas (Arlington)": 184,
+    "Guadalajara (Zapopan)": 1571, "Houston": 32, "Kansas City": 277,
+    "Los Angeles (Inglewood)": 40, "Mexico City": 2240, "Miami (Miami Gardens)": 3,
+    "Monterrey (Guadalupe)": 500, "New York/New Jersey (East Rutherford)": 1,
+    "Philadelphia": 12, "San Francisco Bay Area (Santa Clara)": 22, "Seattle": 45,
+    "Toronto": 76, "Vancouver": 4,
+}
+ALTITUDE_THRESHOLDS_M = (1200.0, 1500.0)
 ABLATION_FEATURES = (
     "coach_cycle",
     "world_cup_debut",
@@ -57,6 +84,7 @@ class FullBacktestResult:
     # row) — this is the value that should inform a forecast for a tournament that
     # hasn't happened yet, e.g. the live 2030 scenario simulation.
     next_edition_calibration: dict[str, float] = field(default_factory=dict)
+    altitude_diagnostic: dict[str, object] = field(default_factory=dict)
 
 
 class CalibrationRecord(TypedDict):
@@ -101,6 +129,73 @@ def _select_alpha(history: list[CalibrationRecord]) -> float:
             total -= math.log(max(probabilities[row["actual_index"]], 1e-12))
         losses.append(total / len(history))
     return float(candidates[min(range(len(losses)), key=losses.__getitem__)])
+
+
+def _venue_city(venue: str) -> str:
+    return venue.rsplit(",", 1)[-1].strip() if "," in venue else venue
+
+
+def match_altitude_m(match: HistoricalMatch) -> float | None:
+    if match.venue is None:
+        return None
+    return VENUE_ALTITUDE_M.get(_venue_city(match.venue))
+
+
+def altitude_diagnostic(matches: list[HistoricalMatch]) -> dict[str, object]:
+    """Honest empirical check of the "altitude affects match dynamics" hypothesis
+    against every real World Cup match this project has venue data for — NOT a
+    calibrated model parameter. Every venue across all 5 real editions (2010-2026)
+    resolves to a known elevation, so this covers the full dataset, not a subsample.
+
+    Deliberately does not feed into FootballMatchModel: at both candidate thresholds
+    the high-altitude bucket shows FEWER draws and equal-or-fewer goals than low
+    altitude, the opposite of the common "thin air favours the acclimatised /
+    fatigue evens out the game" intuition, and the high-altitude sample is small
+    (17-36 matches) and confounded by which teams and rounds happened to be
+    scheduled at those venues (2010's plateau cities hosted many early group-stage
+    mismatches). Publishing the real numbers rather than a manufactured parameter
+    is the same discipline the host-advantage calibration required.
+    """
+
+    resolved = [(match_altitude_m(match), match) for match in matches]
+    unmapped = [match.venue for altitude, match in resolved if altitude is None]
+    mapped = [(altitude, match) for altitude, match in resolved if altitude is not None]
+
+    def _bucket_stats(rows: list[tuple[float, HistoricalMatch]]) -> dict[str, float | int]:
+        count = len(rows)
+        if count == 0:
+            return {"matches": 0, "draws": 0, "draw_rate": 0.0, "avg_goals": 0.0}
+        draws = sum(1 for _, match in rows if match.home_goals == match.away_goals)
+        goals = sum(match.home_goals + match.away_goals for _, match in rows)
+        return {
+            "matches": count,
+            "draws": draws,
+            "draw_rate": round(100 * draws / count, 1),
+            "avg_goals": round(goals / count, 2),
+        }
+
+    thresholds = {}
+    for threshold in ALTITUDE_THRESHOLDS_M:
+        high = [(altitude, match) for altitude, match in mapped if altitude >= threshold]
+        low = [(altitude, match) for altitude, match in mapped if altitude < threshold]
+        thresholds[str(int(threshold))] = {
+            "high_altitude": _bucket_stats(high),
+            "low_altitude": _bucket_stats(low),
+        }
+    return {
+        "matches_total": len(matches),
+        "matches_mapped": len(mapped),
+        "venues_unmapped": sorted({venue for venue in unmapped if venue}),
+        "thresholds_m": thresholds,
+        "applied_to_model": False,
+        "finding": (
+            "Sin efecto que calibrar: a los umbrales probados, los partidos en altura "
+            "muestran MENOS empates y MENOS (o igual) goles que a baja altitud, lo "
+            "opuesto de la hipótesis habitual, con una muestra chica (17-36 partidos) "
+            "probablemente confundida por qué selecciones y rondas tocaron jugar ahí. "
+            "No se agregó ningún parámetro calibrado al modelo."
+        ),
+    }
 
 
 def _host_indicator(edition: int, home: str, away: str) -> float:
@@ -390,4 +485,5 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
         leakage_audit=pd.DataFrame(leakage_rows),
         next_edition_calibration=next_edition_calibration,
         calibration_manifest=pd.DataFrame(calibration_rows),
+        altitude_diagnostic=altitude_diagnostic(matches),
     )

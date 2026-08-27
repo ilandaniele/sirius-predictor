@@ -454,7 +454,7 @@ export default function Home() {
           </>
         ) : null}
 
-        {active === "Auditoría" ? <AuditoriaPanel /> : null}
+        {active === "Auditoría" ? <AuditoriaPanel backtest={backtest} /> : null}
 
         {active === "Sistema" ? (
           <>
