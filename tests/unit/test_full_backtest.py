@@ -31,6 +31,11 @@ def test_full_backtest_uses_only_prior_editions_for_calibration() -> None:
     manifests = result.calibration_manifest.set_index("edition")
     assert manifests.loc[2010, "trained_on_editions"] == []
     assert manifests.loc[2014, "trained_on_editions"] == [2010]
+    # Teams "A"/"B" have no data/historical_coaches_<edition>.json -- fortune_delta
+    # falls back to neutral 0.0 everywhere, so gamma has nothing to fit and stays 0.
+    assert manifests.loc[2010, "argumental_bonus_elo"] == 0.0
+    assert manifests.loc[2014, "argumental_bonus_elo"] == 0.0
+    assert result.next_edition_calibration["argumental_bonus_elo"] == 0.0
     assert result.leakage_audit.future_edition_used_for_calibration.eq(False).all()
     assert result.leakage_audit.same_match_used.eq(False).all()
     assert set(result.round_accuracy.stage) == {"Group", "F"}

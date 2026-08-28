@@ -498,6 +498,11 @@ export default function Home() {
                     <b>{backtest.next_edition_calibration.alpha.toFixed(2)}</b>
                     <span>Se aplica sólo con evidencia lunar publicada por Sirius (hoy, Argentina); el resto de las selecciones queda neutral hasta tener datos propios.</span>
                   </div>
+                  <div>
+                    <small>Señal Argumental (ciclo DT) · calibrada, NO aplicada</small>
+                    <b>+{backtest.next_edition_calibration.argumental_bonus_elo.toFixed(0)} Elo</b>
+                    <span>Igual que la ventaja de local, este número salta con pocos datos (saltó de 0 a un valor no nulo apenas entraron las dos ediciones investigadas) — no hay validación suficiente para confiar en él todavía, así que el motor no lo aplica; queda como referencia diagnóstica junto con la correlación pooled de la pestaña Auditoría.</span>
+                  </div>
                 </div>
                 <h3 className="subheading">Historia de calibración por edición (walk-forward)</h3>
                 <DataTable rows={backtest.calibration_manifest} empty="Sin historial de calibración." />

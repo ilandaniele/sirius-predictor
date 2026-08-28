@@ -269,7 +269,7 @@ export type BacktestResult = {
   round_accuracy: Array<Record<string, string | number>>;
   ablations: Array<Record<string, string | number | null>>;
   calibration_manifest: Array<Record<string, string | number | number[] | boolean>>;
-  next_edition_calibration?: { alpha: number; host_bonus_elo: number };
+  next_edition_calibration?: { alpha: number; host_bonus_elo: number; argumental_bonus_elo: number };
   altitude_diagnostic?: {
     matches_total: number;
     matches_mapped: number;

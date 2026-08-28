@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import json
 import math
 from collections import defaultdict
 from dataclasses import dataclass, field
@@ -11,6 +12,7 @@ import pandas as pd  # type: ignore[import-untyped]
 from engine.argumental import DATA_DIR as ARGUMENTAL_DATA_DIR
 from engine.argumental import argumental_signal_diagnostic as _team_argumental_diagnostic
 from engine.argumental import correlation_stats as _argumental_correlation_stats
+from engine.argumental import historical_coach_cycle_fortune
 from engine.backtest import HistoricalMatch
 from engine.model import elo_expectation
 from engine.sirius import moon_sign_index
@@ -31,6 +33,9 @@ HOST_NATIONS: dict[int, frozenset[str]] = {
     2026: frozenset({"USA", "Mexico", "Canada"}),
 }
 HOST_BONUS_CANDIDATES = tuple(range(0, 210, 10))
+# fortune_index is clamped to [-1, 1] (packages/football/backtest.py::_fortune_lookup),
+# the same normalized range as _host_indicator, so this reuses the same Elo grid.
+ARGUMENTAL_BONUS_CANDIDATES = tuple(range(0, 210, 10))
 # Real elevation (meters above sea level) for every host city across the 5 real World
 # Cup editions this project has match data for, keyed by the city name exactly as it
 # appears in the parsed venue string (engine.backtest.parse_openfootball). Sourced from
@@ -96,6 +101,7 @@ class CalibrationRecord(TypedDict):
     away_rating: float
     moon_delta: float
     host_indicator: float
+    fortune_delta: float
     actual_index: int
 
 
@@ -298,6 +304,52 @@ def _select_beta(history: list[CalibrationRecord]) -> float:
     return float(HOST_BONUS_CANDIDATES[min(range(len(losses)), key=losses.__getitem__)])
 
 
+def _fortune_lookup(edition: int) -> dict[str, float]:
+    """Real coach-cycle solar-revolution fortune_index for every team this project
+    has researched debut data for in this edition (data/historical_coaches_<edition>
+    .json), computed once and cached per edition -- Swiss Ephemeris computation is
+    too slow to repeat per match. Editions with no researched coach data return {},
+    so fortune_delta falls back to the neutral 0.0 everywhere, exactly like
+    _host_indicator returning 0 for a non-host match.
+    """
+
+    path = ARGUMENTAL_DATA_DIR / f"historical_coaches_{edition}.json"
+    if not path.exists():
+        return {}
+    teams = json.loads(path.read_text(encoding="utf-8"))["coaches"]
+    lookup = {}
+    for team in teams:
+        fortune = historical_coach_cycle_fortune(team, edition)
+        if fortune is not None and fortune.status == "computed":
+            lookup[team] = fortune.fortune_index
+    return lookup
+
+
+def _select_gamma(history: list[CalibrationRecord]) -> float:
+    """Empirically calibrate the coach-cycle Argumental signal's Elo weight the
+    same way alpha/beta are calibrated: prequential (walk-forward, no future
+    data) grid search minimizing log-loss against real World Cup results.
+    Defaults to 0 (no assumed effect) until there is prior-edition evidence --
+    same conservative default as beta, and for the same reason: this signal
+    hasn't earned the benefit of the doubt the pre-existing moon-sign formula
+    was given.
+    """
+
+    if not history:
+        return 0.0
+    losses = []
+    for gamma in ARGUMENTAL_BONUS_CANDIDATES:
+        total = 0.0
+        for row in history:
+            probabilities = _probabilities(
+                row["home_rating"] + gamma * row["fortune_delta"] / 2,
+                row["away_rating"] - gamma * row["fortune_delta"] / 2,
+            )
+            total -= math.log(max(probabilities[row["actual_index"]], 1e-12))
+        losses.append(total / len(history))
+    return float(ARGUMENTAL_BONUS_CANDIDATES[min(range(len(losses)), key=losses.__getitem__)])
+
+
 def _metrics(predictions: pd.DataFrame) -> pd.DataFrame:
     return (
         predictions.groupby("model", as_index=False)
@@ -373,11 +425,14 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
         edition_matches = by_edition[edition]
         alpha = _select_alpha(calibration_history)
         beta = _select_beta(calibration_history)
+        gamma = _select_gamma(calibration_history)
+        fortune_by_team = _fortune_lookup(edition)
         calibration_rows.append(
             {
                 "edition": edition,
                 "alpha": alpha,
                 "host_bonus_elo": beta,
+                "argumental_bonus_elo": gamma,
                 "trained_on_editions": previous_editions.copy(),
                 "same_edition_excluded": True,
             }
@@ -426,9 +481,16 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                 away_rate = (sum(away_records) + 1.0) / (len(away_records) + 2.0)
                 moon_delta = 40.0 * (home_rate - away_rate)
             host_indicator = _host_indicator(edition, match.home, match.away)
+            fortune_delta = fortune_by_team.get(match.home, 0.0) - fortune_by_team.get(
+                match.away, 0.0
+            )
             # Host advantage is a football effect, not astrology: it belongs in the
             # football-only baseline (matching how engine.model.FootballMatchModel
             # applies it in FOOTBALL_ONLY and HYBRID, but not the SIRIUS_ONLY ablation).
+            # gamma/fortune_delta is deliberately NOT wired into any of these four
+            # probability rows -- it's tracked below purely for walk-forward
+            # calibration transparency (calibration_manifest/next_edition_calibration),
+            # the same "compute and report honestly, never silently apply" rule as beta.
             probabilities = {
                 "FOOTBALL_ONLY": _probabilities(
                     home_rating + beta * host_indicator / 2,
@@ -473,6 +535,8 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                         "moon_delta": moon_delta,
                         "beta": beta,
                         "host_indicator": host_indicator,
+                        "gamma": gamma,
+                        "fortune_delta": fortune_delta,
                     }
                 )
             leakage_rows.append(
@@ -498,6 +562,7 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
                     "away_rating": away_rating,
                     "moon_delta": moon_delta,
                     "host_indicator": host_indicator,
+                    "fortune_delta": fortune_delta,
                     "actual_index": actual_index,
                 }
             )
@@ -509,6 +574,7 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
     next_edition_calibration = {
         "alpha": _select_alpha(calibration_history),
         "host_bonus_elo": _select_beta(calibration_history),
+        "argumental_bonus_elo": _select_gamma(calibration_history),
     }
     predictions = pd.DataFrame(prediction_rows)
     metrics = _metrics(predictions)
