@@ -1,0 +1,269 @@
+{
+  "schema_version": "sirius-historical-coaches-v1",
+  "edition": 2022,
+  "methodology_note": "Real coach-per-edition data researched for the 2022 FIFA World Cup (Qatar) specifically, to backtest the Argumental coach-cycle solar-revolution signal against a real past edition. Keyed by team name exactly as it appears in engine.backtest's parsed historical matches (post-alias). Only includes teams where the coach's real managerial debut date, opponent, score, venue AND a specific kickoff time could be found; 3 of the 32 real 2022 participants (Ecuador, Qatar, Saudi Arabia) are deliberately omitted because their kickoff time could not be confirmed by any source, consistent with this project's no-placeholder-time policy. time_confidence is reported honestly per record rather than hidden — see NOTES.md-style field per entry.",
+  "excluded_no_confirmed_time": ["Ecuador", "Qatar", "Saudi Arabia"],
+  "coaches": {
+    "Argentina": {
+      "coach_name": "Lionel Scaloni",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-09-07T20:00:00-07:00",
+        "location": {"latitude": 34.0141, "longitude": -118.2879, "name": "Los Angeles Memorial Coliseum, Estados Unidos"},
+        "label": "Argentina 3-0 Guatemala, debut de Lionel Scaloni como DT interino"
+      }
+    },
+    "Australia": {
+      "coach_name": "Graham Arnold",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-10-15T19:30:00+03:00",
+        "location": {"latitude": 29.3494, "longitude": 47.9783, "name": "Kuwait SC Stadium, Ciudad de Kuwait, Kuwait"},
+        "label": "Kuwait 0-4 Australia, debut de Graham Arnold como seleccionador"
+      }
+    },
+    "Belgium": {
+      "coach_name": "Roberto Martínez",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2016-09-01T20:45:00+02:00",
+        "location": {"latitude": 50.8956, "longitude": 4.3389, "name": "King Baudouin Stadium, Bruselas, Bélgica"},
+        "label": "Bélgica 0-2 España, debut de Roberto Martínez como seleccionador"
+      }
+    },
+    "Brazil": {
+      "coach_name": "Tite",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2016-09-01T17:00:00-05:00",
+        "location": {"latitude": -0.1567, "longitude": -78.4842, "name": "Estadio Olímpico Atahualpa, Quito, Ecuador"},
+        "label": "Ecuador 0-3 Brasil, debut de Tite como seleccionador"
+      }
+    },
+    "Cameroon": {
+      "coach_name": "Rigobert Song",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-03-25T18:00:00+01:00",
+        "location": {"latitude": 4.0989, "longitude": 9.7889, "name": "Estadio Japoma, Duala, Camerún"},
+        "label": "Camerún 0-1 Argelia, debut de Rigobert Song como seleccionador"
+      }
+    },
+    "Canada": {
+      "coach_name": "John Herdman",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-03-24T16:00:00+01:00",
+        "location": {"latitude": 37.8375, "longitude": -0.7669, "name": "Pinatar Arena, San Pedro del Pinatar, España"},
+        "label": "Canadá 1-0 Nueva Zelanda, debut de John Herdman como seleccionador"
+      }
+    },
+    "Costa Rica": {
+      "coach_name": "Luis Fernando Suárez",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2021-07-12T21:00:00-04:00",
+        "location": {"latitude": 28.5411, "longitude": -81.3892, "name": "Exploria Stadium, Orlando, Estados Unidos"},
+        "label": "Costa Rica 3-1 Guadalupe, debut de Luis Fernando Suárez como seleccionador"
+      }
+    },
+    "Croatia": {
+      "coach_name": "Zlatko Dalić",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2017-10-09T21:45:00+03:00",
+        "location": {"latitude": 50.4351, "longitude": 30.5222, "name": "NSC Olimpiyskiy, Kiev, Ucrania"},
+        "label": "Ucrania 0-2 Croacia, debut de Zlatko Dalić como seleccionador"
+      }
+    },
+    "Denmark": {
+      "coach_name": "Kasper Hjulmand",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2020-09-05T20:45:00+02:00",
+        "location": {"latitude": 55.7031, "longitude": 12.5714, "name": "Parken Stadium, Copenhague, Dinamarca"},
+        "label": "Dinamarca 0-2 Bélgica, debut de Kasper Hjulmand como seleccionador"
+      }
+    },
+    "England": {
+      "coach_name": "Gareth Southgate",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2016-10-08T17:00:00+01:00",
+        "location": {"latitude": 51.5560, "longitude": -0.2795, "name": "Estadio Wembley, Londres, Inglaterra"},
+        "label": "Inglaterra 2-0 Malta, debut de Gareth Southgate como seleccionador interino"
+      }
+    },
+    "France": {
+      "coach_name": "Didier Deschamps",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2012-08-15T21:00:00+02:00",
+        "location": {"latitude": 49.5075, "longitude": 0.1875, "name": "Stade Océane, Le Havre, Francia"},
+        "label": "Francia 0-0 Uruguay, debut de Didier Deschamps como seleccionador"
+      }
+    },
+    "Germany": {
+      "coach_name": "Hansi Flick",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2021-09-02T20:45:00+02:00",
+        "location": {"latitude": 47.4231, "longitude": 9.3097, "name": "Kybunpark, St. Gallen, Suiza"},
+        "label": "Liechtenstein 0-2 Alemania, debut de Hansi Flick como seleccionador"
+      }
+    },
+    "Ghana": {
+      "coach_name": "Otto Addo",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-03-25T19:30:00+00:00",
+        "location": {"latitude": 6.6931, "longitude": -1.6114, "name": "Baba Yara Sports Stadium, Kumasi, Ghana"},
+        "label": "Ghana 0-0 Nigeria, debut de Otto Addo como seleccionador"
+      }
+    },
+    "Iran": {
+      "coach_name": "Carlos Queiroz",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2022-09-23T18:00:00+02:00",
+        "location": {"latitude": 48.2081, "longitude": 15.6081, "name": "NV Arena, St. Pölten, Austria"},
+        "label": "Irán 1-0 Uruguay, debut del segundo ciclo de Carlos Queiroz como seleccionador"
+      }
+    },
+    "Japan": {
+      "coach_name": "Hajime Moriyasu",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2018-09-11T11:20:00+09:00",
+        "location": {"latitude": 34.7853, "longitude": 135.5225, "name": "Panasonic Stadium Suita, Osaka, Japón"},
+        "label": "Japón 3-0 Costa Rica, debut de Hajime Moriyasu como seleccionador"
+      }
+    },
+    "Mexico": {
+      "coach_name": "Gerardo Martino",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2019-03-22T19:15:00-07:00",
+        "location": {"latitude": 32.7831, "longitude": -117.1195, "name": "SDCCU Stadium, San Diego, Estados Unidos"},
+        "label": "México 3-1 Chile, debut de Gerardo Martino como seleccionador"
+      }
+    },
+    "Morocco": {
+      "coach_name": "Walid Regragui",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2022-09-23T20:00:00+02:00",
+        "location": {"latitude": 41.3496, "longitude": 2.0781, "name": "RCDE Stadium, Cornellà de Llobregat, España"},
+        "label": "Marruecos 2-0 Chile, debut de Walid Regragui como seleccionador"
+      }
+    },
+    "Netherlands": {
+      "coach_name": "Louis van Gaal",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2021-09-01T19:45:00+02:00",
+        "location": {"latitude": 59.9267, "longitude": 10.7314, "name": "Ullevaal Stadion, Oslo, Noruega"},
+        "label": "Noruega 1-1 Países Bajos, debut del tercer ciclo de Louis van Gaal como seleccionador"
+      }
+    },
+    "Poland": {
+      "coach_name": "Czesław Michniewicz",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-03-24T19:45:00+00:00",
+        "location": {"latitude": 55.8253, "longitude": -4.2519, "name": "Hampden Park, Glasgow, Escocia"},
+        "label": "Escocia 1-1 Polonia, debut de Czesław Michniewicz como seleccionador"
+      }
+    },
+    "Portugal": {
+      "coach_name": "Fernando Santos",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2014-10-14T19:45:00+02:00",
+        "location": {"latitude": 55.7031, "longitude": 12.5714, "name": "Parken Stadium, Copenhague, Dinamarca"},
+        "label": "Dinamarca 0-1 Portugal, debut de Fernando Santos como seleccionador"
+      }
+    },
+    "Senegal": {
+      "coach_name": "Aliou Cissé",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2015-03-28T18:00:00+00:00",
+        "location": {"latitude": 49.5075, "longitude": 0.1875, "name": "Stade Océane, Le Havre, Francia"},
+        "label": "Ghana 1-2 Senegal, debut de Aliou Cissé como seleccionador"
+      }
+    },
+    "Serbia": {
+      "coach_name": "Dragan Stojković",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2021-03-24T20:45:00+01:00",
+        "location": {"latitude": 44.7822, "longitude": 20.4636, "name": "Estadio Rajko Mitić, Belgrado, Serbia"},
+        "label": "Serbia 3-2 República de Irlanda, debut de Dragan Stojković como seleccionador"
+      }
+    },
+    "South Korea": {
+      "coach_name": "Paulo Bento",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-09-07T20:00:00+09:00",
+        "location": {"latitude": 37.6764, "longitude": 126.8367, "name": "Estadio de Goyang, Goyang, Corea del Sur"},
+        "label": "Corea del Sur 2-0 Costa Rica, debut de Paulo Bento como seleccionador"
+      }
+    },
+    "Spain": {
+      "coach_name": "Luis Enrique",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2020-09-03T20:45:00+02:00",
+        "location": {"latitude": 48.7925, "longitude": 9.2322, "name": "Mercedes-Benz Arena, Stuttgart, Alemania"},
+        "label": "Alemania 1-1 España, debut del segundo ciclo de Luis Enrique como seleccionador"
+      }
+    },
+    "Switzerland": {
+      "coach_name": "Murat Yakin",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2021-09-01T20:45:00+02:00",
+        "location": {"latitude": 47.5411, "longitude": 7.6297, "name": "St. Jakob-Park, Basilea, Suiza"},
+        "label": "Suiza 2-1 Grecia, debut de Murat Yakin como seleccionador"
+      }
+    },
+    "Tunisia": {
+      "coach_name": "Jalel Kadri",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-01-23T20:00:00+01:00",
+        "location": {"latitude": 9.3167, "longitude": 13.4000, "name": "Estadio Roumdé Adjia, Garoua, Camerún"},
+        "label": "Túnez 1-0 Nigeria, debut de Jalel Kadri como seleccionador interino"
+      }
+    },
+    "USA": {
+      "coach_name": "Gregg Berhalter",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2019-01-27T18:00:00-07:00",
+        "location": {"latitude": 33.5276, "longitude": -112.2626, "name": "State Farm Stadium, Glendale, Estados Unidos"},
+        "label": "Estados Unidos 3-0 Panamá, debut de Gregg Berhalter como seleccionador"
+      }
+    },
+    "Uruguay": {
+      "coach_name": "Diego Alonso",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2022-01-27T20:00:00-03:00",
+        "location": {"latitude": -25.2917, "longitude": -57.6167, "name": "Estadio General Pablo Rojas, Asunción, Paraguay"},
+        "label": "Paraguay 0-1 Uruguay, debut de Diego Alonso como seleccionador"
+      }
+    },
+    "Wales": {
+      "coach_name": "Rob Page",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2020-11-12T19:45:00+00:00",
+        "location": {"latitude": 51.6425, "longitude": -3.9350, "name": "Liberty Stadium, Swansea, Gales"},
+        "label": "Gales 0-0 Estados Unidos, debut de Rob Page como seleccionador interino"
+      }
+    }
+  }
+}

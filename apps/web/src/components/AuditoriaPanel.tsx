@@ -67,6 +67,8 @@ function AstrologerCard({ data }: { data: TrackRecordAstrologer }) {
 
 export function AuditoriaPanel({ backtest }: { backtest: BacktestResult | null }) {
   const altitude = backtest?.altitude_diagnostic;
+  const argumental = backtest?.argumental_signal_diagnostic;
+  const argumental2022 = argumental?.by_edition?.["2022"];
   const [audit, setAudit] = useState<TrackRecordAudit | null>(null);
   const [status, setStatus] = useState("Cargando auditoría…");
 
@@ -141,16 +143,52 @@ export function AuditoriaPanel({ backtest }: { backtest: BacktestResult | null }
         title="Validez de la señal Argumental"
         description="¿La revolución solar del ciclo del DT predice algo real, o es ruido?"
       />
-      <p className="micro">
-        Calibrar esto correctamente requiere lo mismo que la calibración de ventaja de local: un
-        backtest walk-forward contra Mundiales reales pasados (2010-2022), no solo 2026. Eso exige
-        saber quién dirigía a cada selección en cada edición pasada y su carta de debut — datos que
-        este proyecto todavía no recolectó (solo tiene al DT <em>actual</em> de cada selección, no su
-        historial completo). Hacerlo con una sola edición (2026) daría una muestra demasiado chica
-        para significar algo, el mismo problema que ya vimos con la ventaja de local (el ajuste
-        saltó de 0 a +50 Elo con solo agregar una edición más). Pendiente: recolectar el historial de
-        DTs 2010-2022 antes de calibrar esta señal — no se va a inventar un número mientras tanto.
-      </p>
+      {argumental2022 ? (
+        <>
+          <p className="micro">{argumental2022.finding}</p>
+          {argumental2022.pearson_r !== undefined ? (
+            <div className="altitude-grid">
+              <div className="altitude-threshold">
+                <b>Mundial 2022 · {argumental2022.teams_covered} selecciones</b>
+                <div className="altitude-buckets">
+                  <div>
+                    <small>Correlación (r)</small>
+                    <span>
+                      {argumental2022.pearson_r} ·{" "}
+                      {argumental2022.statistically_significant_p05
+                        ? "significativa (p<0.05)"
+                        : "NO significativa"}
+                    </span>
+                  </div>
+                  <div>
+                    <small>Pasó fase de grupos</small>
+                    <span>
+                      n={argumental2022.advanced_past_group?.n} · fortuna media{" "}
+                      {argumental2022.advanced_past_group?.mean_fortune_index}
+                    </span>
+                  </div>
+                  <div>
+                    <small>Eliminado en grupos</small>
+                    <span>
+                      n={argumental2022.eliminated_in_group?.n} · fortuna media{" "}
+                      {argumental2022.eliminated_in_group?.mean_fortune_index}
+                    </span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : null}
+          {argumental?.editions_pending_research?.length ? (
+            <p className="micro">
+              Ediciones sin investigar todavía: {argumental.editions_pending_research.join(", ")}.
+              Con una sola edición esto es un primer chequeo, no un backtest walk-forward con poder
+              estadístico real — el mismo estándar que ya se aplicó a la ventaja de local.
+            </p>
+          ) : null}
+        </>
+      ) : (
+        <p className="empty">Se calcula junto con el backtesting (pestaña Sistema).</p>
+      )}
 
       <SectionTitle
         title="Altitud de la sede"

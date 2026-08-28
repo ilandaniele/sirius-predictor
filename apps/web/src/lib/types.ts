@@ -284,6 +284,28 @@ export type BacktestResult = {
       }
     >;
   };
+  argumental_signal_diagnostic?: {
+    editions_covered: number[];
+    editions_pending_research: number[];
+    applied_to_model: boolean;
+    finding: string;
+    by_edition: Record<
+      string,
+      {
+        edition: number;
+        champion?: string;
+        teams_covered: number;
+        status?: string;
+        pearson_r?: number;
+        t_statistic?: number;
+        statistically_significant_p05?: boolean;
+        advanced_past_group?: { n: number; mean_fortune_index: number | null };
+        eliminated_in_group?: { n: number; mean_fortune_index: number | null };
+        applied_to_model: boolean;
+        finding: string;
+      }
+    >;
+  };
 };
 
 export type UpdateEvent = {

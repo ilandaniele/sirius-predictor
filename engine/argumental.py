@@ -5,6 +5,7 @@ from dataclasses import dataclass
 from datetime import datetime
 from pathlib import Path
 
+from engine.backtest import HistoricalMatch
 from packages.astrology.ephemeris import EphemerisUnavailable, chart
 from packages.astrology.models import AstrologyChart, ChartRequest, GeoLocation
 from packages.astrology.techniques import (
@@ -204,31 +205,27 @@ def _load_coach_debut_event(
     return moment, location, str(debut["coach_name"]), str(debut["label"])
 
 
-def coach_cycle_fortune(
-    team_id: str, year: int, data_dir: Path | None = None
-) -> CycleFortune | None:
-    """Real Swiss Ephemeris solar-return reading of a team's coach-cycle chart,
-    scored from the same testimonies Argumental cites as his primary technique.
-
-    Returns None only when there is no coach_debut event on file for this team
-    (missing evidence stays neutral, same convention as the rest of the project).
-    """
-
-    loaded = _load_coach_debut_event(team_id, data_dir)
-    if loaded is None:
-        return None
-    debut_moment, location, coach_name, debut_label = loaded
+def _cycle_fortune_from_event(
+    label_id: str,
+    coach_name: str,
+    debut_label: str,
+    debut_moment: datetime,
+    location: GeoLocation,
+    year: int,
+) -> CycleFortune:
+    """Shared core for both the live (current-coach) and historical (per-edition)
+    lookups: cast the coach-cycle solar revolution for `year` and score it."""
 
     try:
         natal = chart(ChartRequest(debut_moment, location, True, label=debut_label))
         revolution_result = solar_return(natal, year, location)
         moment = datetime.fromisoformat(str(revolution_result.result["exact_moment"]))
         revolution = chart(
-            ChartRequest(moment, location, True, label=f"{team_id} {coach_name} SR {year}")
+            ChartRequest(moment, location, True, label=f"{label_id} {coach_name} SR {year}")
         )
     except EphemerisUnavailable:
         return CycleFortune(
-            team_id=team_id,
+            team_id=label_id,
             coach_name=coach_name,
             debut_label=debut_label,
             solar_return_year=year,
@@ -244,7 +241,7 @@ def coach_cycle_fortune(
         )
     reading = score_revolution(revolution)
     return CycleFortune(
-        team_id=team_id,
+        team_id=label_id,
         coach_name=coach_name,
         debut_label=debut_label,
         solar_return_year=year,
@@ -260,6 +257,55 @@ def coach_cycle_fortune(
     )
 
 
+def coach_cycle_fortune(
+    team_id: str, year: int, data_dir: Path | None = None
+) -> CycleFortune | None:
+    """Real Swiss Ephemeris solar-return reading of a team's coach-cycle chart,
+    scored from the same testimonies Argumental cites as his primary technique.
+
+    Returns None only when there is no coach_debut event on file for this team
+    (missing evidence stays neutral, same convention as the rest of the project).
+    """
+
+    loaded = _load_coach_debut_event(team_id, data_dir)
+    if loaded is None:
+        return None
+    debut_moment, location, coach_name, debut_label = loaded
+    return _cycle_fortune_from_event(team_id, coach_name, debut_label, debut_moment, location, year)
+
+
+def historical_coach_cycle_fortune(
+    team_name: str, edition: int, data_dir: Path | None = None
+) -> CycleFortune | None:
+    """Same technique, applied to a real PAST World Cup edition's actual coach —
+    for backtesting the signal against a tournament that already happened, using
+    data/historical_coaches_<edition>.json (keyed by team name, not team_id, to
+    match engine.backtest's real historical match records).
+
+    Returns None when the edition file doesn't exist or the team isn't in it
+    (e.g. deliberately excluded for lacking a confirmed kickoff time).
+    """
+
+    directory = data_dir or DATA_DIR
+    path = directory / f"historical_coaches_{edition}.json"
+    if not path.exists():
+        return None
+    payload = json.loads(path.read_text(encoding="utf-8"))
+    entry = payload.get("coaches", {}).get(team_name)
+    if entry is None:
+        return None
+    debut = entry["debut"]
+    debut_moment = datetime.fromisoformat(str(debut["occurred_at"]))
+    location = GeoLocation(
+        latitude=float(debut["location"]["latitude"]),
+        longitude=float(debut["location"]["longitude"]),
+        name=str(debut["location"].get("name", "")),
+    )
+    return _cycle_fortune_from_event(
+        team_name, str(entry["coach_name"]), str(debut["label"]), debut_moment, location, edition
+    )
+
+
 def all_cycle_fortunes(
     team_ids: list[str], year: int, data_dir: Path | None = None
 ) -> dict[str, CycleFortune]:
@@ -269,3 +315,113 @@ def all_cycle_fortunes(
         if fortune is not None:
             results[team_id] = fortune
     return results
+
+
+_STAGE_RANK = {"Group": 0, "R32": 0, "R16": 1, "QF": 2, "SF": 3, "ThirdPlace": 3, "F": 4}
+
+
+def _furthest_stage(
+    matches: list[HistoricalMatch], edition: int
+) -> tuple[dict[str, int], str | None]:
+    furthest: dict[str, int] = {}
+    champion = None
+    for match in matches:
+        if match.edition != edition:
+            continue
+        rank = _STAGE_RANK.get(match.stage)
+        if rank is not None:
+            for team in (match.home, match.away):
+                if team not in furthest or rank > furthest[team]:
+                    furthest[team] = rank
+        if match.stage == "F" and match.winner:
+            champion = match.winner
+    if champion is not None:
+        furthest[champion] = 5
+    return furthest, champion
+
+
+def argumental_signal_diagnostic(
+    matches: list[HistoricalMatch], edition: int, data_dir: Path | None = None
+) -> dict[str, object]:
+    """Honest first check of whether the coach-cycle solar-revolution fortune index
+    predicts anything real, against one full past World Cup edition (real matches,
+    real results). This is deliberately NOT a proper multi-edition backtest — that
+    needs historical coach data for 2010/2014/2018 too, which this project doesn't
+    have yet (see data/historical_coaches_<edition>.json coverage) — so this reports
+    one edition's correlation transparently rather than pretending one edition is
+    enough to calibrate a real parameter. Never applied to the live model.
+    """
+
+    furthest, champion = _furthest_stage(matches, edition)
+    coaches_path = (data_dir or DATA_DIR) / f"historical_coaches_{edition}.json"
+    if not coaches_path.exists():
+        return {
+            "edition": edition,
+            "teams_covered": 0,
+            "status": "no_historical_coach_data",
+            "finding": f"No hay data/historical_coaches_{edition}.json todavía.",
+        }
+    coached_teams = sorted(json.loads(coaches_path.read_text(encoding="utf-8"))["coaches"])
+
+    rows = []
+    for team in coached_teams:
+        fortune = historical_coach_cycle_fortune(team, edition, data_dir)
+        if fortune is None or fortune.status != "computed" or team not in furthest:
+            continue
+        rows.append((fortune.fortune_index, furthest[team], team))
+
+    n = len(rows)
+    if n < 3:
+        return {
+            "edition": edition,
+            "teams_covered": n,
+            "status": "insufficient_data",
+            "finding": f"Solo {n} equipos con dato completo — insuficiente para correlacionar.",
+        }
+
+    xs = [row[0] for row in rows]
+    ys = [float(row[1]) for row in rows]
+    mean_x, mean_y = sum(xs) / n, sum(ys) / n
+    cov = sum((x - mean_x) * (y - mean_y) for x, y in zip(xs, ys, strict=True)) / n
+    std_x = (sum((x - mean_x) ** 2 for x in xs) / n) ** 0.5
+    std_y = (sum((y - mean_y) ** 2 for y in ys) / n) ** 0.5
+    pearson_r = cov / (std_x * std_y) if std_x > 0 and std_y > 0 else 0.0
+    # Rough two-tailed significance check (t-test on the correlation, df = n-2); no
+    # scipy dependency, just enough to avoid overclaiming a small-sample correlation.
+    df = n - 2
+    t_stat = pearson_r * (df**0.5) / max(1e-9, (1 - pearson_r**2) ** 0.5) if df > 0 else 0.0
+    significant = abs(t_stat) >= 2.05  # ~p<0.05 two-tailed for df in the high-20s
+
+    advanced = [x for x, y, _ in rows if y > 0]
+    eliminated_group = [x for x, y, _ in rows if y == 0]
+
+    return {
+        "edition": edition,
+        "champion": champion,
+        "teams_covered": n,
+        "pearson_r": round(pearson_r, 3),
+        "t_statistic": round(t_stat, 3),
+        "statistically_significant_p05": significant,
+        "advanced_past_group": {
+            "n": len(advanced),
+            "mean_fortune_index": round(sum(advanced) / len(advanced), 3) if advanced else None,
+        },
+        "eliminated_in_group": {
+            "n": len(eliminated_group),
+            "mean_fortune_index": (
+                round(sum(eliminated_group) / len(eliminated_group), 3)
+                if eliminated_group
+                else None
+            ),
+        },
+        "applied_to_model": False,
+        "finding": (
+            f"Con los {n} equipos con dato completo del Mundial {edition} real, "
+            f"r={pearson_r:.3f} entre el índice de fortuna y la ronda alcanzada "
+            f"({'compatible con una señal real' if pearson_r > 0 else 'sin dirección clara'}, "
+            f"{'diferencia estadísticamente significativa' if significant else 'NO significativa'} "
+            f"con esta única edición). No es un backtest walk-forward completo — falta "
+            "investigar los DTs reales de 2010/2014/2018 para calibrar con rigor; esto "
+            "es un primer chequeo honesto, no un parámetro para aplicar."
+        ),
+    }

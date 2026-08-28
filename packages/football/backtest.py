@@ -8,6 +8,8 @@ from typing import TypedDict
 
 import pandas as pd  # type: ignore[import-untyped]
 
+from engine.argumental import DATA_DIR as ARGUMENTAL_DATA_DIR
+from engine.argumental import argumental_signal_diagnostic as _team_argumental_diagnostic
 from engine.backtest import HistoricalMatch
 from engine.model import elo_expectation
 from engine.sirius import moon_sign_index
@@ -85,6 +87,7 @@ class FullBacktestResult:
     # hasn't happened yet, e.g. the live 2030 scenario simulation.
     next_edition_calibration: dict[str, float] = field(default_factory=dict)
     altitude_diagnostic: dict[str, object] = field(default_factory=dict)
+    argumental_signal_diagnostic: dict[str, object] = field(default_factory=dict)
 
 
 class CalibrationRecord(TypedDict):
@@ -194,6 +197,41 @@ def altitude_diagnostic(matches: list[HistoricalMatch]) -> dict[str, object]:
             "opuesto de la hipótesis habitual, con una muestra chica (17-36 partidos) "
             "probablemente confundida por qué selecciones y rondas tocaron jugar ahí. "
             "No se agregó ningún parámetro calibrado al modelo."
+        ),
+    }
+
+
+def argumental_diagnostic_by_edition(matches: list[HistoricalMatch]) -> dict[str, object]:
+    """Runs argumental_signal_diagnostic (the coach-cycle solar-revolution fortune
+    index vs. real stage reached) for every edition this project has researched
+    coach data for, and reports honestly which editions are still uncovered.
+
+    Only one edition (2022) has data/historical_coaches_2022.json researched so
+    far, so this is a single-edition first check, not a real multi-edition
+    backtest — the per-edition finding string says so explicitly.
+    """
+
+    editions = sorted({match.edition for match in matches})
+    by_edition: dict[str, object] = {}
+    covered: list[int] = []
+    pending: list[int] = []
+    for edition in editions:
+        if (ARGUMENTAL_DATA_DIR / f"historical_coaches_{edition}.json").exists():
+            by_edition[str(edition)] = _team_argumental_diagnostic(matches, edition)
+            covered.append(edition)
+        else:
+            pending.append(edition)
+    return {
+        "editions_covered": covered,
+        "editions_pending_research": pending,
+        "by_edition": by_edition,
+        "applied_to_model": False,
+        "finding": (
+            f"Investigación de DT completa solo para {covered} — faltan {pending} "
+            "para un backtest walk-forward real de la señal Argumental con poder "
+            "estadístico. Ver by_edition para el detalle de cada edición cubierta."
+            if pending
+            else "Todas las ediciones disponibles tienen investigación de DT."
         ),
     }
 
@@ -486,4 +524,5 @@ def run_full_backtest(matches: list[HistoricalMatch]) -> FullBacktestResult:
         next_edition_calibration=next_edition_calibration,
         calibration_manifest=pd.DataFrame(calibration_rows),
         altitude_diagnostic=altitude_diagnostic(matches),
+        argumental_signal_diagnostic=argumental_diagnostic_by_edition(matches),
     )

@@ -72,6 +72,7 @@ def build_backtest_artifact(state_path: Path) -> dict[str, Any]:
         "calibration_manifest": _records(backtest.calibration_manifest),
         "next_edition_calibration": backtest.next_edition_calibration,
         "altitude_diagnostic": backtest.altitude_diagnostic,
+        "argumental_signal_diagnostic": backtest.argumental_signal_diagnostic,
     }
     validate_backtest_artifact(artifact)
     return artifact
