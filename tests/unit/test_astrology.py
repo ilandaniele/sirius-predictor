@@ -78,6 +78,14 @@ def test_time_dependent_returns_never_use_an_unknown_natal_time() -> None:
             technique(untimed, event, MADRID)
 
 
+def test_solar_return_handles_a_leap_day_natal_moment() -> None:
+    natal = chart(ChartRequest(datetime(2012, 2, 29, 20, tzinfo=UTC), MADRID, True))
+    result = solar_return(natal, 2018, MADRID)  # 2018 is not a leap year
+    returned_sun = result.result["chart"]["positions"]["Sun"]["longitude"]
+    delta = abs((returned_sun - natal.positions["Sun"].longitude + 180) % 360 - 180)
+    assert delta < 0.01
+
+
 def test_kickoff_sensitivity_and_star_orbs_validate_inputs() -> None:
     request = ChartRequest(datetime(2030, 7, 21, 16, tzinfo=UTC), MADRID, False)
     with pytest.raises(ValueError, match="scheduled base time"):

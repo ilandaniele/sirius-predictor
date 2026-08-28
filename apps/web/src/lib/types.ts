@@ -305,6 +305,17 @@ export type BacktestResult = {
         finding: string;
       }
     >;
+    pooled?: {
+      editions: number[];
+      teams_covered: number;
+      pearson_r: number;
+      t_statistic: number;
+      statistically_significant_p05: boolean;
+      advanced_past_group: { n: number; mean_fortune_index: number | null };
+      eliminated_in_group: { n: number; mean_fortune_index: number | null };
+      applied_to_model: boolean;
+      finding: string;
+    } | null;
   };
 };
 

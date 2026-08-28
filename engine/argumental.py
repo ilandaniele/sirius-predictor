@@ -340,44 +340,16 @@ def _furthest_stage(
     return furthest, champion
 
 
-def argumental_signal_diagnostic(
-    matches: list[HistoricalMatch], edition: int, data_dir: Path | None = None
-) -> dict[str, object]:
-    """Honest first check of whether the coach-cycle solar-revolution fortune index
-    predicts anything real, against one full past World Cup edition (real matches,
-    real results). This is deliberately NOT a proper multi-edition backtest — that
-    needs historical coach data for 2010/2014/2018 too, which this project doesn't
-    have yet (see data/historical_coaches_<edition>.json coverage) — so this reports
-    one edition's correlation transparently rather than pretending one edition is
-    enough to calibrate a real parameter. Never applied to the live model.
+def correlation_stats(rows: list[tuple[float, int, str]]) -> dict[str, object]:
+    """Pearson correlation + group comparison between a fortune_index and a
+    stage_rank across a set of (fortune_index, stage_rank, team_label) rows. Pure
+    statistics, no data loading -- reused both per-edition and pooled across
+    editions in argumental_diagnostic_by_edition.
     """
-
-    furthest, champion = _furthest_stage(matches, edition)
-    coaches_path = (data_dir or DATA_DIR) / f"historical_coaches_{edition}.json"
-    if not coaches_path.exists():
-        return {
-            "edition": edition,
-            "teams_covered": 0,
-            "status": "no_historical_coach_data",
-            "finding": f"No hay data/historical_coaches_{edition}.json todavía.",
-        }
-    coached_teams = sorted(json.loads(coaches_path.read_text(encoding="utf-8"))["coaches"])
-
-    rows = []
-    for team in coached_teams:
-        fortune = historical_coach_cycle_fortune(team, edition, data_dir)
-        if fortune is None or fortune.status != "computed" or team not in furthest:
-            continue
-        rows.append((fortune.fortune_index, furthest[team], team))
 
     n = len(rows)
     if n < 3:
-        return {
-            "edition": edition,
-            "teams_covered": n,
-            "status": "insufficient_data",
-            "finding": f"Solo {n} equipos con dato completo — insuficiente para correlacionar.",
-        }
+        return {"teams_covered": n, "status": "insufficient_data"}
 
     xs = [row[0] for row in rows]
     ys = [float(row[1]) for row in rows]
@@ -396,8 +368,6 @@ def argumental_signal_diagnostic(
     eliminated_group = [x for x, y, _ in rows if y == 0]
 
     return {
-        "edition": edition,
-        "champion": champion,
         "teams_covered": n,
         "pearson_r": round(pearson_r, 3),
         "t_statistic": round(t_stat, 3),
@@ -414,14 +384,69 @@ def argumental_signal_diagnostic(
                 else None
             ),
         },
+    }
+
+
+def argumental_signal_diagnostic(
+    matches: list[HistoricalMatch], edition: int, data_dir: Path | None = None
+) -> dict[str, object]:
+    """Honest first check of whether the coach-cycle solar-revolution fortune index
+    predicts anything real, against one full past World Cup edition (real matches,
+    real results). One edition alone is not a proper multi-edition backtest, so
+    this reports that edition's correlation transparently rather than pretending
+    it's enough to calibrate a real parameter -- argumental_diagnostic_by_edition
+    (packages/football/backtest.py) pools the raw rows across every edition this
+    project has researched coach data for. Never applied to the live model.
+    """
+
+    furthest, champion = _furthest_stage(matches, edition)
+    coaches_path = (data_dir or DATA_DIR) / f"historical_coaches_{edition}.json"
+    if not coaches_path.exists():
+        return {
+            "edition": edition,
+            "teams_covered": 0,
+            "status": "no_historical_coach_data",
+            "finding": f"No hay data/historical_coaches_{edition}.json todavía.",
+            "rows": [],
+        }
+    coached_teams = sorted(json.loads(coaches_path.read_text(encoding="utf-8"))["coaches"])
+
+    rows: list[tuple[float, int, str]] = []
+    for team in coached_teams:
+        fortune = historical_coach_cycle_fortune(team, edition, data_dir)
+        if fortune is None or fortune.status != "computed" or team not in furthest:
+            continue
+        rows.append((fortune.fortune_index, furthest[team], team))
+    row_dicts = [{"team": team, "fortune_index": x, "stage_rank": y} for x, y, team in rows]
+
+    stats = correlation_stats(rows)
+    if stats.get("status") == "insufficient_data":
+        return {
+            "edition": edition,
+            "teams_covered": len(rows),
+            "status": "insufficient_data",
+            "finding": (
+                f"Solo {len(rows)} equipos con dato completo — insuficiente para correlacionar."
+            ),
+            "rows": row_dicts,
+        }
+
+    pearson_r = float(stats["pearson_r"])  # type: ignore[arg-type]
+    significant = bool(stats["statistically_significant_p05"])
+    return {
+        "edition": edition,
+        "champion": champion,
+        **stats,
         "applied_to_model": False,
         "finding": (
-            f"Con los {n} equipos con dato completo del Mundial {edition} real, "
+            f"Con los {len(rows)} equipos con dato completo del Mundial {edition} real, "
             f"r={pearson_r:.3f} entre el índice de fortuna y la ronda alcanzada "
             f"({'compatible con una señal real' if pearson_r > 0 else 'sin dirección clara'}, "
             f"{'diferencia estadísticamente significativa' if significant else 'NO significativa'} "
-            f"con esta única edición). No es un backtest walk-forward completo — falta "
-            "investigar los DTs reales de 2010/2014/2018 para calibrar con rigor; esto "
-            "es un primer chequeo honesto, no un parámetro para aplicar."
+            f"con una sola edición). No es un backtest walk-forward completo por sí solo — "
+            "hace falta combinar esto con otras ediciones reales investigadas para tener "
+            "poder estadístico; esto es un chequeo honesto por edición, no un parámetro "
+            "para aplicar."
         ),
+        "rows": row_dicts,
     }

@@ -135,11 +135,22 @@ def _find_return(
     return estimate
 
 
+def _seed_moment(moment: datetime, year: int) -> datetime:
+    """.replace(year=...) is only used to seed _find_return's iterative search,
+    so it only needs to land near the real return date, not exactly on it. A Feb
+    29 natal moment has no equivalent date in a non-leap target year -- Feb 28 is
+    close enough as a seed."""
+    try:
+        return moment.replace(year=year)
+    except ValueError:
+        return moment.replace(year=year, day=28)
+
+
 def solar_return(natal: AstrologyChart, year: int, location: GeoLocation) -> TechniqueResult:
     if not natal.request.time_known:
         raise ValueError("solar return requires a known real natal time or time sensitivity")
     target = natal.positions["Sun"].longitude
-    after = natal.request.moment.replace(year=year) - timedelta(days=2)
+    after = _seed_moment(natal.request.moment, year) - timedelta(days=2)
     moment = _find_return("Sun", target, after, 365.256)
     result_chart = chart(ChartRequest(moment, location, True, label="Solar return"))
     return TechniqueResult(

@@ -10,6 +10,7 @@ import pandas as pd  # type: ignore[import-untyped]
 
 from engine.argumental import DATA_DIR as ARGUMENTAL_DATA_DIR
 from engine.argumental import argumental_signal_diagnostic as _team_argumental_diagnostic
+from engine.argumental import correlation_stats as _argumental_correlation_stats
 from engine.backtest import HistoricalMatch
 from engine.model import elo_expectation
 from engine.sirius import moon_sign_index
@@ -215,21 +216,49 @@ def argumental_diagnostic_by_edition(matches: list[HistoricalMatch]) -> dict[str
     by_edition: dict[str, object] = {}
     covered: list[int] = []
     pending: list[int] = []
+    pooled_rows: list[tuple[float, int, str]] = []
     for edition in editions:
         if (ARGUMENTAL_DATA_DIR / f"historical_coaches_{edition}.json").exists():
-            by_edition[str(edition)] = _team_argumental_diagnostic(matches, edition)
+            result = _team_argumental_diagnostic(matches, edition)
+            by_edition[str(edition)] = result
             covered.append(edition)
+            pooled_rows.extend(
+                (float(row["fortune_index"]), int(row["stage_rank"]), f"{edition}:{row['team']}")
+                for row in result.get("rows", [])
+            )
         else:
             pending.append(edition)
+
+    pooled: dict[str, object] | None = None
+    if len(covered) >= 2:
+        pooled_stats = _argumental_correlation_stats(pooled_rows)
+        if pooled_stats.get("status") != "insufficient_data":
+            pearson_r = float(pooled_stats["pearson_r"])
+            significant = bool(pooled_stats["statistically_significant_p05"])
+            pooled = {
+                "editions": covered,
+                **pooled_stats,
+                "applied_to_model": False,
+                "finding": (
+                    f"Combinando {covered} ({pooled_stats['teams_covered']} observaciones "
+                    f"equipo-edición reales): r={pearson_r:.3f} "
+                    f"({'significativo' if significant else 'NO significativo'} con p<0.05). "
+                    "Todavía no es un backtest walk-forward multi-edición completo (eso "
+                    "exigiría re-entrenar y evaluar fuera de muestra edición por edición), "
+                    "pero con más de una edición real combinada ya empieza a tener algo de "
+                    "poder estadístico genuino en vez de depender de una sola muestra chica."
+                ),
+            }
+
     return {
         "editions_covered": covered,
         "editions_pending_research": pending,
         "by_edition": by_edition,
+        "pooled": pooled,
         "applied_to_model": False,
         "finding": (
             f"Investigación de DT completa solo para {covered} — faltan {pending} "
-            "para un backtest walk-forward real de la señal Argumental con poder "
-            "estadístico. Ver by_edition para el detalle de cada edición cubierta."
+            "para cubrir todas las ediciones disponibles."
             if pending
             else "Todas las ediciones disponibles tienen investigación de DT."
         ),

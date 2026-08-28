@@ -68,7 +68,9 @@ function AstrologerCard({ data }: { data: TrackRecordAstrologer }) {
 export function AuditoriaPanel({ backtest }: { backtest: BacktestResult | null }) {
   const altitude = backtest?.altitude_diagnostic;
   const argumental = backtest?.argumental_signal_diagnostic;
-  const argumental2022 = argumental?.by_edition?.["2022"];
+  const argumentalEditions = argumental
+    ? Object.values(argumental.by_edition).sort((a, b) => a.edition - b.edition)
+    : [];
   const [audit, setAudit] = useState<TrackRecordAudit | null>(null);
   const [status, setStatus] = useState("Cargando auditoría…");
 
@@ -143,46 +145,94 @@ export function AuditoriaPanel({ backtest }: { backtest: BacktestResult | null }
         title="Validez de la señal Argumental"
         description="¿La revolución solar del ciclo del DT predice algo real, o es ruido?"
       />
-      {argumental2022 ? (
+      {argumental && argumentalEditions.length ? (
         <>
-          <p className="micro">{argumental2022.finding}</p>
-          {argumental2022.pearson_r !== undefined ? (
-            <div className="altitude-grid">
-              <div className="altitude-threshold">
-                <b>Mundial 2022 · {argumental2022.teams_covered} selecciones</b>
-                <div className="altitude-buckets">
-                  <div>
-                    <small>Correlación (r)</small>
-                    <span>
-                      {argumental2022.pearson_r} ·{" "}
-                      {argumental2022.statistically_significant_p05
-                        ? "significativa (p<0.05)"
-                        : "NO significativa"}
-                    </span>
-                  </div>
-                  <div>
-                    <small>Pasó fase de grupos</small>
-                    <span>
-                      n={argumental2022.advanced_past_group?.n} · fortuna media{" "}
-                      {argumental2022.advanced_past_group?.mean_fortune_index}
-                    </span>
-                  </div>
-                  <div>
-                    <small>Eliminado en grupos</small>
-                    <span>
-                      n={argumental2022.eliminated_in_group?.n} · fortuna media{" "}
-                      {argumental2022.eliminated_in_group?.mean_fortune_index}
-                    </span>
+          {argumental.pooled ? (
+            <>
+              <p className="micro">
+                <b>Combinado ({argumental.pooled.editions.join(" + ")}):</b> {argumental.pooled.finding}
+              </p>
+              <div className="altitude-grid">
+                <div className="altitude-threshold">
+                  <b>
+                    Pooled · {argumental.pooled.editions.join(" + ")} ·{" "}
+                    {argumental.pooled.teams_covered} observaciones
+                  </b>
+                  <div className="altitude-buckets">
+                    <div>
+                      <small>Correlación (r)</small>
+                      <span>
+                        {argumental.pooled.pearson_r} ·{" "}
+                        {argumental.pooled.statistically_significant_p05
+                          ? "significativa (p<0.05)"
+                          : "NO significativa"}
+                      </span>
+                    </div>
+                    <div>
+                      <small>Pasó fase de grupos</small>
+                      <span>
+                        n={argumental.pooled.advanced_past_group.n} · fortuna media{" "}
+                        {argumental.pooled.advanced_past_group.mean_fortune_index}
+                      </span>
+                    </div>
+                    <div>
+                      <small>Eliminado en grupos</small>
+                      <span>
+                        n={argumental.pooled.eliminated_in_group.n} · fortuna media{" "}
+                        {argumental.pooled.eliminated_in_group.mean_fortune_index}
+                      </span>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ) : null}
-          {argumental?.editions_pending_research?.length ? (
+            </>
+          ) : (
+            <p className="micro">
+              Todavía hay una sola edición investigada — falta al menos otra para combinar y tener
+              algo de poder estadístico real.
+            </p>
+          )}
+
+          <p className="micro">Detalle por edición:</p>
+          <div className="altitude-grid">
+            {argumentalEditions.map((entry) =>
+              entry.pearson_r !== undefined ? (
+                <div className="altitude-threshold" key={entry.edition}>
+                  <b>
+                    Mundial {entry.edition} · {entry.teams_covered} selecciones
+                    {entry.champion ? ` · campeón ${entry.champion}` : ""}
+                  </b>
+                  <div className="altitude-buckets">
+                    <div>
+                      <small>Correlación (r)</small>
+                      <span>
+                        {entry.pearson_r} ·{" "}
+                        {entry.statistically_significant_p05 ? "significativa" : "NO significativa"}
+                      </span>
+                    </div>
+                    <div>
+                      <small>Pasó fase de grupos</small>
+                      <span>
+                        n={entry.advanced_past_group?.n} · fortuna media{" "}
+                        {entry.advanced_past_group?.mean_fortune_index}
+                      </span>
+                    </div>
+                    <div>
+                      <small>Eliminado en grupos</small>
+                      <span>
+                        n={entry.eliminated_in_group?.n} · fortuna media{" "}
+                        {entry.eliminated_in_group?.mean_fortune_index}
+                      </span>
+                    </div>
+                  </div>
+                </div>
+              ) : null
+            )}
+          </div>
+
+          {argumental.editions_pending_research.length ? (
             <p className="micro">
               Ediciones sin investigar todavía: {argumental.editions_pending_research.join(", ")}.
-              Con una sola edición esto es un primer chequeo, no un backtest walk-forward con poder
-              estadístico real — el mismo estándar que ya se aplicó a la ventaja de local.
             </p>
           ) : null}
         </>
