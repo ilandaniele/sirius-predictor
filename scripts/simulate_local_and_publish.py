@@ -4,6 +4,7 @@ import argparse
 import base64
 import json
 import os
+import time
 import zipfile
 from datetime import UTC, datetime
 from pathlib import Path
@@ -75,6 +76,39 @@ def _response_json(response: requests.Response) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise RuntimeError("La respuesta del servidor no es un objeto JSON")
     return payload
+
+
+def _post_with_retries(
+    url: str,
+    *,
+    attempts: int = 3,
+    backoff_seconds: float = 5.0,
+    **kwargs: Any,
+) -> requests.Response:
+    """POST with a few retries: Fly's proxy has intermittently returned a hung-up
+    connection or a synthetic 5xx (socket resets on the backend, DNS blips) on both
+    the prepare and upload steps this project talks to — always transient, always
+    fixed by a bare retry so far. `data=` must be reusable bytes, not a stream, so a
+    retry can resend the same payload; callers pass bundle bytes, not a file handle.
+    """
+
+    last_error: Exception = RuntimeError("no attempt was made")
+    for attempt in range(1, attempts + 1):
+        try:
+            response = requests.post(url, timeout=(30, 900), **kwargs)
+            if response.ok:
+                return response
+            last_error = RuntimeError(f"Servidor respondió {response.status_code}")
+        except requests.exceptions.RequestException as exc:
+            last_error = exc
+        if attempt < attempts:
+            print(
+                f"Intento {attempt}/{attempts} falló ({last_error}); "
+                f"reintentando en {backoff_seconds:.0f}s…",
+                flush=True,
+            )
+            time.sleep(backoff_seconds)
+    raise RuntimeError(f"Falló tras {attempts} intentos: {last_error}") from last_error
 
 
 def _require_swiss_ephemeris() -> None:
@@ -205,7 +239,7 @@ def main() -> None:
         raise RuntimeError("Falta SIRIUS_API_KEY en .env")
     headers = {"X-API-Key": api_key}
     print("1/8 · Fly prepara y congela fuentes e inputs livianos…", flush=True)
-    prepared_response = requests.post(
+    prepared_response = _post_with_retries(
         _api_url(args.server, "local-simulation-inputs"),
         headers={**headers, "Content-Type": "application/json"},
         json={
@@ -215,7 +249,6 @@ def main() -> None:
             "final_hour": args.final_hour,
             "workers": args.workers,
         },
-        timeout=(30, 900),
     )
     prepared = _response_json(prepared_response)["data"]
     if prepared["status"] == "already_published":
@@ -372,13 +405,11 @@ def main() -> None:
             flush=True,
         )
         _write_status(work, "uploading", "Subiendo bundle verificado a Fly")
-        with bundle_path.open("rb") as handle:
-            uploaded = requests.post(
-                _api_url(args.server, "local-simulation-results"),
-                headers={**headers, "Content-Type": "application/zip"},
-                data=handle,
-                timeout=(30, 900),
-            )
+        uploaded = _post_with_retries(
+            _api_url(args.server, "local-simulation-results"),
+            headers={**headers, "Content-Type": "application/zip"},
+            data=bundle_path.read_bytes(),
+        )
         published = _response_json(uploaded)["data"]
         print(
             f"Publicado: snapshot {published['snapshot_id']} · formato "
