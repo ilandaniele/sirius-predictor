@@ -18,6 +18,8 @@ con 64 selecciones por defecto o una alternativa de 48. Compara tres modelos ind
 - Argentina y España en sectores opuestos como supuesto configurable.
 - Final en Madrid el 21/07/2030 a las 18:00; sensibilidad 17/18/20/21 y ±15 minutos.
 - Lionel Scaloni continúa con Argentina como supuesto de trabajo, no como hecho futuro.
+- Cristian "Cuti" Romero es el capitán proyectado de Argentina por decisión de escenario; no se presenta
+  como designación oficial. Messi queda conservado sólo como dato histórico tras su retiro.
 
 Participantes, rankings, bombos, cuadro, sedes, horarios, DT y capitanes son proyecciones o datos
 versionados hasta que fuentes oficiales los confirmen.

@@ -1,7 +1,7 @@
-id: mundial-2030-sirius-48-v1
-name: Mundial 2030 Sirius Engine · alternativa 48
+id: mundial-2030-sirius-48-v3
+name: Mundial 2030 Sirius Engine · alternativa 48 · escenario v3
 status: hypothetical_48_team_scenario_using_official_2026_group_structure
-as_of: 2026-08-17
+as_of: 2026-08-31
 format:
   teams: 48
   pots: 4
@@ -37,6 +37,10 @@ final:
   sensitivity_minutes: [-15, 0, 15]
 assumptions:
   argentina_coach: Lionel Scaloni
+  argentina_captain: Cristian Romero
+  argentina_captain_basis: Proyección solicitada por el usuario; sin designación oficial confirmada al 2026-08-31.
+  argentina_captain_natal_source: natal_cristian_romero
+  messi_retirement_source: messi_international_retirement_2026
   scientific_status: La astrología es una capa experimental no validada científicamente.
 models:
   baseline_version: elo-poisson-v1

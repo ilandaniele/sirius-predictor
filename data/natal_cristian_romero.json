@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Cristian Romero",
+      "birth_date": "1998-04-27",
+      "birth_time": null,
+      "timezone": "America/Argentina/Cordoba",
+      "place": "Córdoba, Córdoba, Argentina",
+      "latitude": -31.416667,
+      "longitude": -64.183333,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

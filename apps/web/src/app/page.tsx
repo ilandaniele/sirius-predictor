@@ -323,7 +323,7 @@ export default function Home() {
             />
             <article className="panel wide">
               <div className="panel-title"><div><p>CAMPO PROYECTADO</p><h3>{formatSize} selecciones · no es clasificación oficial</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
-              <div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small></div>)}</div>
+              <div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small><small>DT {team.coach}</small><small>Cap. {team.captain}</small></div>)}</div>
             </article>
             <div className="two-columns">
               <article className="panel">
@@ -425,6 +425,29 @@ export default function Home() {
             <article className="panel wide">
               <div className="panel-title"><div><p>SENSIBILIDAD</p><h3>Hora de la final y datos desconocidos</h3></div></div>
               <DataTable rows={prediction?.sensitivity ?? []} empty="Se genera con una simulación; 4 horas × 3 offsets." />
+              <h3 className="subheading">Capitán proyectado de Argentina · hora desconocida</h3>
+              <DataTable
+                rows={[
+                  ...(prediction?.chart_recalculation?.sensitivity_computed ?? []).filter((row) => row.entity === "BirthData:Cristian Romero").map((row) => ({
+                    Entidad: row.entity,
+                    Estado: "calculada",
+                    Muestras: row.sample_count,
+                    "Signos invariantes": Object.entries(row.invariant_signs).map(([body, sign]) => `${body}: ${sign}`).join(", "),
+                    "Signos variables": Object.entries(row.variable_signs).map(([body, counts]) => `${body}: ${Object.keys(counts).join("/")}`).join(", "),
+                    Casas: "No usadas"
+                  })),
+                  ...(prediction?.chart_recalculation?.sensitivity_cache_hits ?? []).filter((row) => row.entity === "BirthData:Cristian Romero").map((row) => ({
+                    Entidad: row.entity,
+                    Estado: "caché",
+                    Muestras: row.sample_count,
+                    "Signos invariantes": Object.entries(row.invariant_signs).map(([body, sign]) => `${body}: ${sign}`).join(", "),
+                    "Signos variables": Object.entries(row.variable_signs).map(([body, counts]) => `${body}: ${Object.keys(counts).join("/")}`).join(", "),
+                    Casas: "No usadas"
+                  }))
+                ]}
+                empty="ACTUALIZAR calculará la sensibilidad natal sin imputar una hora."
+                maxColumns={6}
+              />
             </article>
 
             <SectionHeading

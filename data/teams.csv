@@ -1,5 +1,5 @@
 team_id,team,confed,host,pot,projected_elo,rating_uncertainty,sirius_index,sirius_confidence,qualification_status,coach,captain,source_id,as_of
-ARG,Argentina,CONMEBOL,1,1,1960,35,0.0,0.0,host_assumption,Lionel Scaloni,Lionel Andrés Messi,scenario,2026-08-17
+ARG,Argentina,CONMEBOL,1,1,1960,35,0.0,0.0,host_assumption,Lionel Scaloni,Cristian Romero,scenario,2026-08-31
 ESP,España,UEFA,1,1,1985,30,0.0,0.0,host_assumption,Luis de la Fuente Castillo,Rodrigo Hernández Cascante,scenario,2026-08-17
 FRA,Francia,UEFA,0,1,1950,32,0.0,0.0,projected,Zinedine Yazid Zidane,Kylian Mbappé Lottin,scenario,2026-08-17
 ENG,Inglaterra,UEFA,0,1,1925,38,0.0,0.0,projected,Thomas Tuchel,Harry Edward Kane,scenario,2026-08-17

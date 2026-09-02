@@ -14,6 +14,9 @@ alternativa. Deben cumplir:
 - Final Madrid 21/07/2030; horas 17, 18, 20 y 21; offsets −15, 0 y +15 minutos.
 
 El campo `status: hypothetical_scenario` evita presentar la configuración como confirmación FIFA.
+Los campos `argentina_coach` y `argentina_captain` fijan supuestos de trabajo y deben coincidir con
+`data/teams.csv`. Una capitanía proyectada conserva calidad X aunque la identidad y fecha natal del
+jugador provengan de fuentes mejores; la calidad biográfica no confirma el cargo futuro.
 
 ## Equipos
 

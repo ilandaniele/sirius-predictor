@@ -197,6 +197,12 @@ def test_unknown_time_birth_data_gets_a_marginalized_sensitivity_result_not_a_sk
         first.sensitivity_computed[0]["input_hash"]
         == second.sensitivity_cache_hits[0]["input_hash"]
     )
+    assert first.sensitivity_computed[0]["sample_count"] == 96
+    assert first.sensitivity_computed[0]["houses_used"] is False
+    assert first.sensitivity_computed[0]["invariant_signs"]
+    assert second.sensitivity_cache_hits[0]["invariant_signs"] == (
+        first.sensitivity_computed[0]["invariant_signs"]
+    )
     assert session.scalar(select(func.count()).select_from(StoredAstrologyTimeSensitivity)) == 1
 
 

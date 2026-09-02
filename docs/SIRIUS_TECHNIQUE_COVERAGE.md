@@ -42,7 +42,8 @@ para `extra_time_penalties` (es una característica del resultado del partido, n
 
 La investigación no encontró ninguna técnica pública que Sirius use y que no estuviera ya en
 `data/sirius_rules.yaml`. Su metodología declarada (4-6 cartas natales combinadas: debut mundialista
-1930, AFA, ciclo del DT, capitán/Messi) es estable en el tiempo — se repite igual en las campañas
+1930, AFA, ciclo del DT, capitán de cada escenario) es estable en el tiempo — se repite igual en
+las campañas
 2018, 2022 y 2026 revisadas. No se agregó ninguna técnica nueva al archivo de reglas porque no hay
 evidencia de que exista una; agregar una "por las dudas" violaría la regla del proyecto de no
 inventar datos.

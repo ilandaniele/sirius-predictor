@@ -44,12 +44,12 @@ class ChartCacheResult:
 @dataclass(slots=True)
 class ChartRecalculationReport:
     requested_entities: list[str] = field(default_factory=list)
-    recalculated: list[dict[str, str]] = field(default_factory=list)
-    cache_hits: list[dict[str, str]] = field(default_factory=list)
-    skipped: list[dict[str, str]] = field(default_factory=list)
-    failed: list[dict[str, str]] = field(default_factory=list)
-    sensitivity_computed: list[dict[str, str]] = field(default_factory=list)
-    sensitivity_cache_hits: list[dict[str, str]] = field(default_factory=list)
+    recalculated: list[dict[str, Any]] = field(default_factory=list)
+    cache_hits: list[dict[str, Any]] = field(default_factory=list)
+    skipped: list[dict[str, Any]] = field(default_factory=list)
+    failed: list[dict[str, Any]] = field(default_factory=list)
+    sensitivity_computed: list[dict[str, Any]] = field(default_factory=list)
+    sensitivity_cache_hits: list[dict[str, Any]] = field(default_factory=list)
 
     def to_dict(self) -> dict[str, Any]:
         return {
@@ -603,6 +603,16 @@ def recalculate_accepted_charts(
                 "entity": entity,
                 "record_id": sensitivity_result.record_id,
                 "input_hash": sensitivity_result.input_hash,
+                "sample_count": int(sensitivity_result.result.result["sample_count"]),
+                "invariant_signs": dict(
+                    sensitivity_result.result.result["invariant_signs"]
+                ),
+                "variable_signs": dict(sensitivity_result.result.result["variable_signs"]),
+                "houses_used": False,
+                "warning": (
+                    "Hora desconocida: son muestras sintéticas del día completo; "
+                    "no se usan ASC, MC ni casas."
+                ),
             }
             if sensitivity_result.status == "hit":
                 report.sensitivity_cache_hits.append(row)

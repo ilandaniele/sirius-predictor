@@ -156,7 +156,10 @@ def create_app() -> FastAPI:
         scenario, _ = _scenario_inputs(format_size)
         return ApiEnvelope(
             data=asdict(scenario),
-            provenance=[provenance("scenario", scenario.as_of)],
+            provenance=[
+                provenance("scenario", scenario.as_of),
+                provenance("messi_international_retirement_2026", scenario.as_of),
+            ],
             assumptions=[
                 (
                     "Formato 64/16×4 hipotético hasta confirmación oficial."
@@ -167,6 +170,10 @@ def create_app() -> FastAPI:
                     )
                 ),
                 "Lionel Scaloni continúa con Argentina como supuesto de trabajo.",
+                (
+                    "Cristian 'Cuti' Romero se usa como capitán proyectado de Argentina; "
+                    "no es una designación oficial confirmada."
+                ),
             ],
             warnings=["La astrología es experimental y no está validada científicamente."],
         )
@@ -176,8 +183,14 @@ def create_app() -> FastAPI:
         scenario, teams = _scenario_inputs(format_size)
         return ApiEnvelope(
             data=[team.to_dict() for team in teams],
-            provenance=[provenance("scenario", scenario.as_of)],
-            assumptions=["Campo y bombos proyectados; no son clasificados oficiales."],
+            provenance=[
+                provenance("scenario", scenario.as_of),
+                provenance("messi_international_retirement_2026", scenario.as_of),
+            ],
+            assumptions=[
+                "Campo y bombos proyectados; no son clasificados oficiales.",
+                "Cristian Romero es una elección de escenario X, no una capitanía oficial.",
+            ],
         )
 
     @application.get("/api/v1/draw", response_model=ApiEnvelope)
@@ -262,6 +275,7 @@ def create_app() -> FastAPI:
                     "sirius_assessments": manifest.get("sirius_assessments", {}),
                     "sirius_evidence_audit": manifest.get("sirius_evidence_audit", {}),
                     "sirius_application": manifest.get("sirius_application", {}),
+                    "chart_recalculation": manifest.get("chart_recalculation", {}),
                 }
         if summary is None and format_size == 64:
             summary = latest_run_summary(settings.storage_path)

@@ -28,9 +28,15 @@ def test_health_scenario_teams_and_draw_contracts() -> None:
     assert scenario.status_code == 200
     assert scenario.json()["data"]["format"]["teams"] == 64
     assert scenario.json()["provenance"][0]["quality"] == "X"
+    assert scenario.json()["provenance"][1]["source_id"] == (
+        "messi_international_retirement_2026"
+    )
+    assert scenario.json()["provenance"][1]["quality"] == "B"
     teams = client.get("/api/v1/teams").json()
     assert len(teams["data"]) == 64
     assert teams["provenance"]
+    argentina = next(team for team in teams["data"] if team["team_id"] == "ARG")
+    assert argentina["captain"] == "Cristian Romero"
     draw = client.get("/api/v1/draw?seed=11").json()["data"]
     assert len(draw) == 16
     assert all(len(group) == 4 for group in draw.values())

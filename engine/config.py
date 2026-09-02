@@ -240,5 +240,7 @@ def validate_scenario(scenario: Scenario, teams: list[Team]) -> None:
     argentina = next((team for team in teams if team.team_id == "ARG"), None)
     if argentina is None or argentina.coach != scenario.assumptions["argentina_coach"]:
         errors.append("Argentina coach does not match the fixed scenario assumption")
+    if argentina is None or argentina.captain != scenario.assumptions["argentina_captain"]:
+        errors.append("Argentina captain does not match the fixed scenario assumption")
     if errors:
         raise ScenarioValidationError(errors)

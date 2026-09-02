@@ -3,6 +3,7 @@ from datetime import UTC, date, datetime
 from pathlib import Path
 
 import pytest
+import yaml
 
 from collectors.common.base import ImmutableSnapshotStore
 from collectors.common.records import BirthRecord
@@ -254,6 +255,42 @@ def test_all_curated_natal_data_files_parse_and_never_impute_a_time() -> None:
         assert record.timezone
         assert record.latitude is not None
         assert record.longitude is not None
+
+
+def test_enzo_natal_data_is_sourced_and_keeps_unknown_time_explicit() -> None:
+    root = Path(__file__).resolve().parents[2]
+    records = parse_birth_records((root / "data" / "natal_enzo_fernandez.json").read_bytes())
+    assert len(records) == 1
+    record = records[0]
+    assert record.person_name == "Enzo Fernández"
+    assert record.birth_date.isoformat() == "2001-01-17"
+    assert record.birth_time is None
+    assert record.time_known is False
+    assert record.rodden_rating == "X"
+
+    sources = yaml.safe_load((root / "data" / "sources.yaml").read_text(encoding="utf-8"))
+    source = next(item for item in sources if item["id"] == "natal_enzo_fernandez")
+    assert source["grade"] == "B"
+    assert source["consulted_at"].isoformat() == "2026-08-31"
+    assert [item["grade"] for item in source["field_sources"]] == ["A", "B"]
+
+
+def test_cristian_romero_natal_data_is_sourced_and_keeps_unknown_time_explicit() -> None:
+    root = Path(__file__).resolve().parents[2]
+    records = parse_birth_records((root / "data" / "natal_cristian_romero.json").read_bytes())
+    assert len(records) == 1
+    record = records[0]
+    assert record.person_name == "Cristian Romero"
+    assert record.birth_date.isoformat() == "1998-04-27"
+    assert record.birth_time is None
+    assert record.time_known is False
+    assert record.rodden_rating == "X"
+
+    sources = yaml.safe_load((root / "data" / "sources.yaml").read_text(encoding="utf-8"))
+    source = next(item for item in sources if item["id"] == "natal_cristian_romero")
+    assert source["grade"] == "B"
+    assert source["consulted_at"].isoformat() == "2026-08-31"
+    assert [item["grade"] for item in source["field_sources"]] == ["A", "B"]
 
 
 def test_team_event_record_requires_a_timezone_aware_moment() -> None:

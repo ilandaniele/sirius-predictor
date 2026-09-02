@@ -71,6 +71,16 @@
   robots_policy: adapter_not_configured
   use: Entrenadores, capitanes y datos oficiales; se incorpora por adaptadores específicos.
   enabled: false
+- id: messi_international_retirement_2026
+  name: Reuters — retiro internacional de Lionel Messi
+  grade: B
+  kind: html
+  url: https://noticias.uol.com.br/ultimas-noticias/reuters/2026/08/31/messi-anuncia-aposentadoria-da-selecao-argentina.amp.htm
+  consulted_at: 2026-08-31
+  terms_url: https://sobreuol.noticias.uol.com.br/normas-de-seguranca-e-privacidade.html
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Confirma el retiro de Messi de la selección argentina; no confirma a su sucesor en la capitanía.
+  enabled: true
 - id: natal_scaloni
   name: Lionel Scaloni — Wikipedia (biografía)
   grade: B
@@ -89,7 +99,51 @@
   local_path: data/natal_messi.json
   terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
   robots_policy: curated_local_file_cites_public_biography
-  use: Dato histórico de nacimiento del capitán de Argentina 2014-2026; no implica un supuesto sobre quién será capitán en 2030 (data/scenario.yaml deja ese dato explícitamente pendiente). Hora desconocida, nunca imputada.
+  use: Dato histórico de nacimiento del excapitán de Argentina; su retiro internacional del 31/8/2026 se documenta en messi_international_retirement_2026. Se conserva para historia y no se usa como capitán del escenario 2030. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_enzo_fernandez
+  name: Enzo Fernández — AFA + referencia geográfica Wikidata
+  grade: B
+  kind: local_natal_data
+  url: https://www.afa.com.ar/4805/posts/origen-futbolistas
+  local_path: data/natal_enzo_fernandez.json
+  consulted_at: 2026-08-31
+  terms_url: https://www.afa.com.ar/
+  robots_policy: curated_local_file_cites_public_biography
+  field_sources:
+    - fields: [person_name, birth_date, place]
+      source: Asociación del Fútbol Argentino
+      url: https://www.afa.com.ar/4805/posts/origen-futbolistas
+      consulted_at: 2026-08-31
+      grade: A
+    - fields: [latitude, longitude]
+      source: Wikidata Q781245, punto de referencia de la ciudad de General San Martín
+      url: https://www.wikidata.org/wiki/Q781245
+      consulted_at: 2026-08-31
+      grade: B
+  use: Dato histórico del capitán proyectado para Argentina en el escenario v2, reemplazado por Cristian Romero en v3. La calidad agregada es B por combinar la biografía oficial AFA (A) con un punto geográfico urbano de referencia (B), no el lugar exacto del parto. Hora desconocida, nunca imputada; sólo admite sensibilidad horaria explícita.
+  enabled: true
+- id: natal_cristian_romero
+  name: Cristian "Cuti" Romero — AFA + referencia geográfica Wikidata
+  grade: B
+  kind: local_natal_data
+  url: https://www.afa.com.ar/4374/posts/origen-futbolistas
+  local_path: data/natal_cristian_romero.json
+  consulted_at: 2026-08-31
+  terms_url: https://www.afa.com.ar/
+  robots_policy: curated_local_file_cites_public_biography
+  field_sources:
+    - fields: [person_name, birth_date, place]
+      source: Asociación del Fútbol Argentino
+      url: https://www.afa.com.ar/4374/posts/origen-futbolistas
+      consulted_at: 2026-08-31
+      grade: A
+    - fields: [latitude, longitude]
+      source: Wikidata Q44210, punto de referencia de la ciudad de Córdoba
+      url: https://www.wikidata.org/wiki/Q44210
+      consulted_at: 2026-08-31
+      grade: B
+  use: Fecha y lugar de nacimiento del capitán proyectado por el usuario para Argentina en el escenario v3. La calidad agregada es B por combinar la biografía oficial AFA (A) con un punto geográfico urbano de referencia (B), no el lugar exacto del parto. Hora desconocida, nunca imputada; sólo admite sensibilidad horaria explícita.
   enabled: true
 - id: natal_de_la_fuente
   name: Luis de la Fuente — Wikipedia (biografía)

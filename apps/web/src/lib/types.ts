@@ -39,6 +39,9 @@ export type Team = {
   projected_elo: number;
   sirius_index: number;
   sirius_confidence: number;
+  qualification_status: string;
+  coach: string;
+  captain: string;
   source_id: string;
   as_of: string;
 };
@@ -97,6 +100,21 @@ export type Prediction = {
     teams_with_evidence: number;
     teams_with_nonzero_adjustment: number;
   };
+  chart_recalculation?: {
+    sensitivity_computed?: NatalSensitivitySummary[];
+    sensitivity_cache_hits?: NatalSensitivitySummary[];
+  };
+};
+
+export type NatalSensitivitySummary = {
+  entity: string;
+  record_id: string;
+  input_hash: string;
+  sample_count: number;
+  invariant_signs: Record<string, string>;
+  variable_signs: Record<string, Record<string, number>>;
+  houses_used: false;
+  warning: string;
 };
 
 export type SiriusAssessment = {
