@@ -115,7 +115,13 @@ class FootballMatchModel:
         return self.HOST_ADVANTAGE_ELO if team is not None and team.host else 0.0
 
     def expected_goals(self, home_rating: float, away_rating: float) -> tuple[float, float]:
-        share = 1.0 / (1.0 + 10.0 ** ((away_rating - home_rating) / 800.0))
+        # Reuses elo_expectation's standard /400 scale so the goal split a big Elo
+        # favorite gets here matches the win probability packages/football/backtest.py
+        # validates against real World Cup results -- a separate, flatter /800 scale
+        # used to live here and silently made every large mismatch (e.g. Argentina
+        # vs a Pot 4 minnow) resolve far less decisively than the calibrated model
+        # implies, inflating upsets and draws across the whole bracket.
+        share = elo_expectation(home_rating, away_rating)
         return self.total_goals * share, self.total_goals * (1.0 - share)
 
     def probabilities_from_ratings(

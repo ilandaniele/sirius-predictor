@@ -33,6 +33,30 @@ def test_probabilities_are_normalized(scenario, teams):
     assert probabilities.sirius_adjustment != 0
 
 
+def test_expected_goals_uses_the_same_elo_scale_the_backtest_validates(teams):
+    # engine.model.FootballMatchModel.expected_goals used to convert an Elo gap into a
+    # goal share with a flatter /800 scale, while packages/football/backtest.py (the
+    # module actually calibrated and validated against 360 real World Cup matches)
+    # uses elo_expectation's standard /400 scale for the same purpose. That silent
+    # mismatch made big favorites resolve far less decisively in the live simulation
+    # than the calibrated model implies -- e.g. a ~440-point favorite winning only
+    # ~72% of the time instead of the ~87-93% a real Elo gap that size predicts.
+    layer = SiriusExperimentalLayer(0.0)
+    model = FootballMatchModel(teams, layer, mode="baseline")
+    home_rating, away_rating = 1960.0, 1520.0
+    home_goals, away_goals = model.expected_goals(home_rating, away_rating)
+    expected_share = elo_expectation(home_rating, away_rating)
+    assert np.isclose(home_goals / model.total_goals, expected_share)
+    assert np.isclose(home_goals + away_goals, model.total_goals)
+
+    home_p, draw_p, away_p = model.probabilities_from_ratings(home_rating, away_rating)
+    # A ~440-Elo-point favorite should win outright clearly more often than not, with
+    # a real (not inflated) chance of a draw or upset -- not the previous ~72%/19%/9%.
+    assert home_p > 0.8
+    assert draw_p < 0.15
+    assert away_p < 0.05
+
+
 def test_host_nation_gets_a_football_only_edge_over_an_equal_rated_visitor(scenario, teams):
     # ARG (host) vs a non-host team with an artificially matched rating: without a
     # host boost this would be a 50/50 baseline; the host adjustment should tilt it.
