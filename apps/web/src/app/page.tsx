@@ -4,6 +4,7 @@ import { useEffect, useMemo, useState } from "react";
 
 import { AstrologiaPanel } from "@/components/AstrologiaPanel";
 import { AuditoriaPanel } from "@/components/AuditoriaPanel";
+import { Flag } from "@/components/Flag";
 import { MetricCard } from "@/components/MetricCard";
 import { SourceBadge } from "@/components/SourceBadge";
 import { HistoryChart } from "@/components/HistoryChart";
@@ -265,7 +266,7 @@ export default function Home() {
                 <div className="ranking-list">
                   {candidates.map((team, index) => (
                     <div className="rank-row" key={team.team_id}>
-                      <b>{String(index + 1).padStart(2, "0")}</b><span className="flag">{team.team_id}</span><strong>{team.team}</strong>
+                      <b>{String(index + 1).padStart(2, "0")}</b><Flag teamId={team.team_id} teamName={team.team} /><strong>{team.team}</strong>
                       <div className="bar"><i style={{ width: `${Math.max(8, (team.projected_elo - 1300) / 7)}%` }} /></div>
                       <code>{team.projected_elo}</code>
                     </div>
@@ -323,12 +324,12 @@ export default function Home() {
             />
             <article className="panel wide">
               <div className="panel-title"><div><p>CAMPO PROYECTADO</p><h3>{formatSize} selecciones · no es clasificación oficial</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
-              <div className="team-grid">{teams.map((team) => <div key={team.team_id}><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small><small>DT {team.coach}</small><small>Cap. {team.captain}</small></div>)}</div>
+              <div className="team-grid">{teams.map((team) => <div key={team.team_id}><Flag teamId={team.team_id} teamName={team.team} /><b>{team.team_id}</b><strong>{team.team}</strong><span>{team.confed} · Bombo {team.pot}</span><small>Elo {team.projected_elo}</small><small>DT {team.coach}</small><small>Cap. {team.captain}</small></div>)}</div>
             </article>
             <div className="two-columns">
               <article className="panel">
                 <div className="panel-title"><div><p>SEED 2030</p><h3>Un sorteo legal reproducible</h3></div>{scenarioSource ? <SourceBadge source={scenarioSource} /> : null}</div>
-                <div className="groups-grid">{Object.entries(draw).map(([group, members]) => <div key={group}><b>Grupo {group}</b>{members.map((team) => <span key={team.team_id}>{team.team_id} · {team.team}</span>)}</div>)}</div>
+                <div className="groups-grid">{Object.entries(draw).map(([group, members]) => <div key={group}><b>Grupo {group}</b>{members.map((team) => <span key={team.team_id}><Flag teamId={team.team_id} teamName={team.team} /> {team.team_id} · {team.team}</span>)}</div>)}</div>
               </article>
               <article className="panel">
                 <div className="panel-title"><div><p>ARGENTINA</p><h3>Los 10 grupos más probables</h3></div></div>

@@ -321,10 +321,10 @@ def _validate_result_payload(results: dict[str, Any], job: dict[str, Any]) -> No
             character not in "0123456789abcdef" for character in run_id
         ):
             raise ValueError(f"{mode}: run_id must be a lowercase hex digest")
-    hybrid_brackets = simulations[ModelMode.HYBRID.value].get("top_brackets", [])
-    if len(hybrid_brackets) != 5:
-        raise ValueError("HYBRID must contain exactly five decisive scenarios")
-    for bracket in hybrid_brackets:
+    primary_brackets = simulations[ModelMode.SIRIUS_ONLY.value].get("top_brackets", [])
+    if len(primary_brackets) != 5:
+        raise ValueError("SIRIUS_ONLY must contain exactly five decisive scenarios")
+    for bracket in primary_brackets:
         if (
             not isinstance(bracket, dict)
             or bracket.get("scope") != "SF_AND_FINAL"
@@ -332,11 +332,11 @@ def _validate_result_payload(results: dict[str, Any], job: dict[str, Any]) -> No
             or not isinstance(bracket.get("decisive_matches"), list)
             or len(bracket["decisive_matches"]) != 3
         ):
-            raise ValueError("HYBRID brackets must describe two semifinals and one final")
-    if results.get("sirius_evidence_audit") != simulations[ModelMode.HYBRID.value].get(
+            raise ValueError("SIRIUS_ONLY brackets must describe two semifinals and one final")
+    if results.get("sirius_evidence_audit") != simulations[ModelMode.SIRIUS_ONLY.value].get(
         "sirius_evidence_audit"
     ):
-        raise ValueError("top-level Sirius evidence audit differs from HYBRID")
+        raise ValueError("top-level Sirius evidence audit differs from SIRIUS_ONLY")
     assessments = results.get("sirius_assessments")
     if not isinstance(assessments, dict) or any(
         not isinstance(assessment, dict) for assessment in assessments.values()
@@ -348,8 +348,8 @@ def _validate_result_payload(results: dict[str, Any], job: dict[str, Any]) -> No
     )
     if results.get("sirius_application") != expected_application:
         raise ValueError("top-level Sirius application status is invalid")
-    if simulations[ModelMode.HYBRID.value].get("sirius_application") != expected_application:
-        raise ValueError("HYBRID Sirius application status differs from evidence")
+    if simulations[ModelMode.SIRIUS_ONLY.value].get("sirius_application") != expected_application:
+        raise ValueError("SIRIUS_ONLY Sirius application status differs from evidence")
 
 
 def _validate_frozen_job(settings: Settings, job: dict[str, Any]) -> None:
@@ -633,24 +633,24 @@ def import_local_result(
         files,
         digests,
     )
-    hybrid_brackets = simulations[ModelMode.HYBRID.value]["top_brackets"]
+    primary_brackets = simulations[ModelMode.SIRIUS_ONLY.value]["top_brackets"]
     if any(
         not math.isclose(
             float(bracket_manifest[index]["density_percent"]),
-            float(hybrid_brackets[index]["density_percent"]),
+            float(primary_brackets[index]["density_percent"]),
             abs_tol=1e-9,
         )
         for index in range(5)
     ):
-        raise ValueError("bracket asset densities differ from HYBRID results")
+        raise ValueError("bracket asset densities differ from SIRIUS_ONLY results")
     if any(
-        bracket_manifest[index].get("signature") != hybrid_brackets[index].get("signature")
+        bracket_manifest[index].get("signature") != primary_brackets[index].get("signature")
         or bracket_manifest[index].get("scope") != "SF_AND_FINAL"
         or bracket_manifest[index].get("signature_version") != "decisive-v1"
         or bracket_manifest[index].get("sirius_application") != results["sirius_application"]
         for index in range(5)
     ):
-        raise ValueError("bracket assets differ from decisive HYBRID scenarios")
+        raise ValueError("bracket assets differ from decisive SIRIUS_ONLY scenarios")
     report_path = final_directory / "report.md"
     bracket_manifest_path = bracket_directory / "manifest.json"
     manifest = {

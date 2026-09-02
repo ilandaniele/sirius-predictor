@@ -201,7 +201,7 @@ def _simulation(mode: ModelMode, teams: list[object], marker: str) -> dict[str, 
                 }
                 for index in range(5)
             ]
-            if mode == ModelMode.HYBRID
+            if mode == ModelMode.SIRIUS_ONLY
             else []
         ),
         "sirius_evidence_audit": {},

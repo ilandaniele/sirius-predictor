@@ -299,27 +299,27 @@ def main() -> None:
         host_advantage_elo = 0.0
 
         print(
-            f"4/8 · HYBRID primero · {args.iterations:,} simulaciones locales…",
+            f"4/8 · SIRIUS_ONLY primero (método puro) · {args.iterations:,} simulaciones locales…",
             flush=True,
         )
-        _write_status(work, "simulating_hybrid", "Ejecutando HYBRID")
+        _write_status(work, "simulating_primary", "Ejecutando SIRIUS_ONLY")
         raw_results = {
-            ModelMode.HYBRID: run_parallel(
+            ModelMode.SIRIUS_ONLY: run_parallel(
                 scenario_path,
                 teams_path,
                 iterations=args.iterations,
                 seed=args.seed,
-                mode=ModelMode.HYBRID,
+                mode=ModelMode.SIRIUS_ONLY,
                 final_hour=args.final_hour,
                 workers=args.workers,
                 reviewed_observations_path=reviewed_path,
                 host_advantage_elo=host_advantage_elo,
             )
         }
-        hybrid_result = raw_results[ModelMode.HYBRID]
+        primary_result = raw_results[ModelMode.SIRIUS_ONLY]
         application = sirius_application_status(
-            hybrid_result.sirius_assessments,
-            hybrid_result.sirius_evidence_audit,
+            primary_result.sirius_assessments,
+            primary_result.sirius_evidence_audit,
         )
         print(f"Sirius: {application['label']}.", flush=True)
 
@@ -335,16 +335,16 @@ def main() -> None:
             sirius_application=application,
         )
         export_five_brackets(
-            hybrid_result.top_brackets,
+            primary_result.top_brackets,
             teams,
             bracket_directory,
-            sirius_reasons=_sirius_reasons(hybrid_result),
+            sirius_reasons=_sirius_reasons(primary_result),
             sirius_application=application,
         )
         print(f"Imágenes listas y persistentes: {bracket_directory}", flush=True)
 
         for index, mode in enumerate(
-            (ModelMode.FOOTBALL_ONLY, ModelMode.SIRIUS_ONLY),
+            (ModelMode.FOOTBALL_ONLY, ModelMode.HYBRID),
             start=1,
         ):
             print(
@@ -375,8 +375,8 @@ def main() -> None:
             "ephemeris": prepared["ephemeris"],
             "completed_at": datetime.now(UTC).isoformat(),
             "simulations": simulations,
-            "sirius_assessments": hybrid_result.sirius_assessments,
-            "sirius_evidence_audit": hybrid_result.sirius_evidence_audit,
+            "sirius_assessments": primary_result.sirius_assessments,
+            "sirius_evidence_audit": primary_result.sirius_evidence_audit,
             "sirius_application": application,
         }
         (work / "results.json").write_text(

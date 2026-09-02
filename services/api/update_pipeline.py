@@ -581,10 +581,10 @@ def _sirius_reasons(result: ParallelSimulationResult) -> dict[str, list[str]]:
 
 
 def _argentina_probability(simulations: dict[str, dict[str, Any]]) -> float | None:
-    hybrid = simulations.get(ModelMode.HYBRID.value)
-    if not hybrid:
+    primary = simulations.get(ModelMode.SIRIUS_ONLY.value)
+    if not primary:
         return None
-    argentina = next((row for row in hybrid["ranking"] if row["ID"] == "ARG"), None)
+    argentina = next((row for row in primary["ranking"] if row["ID"] == "ARG"), None)
     return float(argentina["Campeón %"]) if argentina else None
 
 
@@ -917,16 +917,16 @@ class UpdateOrchestrator:
         )
 
         bracket_manifest_path = None
-        hybrid_result = raw_results.get(ModelMode.HYBRID)
-        if hybrid_result is not None:
+        primary_result = raw_results.get(ModelMode.SIRIUS_ONLY)
+        if primary_result is not None:
             export_five_brackets(
-                hybrid_result.top_brackets,
+                primary_result.top_brackets,
                 teams,
                 output_dir / "brackets",
-                sirius_reasons=_sirius_reasons(hybrid_result),
+                sirius_reasons=_sirius_reasons(primary_result),
                 sirius_application=sirius_application_status(
-                    hybrid_result.sirius_assessments,
-                    hybrid_result.sirius_evidence_audit,
+                    primary_result.sirius_assessments,
+                    primary_result.sirius_evidence_audit,
                 ),
                 spec=self.bracket_spec,
             )
@@ -970,17 +970,17 @@ class UpdateOrchestrator:
                 "modes": [mode.value for mode in command.modes],
             },
             "sirius_assessments": (
-                hybrid_result.sirius_assessments if hybrid_result is not None else {}
+                primary_result.sirius_assessments if primary_result is not None else {}
             ),
             "sirius_evidence_audit": (
-                hybrid_result.sirius_evidence_audit if hybrid_result is not None else {}
+                primary_result.sirius_evidence_audit if primary_result is not None else {}
             ),
             "sirius_application": (
                 sirius_application_status(
-                    hybrid_result.sirius_assessments,
-                    hybrid_result.sirius_evidence_audit,
+                    primary_result.sirius_assessments,
+                    primary_result.sirius_evidence_audit,
                 )
-                if hybrid_result is not None
+                if primary_result is not None
                 else {}
             ),
             "quality_pending_review": len(update.pending_review),

@@ -242,7 +242,7 @@ def create_app() -> FastAPI:
         source_rows = []
         if manifest is not None:
             source_rows = manifest_provenance(manifest.get("sources", []))
-            summary = manifest.get("simulations", {}).get("HYBRID")
+            summary = manifest.get("simulations", {}).get("SIRIUS_ONLY")
             if summary is not None:
                 comparison = {}
                 for mode, simulation in manifest.get("simulations", {}).items():

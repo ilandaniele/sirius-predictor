@@ -22,7 +22,7 @@ class SimulationRequest(BaseModel):
     format_size: Literal[48, 64] = 64
     iterations: int = Field(default=100_000, ge=100, le=1_000_000)
     seed: int = Field(default=2030, ge=0, le=2**31 - 1)
-    mode: ModelMode = ModelMode.HYBRID
+    mode: ModelMode = ModelMode.SIRIUS_ONLY
     final_hour: int = 18
     workers: int | None = Field(default=None, ge=1, le=64)
 

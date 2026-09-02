@@ -148,7 +148,7 @@ def run_engine(
     scenario: Scenario,
     n: int = 5_000,
     seed: int = 2030,
-    mode: str | ModelMode = ModelMode.HYBRID,
+    mode: str | ModelMode = ModelMode.SIRIUS_ONLY,
     final_hour: int = 18,
     progress=None,
     top_bracket_limit: int = 5,

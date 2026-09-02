@@ -116,7 +116,7 @@ def run_parallel(
     teams_path: str | Path,
     iterations: int = 100_000,
     seed: int = 2030,
-    mode: ModelMode = ModelMode.HYBRID,
+    mode: ModelMode = ModelMode.SIRIUS_ONLY,
     final_hour: int = 18,
     workers: int | None = None,
     reviewed_observations_path: str | Path | None = None,
