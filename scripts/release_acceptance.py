@@ -27,7 +27,7 @@ def _records(frame: pd.DataFrame) -> list[dict[str, object]]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Run v0.4.0 release acceptance")
+    parser = argparse.ArgumentParser(description="Run v0.5.0 release acceptance")
     parser.add_argument("--iterations", type=int, default=100_000)
     parser.add_argument("--workers", type=int, default=None)
     parser.add_argument("--format-size", type=int, choices=(48, 64), default=64)
@@ -188,7 +188,7 @@ def main() -> None:
         ),
     }
     manifest = {
-        "release": "0.4.0",
+        "release": "0.5.0",
         "created_at": datetime.now(UTC).isoformat(),
         "scenario": scenario.scenario_id,
         "format_size": args.format_size,

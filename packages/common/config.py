@@ -33,7 +33,7 @@ class Settings(BaseSettings):
     collector_rate_limit_seconds: float = 1.0
     default_simulations: int = 100_000
     simulation_workers: int | None = Field(default=None, ge=1, le=64)
-    model_version: str = "0.4.0"
+    model_version: str = "0.5.0"
     api_key: SecretStr | None = None
     post_rate_limit_per_minute: int = 10
     allow_remote_compute: bool = True

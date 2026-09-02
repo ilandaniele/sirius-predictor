@@ -214,7 +214,7 @@ export default function Home() {
 
       <section className="hero">
         <div>
-          <p className="eyebrow">INTELIGENCIA DE TORNEO · v0.4.0</p>
+          <p className="eyebrow">INTELIGENCIA DE TORNEO · v0.5.0</p>
           <h1>Mundial 2030<br /><em>Sirius Engine</em></h1>
           <p className="lede">Baseline futbolístico y modelos astrológicos experimentales, separados, comparables y trazables.</p>
         </div>
