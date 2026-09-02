@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "SWE",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1934-05-27T16:00:00+01:00",
+      "location": {
+        "latitude": 44.4922,
+        "longitude": 11.3095,
+        "name": "Stadio Littoriale (hoy Renato Dall'Ara), Bolonia, Italia"
+      },
+      "label": "Suecia 3-2 Argentina, debut mundialista de Suecia, Mundial 1934",
+      "coach_name": null
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Granit Xhaka",
+      "birth_date": "1992-09-27",
+      "birth_time": null,
+      "timezone": "Europe/Zurich",
+      "place": "Basilea, Suiza",
+      "latitude": 47.5596,
+      "longitude": 7.5886,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

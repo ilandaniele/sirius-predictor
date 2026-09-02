@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Onyinye Wilfred Ndidi",
+      "birth_date": "1996-12-16",
+      "birth_time": null,
+      "timezone": "Africa/Lagos",
+      "place": "Lagos, Nigeria",
+      "latitude": 6.5244,
+      "longitude": 3.3792,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

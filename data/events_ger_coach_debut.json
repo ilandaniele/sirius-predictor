@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "GER",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2026-09-24T20:45:00+02:00",
+      "location": {
+        "latitude": 52.3143,
+        "longitude": 4.9416,
+        "name": "Johan Cruijff Arena, Ámsterdam, Países Bajos"
+      },
+      "label": "Países Bajos vs Alemania, debut de Jürgen Klopp como seleccionador (UEFA Nations League, fecha y horario oficialmente confirmados)",
+      "coach_name": "Jürgen Klopp"
+    }
+  ]
+}

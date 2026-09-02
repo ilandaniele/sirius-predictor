@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "César Lolohéa Zeoula",
+      "birth_date": "1989-08-29",
+      "birth_time": null,
+      "timezone": "Pacific/Noumea",
+      "place": "Dumbéa, Nueva Caledonia",
+      "latitude": -22.1489,
+      "longitude": 166.4581,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

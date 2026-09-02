@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "NGA",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1994-06-21T18:30:00-05:00",
+      "location": {
+        "latitude": 32.7815,
+        "longitude": -96.7601,
+        "name": "Cotton Bowl, Dallas, Texas, Estados Unidos"
+      },
+      "label": "Nigeria 3-0 Bulgaria, debut mundialista de Nigeria, Mundial 1994",
+      "coach_name": null
+    }
+  ]
+}

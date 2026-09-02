@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jamal Sellami",
+      "birth_date": "1970-10-06",
+      "birth_time": null,
+      "timezone": "Africa/Casablanca",
+      "place": "Casablanca, Marruecos",
+      "latitude": 33.5731,
+      "longitude": -7.5898,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

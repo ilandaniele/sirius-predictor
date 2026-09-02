@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "POL",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1938-06-05T17:00:00+01:00",
+      "location": {
+        "latitude": 48.5600,
+        "longitude": 7.7550,
+        "name": "Stade de la Meinau, Estrasburgo, Francia"
+      },
+      "label": "Brasil 6-5 Polonia (prórroga), debut mundialista de Polonia, Mundial 1938",
+      "coach_name": null
+    }
+  ]
+}

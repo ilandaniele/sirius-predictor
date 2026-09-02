@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Robert Lewandowski",
+      "birth_date": "1988-08-21",
+      "birth_time": null,
+      "timezone": "Europe/Warsaw",
+      "place": "Varsovia, Polonia",
+      "latitude": 52.2297,
+      "longitude": 21.0122,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

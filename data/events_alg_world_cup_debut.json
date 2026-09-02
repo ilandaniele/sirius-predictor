@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ALG",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1982-06-16T17:15:00+02:00",
+      "location": {
+        "latitude": 43.5361,
+        "longitude": -5.6386,
+        "name": "El Molinón, Gijón, España"
+      },
+      "label": "Argelia 2-1 Alemania Occidental, debut mundialista de Argelia (el 'Milagro de Gijón'), Mundial 1982",
+      "coach_name": null
+    }
+  ]
+}

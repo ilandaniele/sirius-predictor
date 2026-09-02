@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mohamed Ouahbi",
+      "birth_date": "1976-09-07",
+      "birth_time": null,
+      "timezone": "Europe/Brussels",
+      "place": "Schaerbeek, Bruselas, Bélgica",
+      "latitude": 50.8676,
+      "longitude": 4.3738,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

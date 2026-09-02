@@ -1,0 +1,75 @@
+# syntax=docker/dockerfile:1.7
+FROM node:24-trixie-slim AS web-dependencies
+WORKDIR /web
+COPY apps/web/package.json apps/web/package-lock.json ./
+RUN npm ci
+
+FROM node:24-trixie-slim AS web-builder
+WORKDIR /web
+ARG NEXT_PUBLIC_API_URL=/api/v1
+ENV NEXT_PUBLIC_API_URL=$NEXT_PUBLIC_API_URL
+COPY --from=web-dependencies /web/node_modules ./node_modules
+COPY apps/web ./
+RUN npm run build
+
+FROM python:3.13-slim AS python-builder
+ENV PIP_DISABLE_PIP_VERSION_CHECK=1 \
+    PIP_NO_CACHE_DIR=1
+WORKDIR /build
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y build-essential \
+    && rm -rf /var/lib/apt/lists/*
+COPY pyproject.toml README.md ./
+COPY collectors ./collectors
+COPY db ./db
+COPY engine ./engine
+COPY packages ./packages
+COPY services ./services
+RUN --mount=type=cache,target=/root/.cache/pip \
+    PIP_NO_CACHE_DIR=off python -m pip wheel --wheel-dir /wheels .
+
+FROM python:3.13-slim AS runtime
+ENV PYTHONUNBUFFERED=1 \
+    PYTHONDONTWRITEBYTECODE=1 \
+    NODE_ENV=production \
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME=0.0.0.0 \
+    PORT=3000 \
+    SIRIUS_ROOT=/app \
+    PGDATA=/data/postgres \
+    PGSOCKET=/data/postgres-socket
+
+RUN apt-get update \
+    && apt-get install --no-install-recommends -y \
+        ca-certificates \
+        postgresql \
+        postgresql-client \
+        redis-server \
+        tini \
+    && rm -rf /var/lib/apt/lists/* \
+    && groupadd --system sirius \
+    && useradd --system --gid sirius --home-dir /app --create-home sirius
+
+COPY --from=node:24-trixie-slim /usr/local/bin/node /usr/local/bin/node
+COPY --from=python-builder /wheels /wheels
+RUN python -m pip install --no-cache-dir /wheels/* && rm -rf /wheels
+
+ARG SIRIUS_GIT_COMMIT=unavailable
+ARG SIRIUS_GIT_DIRTY=false
+ARG SIRIUS_WORKING_TREE_SHA256=
+ENV SIRIUS_GIT_COMMIT=$SIRIUS_GIT_COMMIT \
+    SIRIUS_GIT_DIRTY=$SIRIUS_GIT_DIRTY \
+    SIRIUS_WORKING_TREE_SHA256=$SIRIUS_WORKING_TREE_SHA256
+
+WORKDIR /app
+COPY alembic.ini ./
+COPY alembic ./alembic
+COPY data ./data
+COPY docs ./docs
+COPY --from=web-builder --chown=sirius:sirius /web/public ./web/public
+COPY --from=web-builder --chown=sirius:sirius /web/.next/standalone ./web
+COPY --from=web-builder --chown=sirius:sirius /web/.next/static ./web/.next/static
+COPY --chmod=755 ops/fly/entrypoint.sh /usr/local/bin/sirius-fly-entrypoint
+
+EXPOSE 3000
+ENTRYPOINT ["/usr/bin/tini", "-s", "--", "/usr/local/bin/sirius-fly-entrypoint"]

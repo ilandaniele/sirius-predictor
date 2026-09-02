@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "José Francisco Molina Jiménez",
+      "birth_date": "1970-08-08",
+      "birth_time": null,
+      "timezone": "Europe/Madrid",
+      "place": "Valencia, España",
+      "latitude": 39.4699,
+      "longitude": -0.3763,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

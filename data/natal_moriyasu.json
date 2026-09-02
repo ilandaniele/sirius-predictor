@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hajime Moriyasu",
+      "birth_date": "1968-08-23",
+      "birth_time": null,
+      "timezone": "Asia/Tokyo",
+      "place": "Kakegawa, Shizuoka, Japón",
+      "latitude": 34.7686,
+      "longitude": 137.9979,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

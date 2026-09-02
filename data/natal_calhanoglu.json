@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hakan Çalhanoğlu",
+      "birth_date": "1994-02-08",
+      "birth_time": null,
+      "timezone": "Europe/Berlin",
+      "place": "Mannheim, Alemania",
+      "latitude": 49.4875,
+      "longitude": 8.466,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

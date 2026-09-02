@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CMR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1982-06-19T17:15:00+02:00",
+      "location": {
+        "latitude": 43.3675,
+        "longitude": -8.4176,
+        "name": "Estadio Riazor, La Coruña, España"
+      },
+      "label": "Polonia 0-0 Camerún, debut mundialista de Camerún, Mundial 1982",
+      "coach_name": null
+    }
+  ]
+}

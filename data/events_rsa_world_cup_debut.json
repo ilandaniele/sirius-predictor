@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "RSA",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1998-06-12T21:00:00+02:00",
+      "location": {
+        "latitude": 43.2696,
+        "longitude": 5.3958,
+        "name": "Stade Vélodrome, Marsella, Francia"
+      },
+      "label": "Francia 3-0 Sudáfrica, debut mundialista de Sudáfrica (primera participación tras el fin del apartheid), Mundial 1998",
+      "coach_name": null
+    }
+  ]
+}

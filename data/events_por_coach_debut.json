@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "POR",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2023-03-23T19:45:00+00:00",
+      "location": {
+        "latitude": 38.7601,
+        "longitude": -9.1607,
+        "name": "Estádio José Alvalade, Lisboa, Portugal"
+      },
+      "label": "Portugal 4-0 Liechtenstein, debut de Roberto Martínez como seleccionador",
+      "coach_name": "Roberto Martínez"
+    }
+  ]
+}

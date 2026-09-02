@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "PER",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2026-03-28T17:00:00+01:00",
+      "location": {
+        "latitude": 48.9244,
+        "longitude": 2.3601,
+        "name": "Stade de France, Saint-Denis, Francia"
+      },
+      "label": "Senegal 2-0 Perú, debut de Mano Menezes como seleccionador",
+      "coach_name": "Mano Menezes"
+    }
+  ]
+}

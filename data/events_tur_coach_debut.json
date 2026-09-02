@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "TUR",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2023-10-12T20:45:00+02:00",
+      "location": {
+        "latitude": 45.5578,
+        "longitude": 18.6767,
+        "name": "Opus Arena, Osijek, Croacia"
+      },
+      "label": "Croacia 0-1 Turquía, debut de Vincenzo Montella como seleccionador",
+      "coach_name": "Vincenzo Montella"
+    }
+  ]
+}

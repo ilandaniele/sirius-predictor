@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "POL",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2025-09-04T20:45:00+02:00",
+      "location": {
+        "latitude": 51.8935,
+        "longitude": 4.5232,
+        "name": "Stadion Feijenoord (De Kuip), Róterdam, Países Bajos"
+      },
+      "label": "Países Bajos 1-1 Polonia, debut de Jan Urban como seleccionador",
+      "coach_name": "Jan Urban"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Riyad Karim Mahrez",
+      "birth_date": "1991-02-21",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Sarcelles, Francia",
+      "latitude": 48.9959,
+      "longitude": 2.3719,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

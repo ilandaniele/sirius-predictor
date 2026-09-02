@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "GRE",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1994-06-21T12:30:00-04:00",
+      "location": {
+        "latitude": 42.0654,
+        "longitude": -71.2413,
+        "name": "Estadio Foxboro, Foxborough, Massachusetts, Estados Unidos"
+      },
+      "label": "Argentina 4-0 Grecia, debut mundialista de Grecia, Mundial 1994",
+      "coach_name": null
+    }
+  ]
+}

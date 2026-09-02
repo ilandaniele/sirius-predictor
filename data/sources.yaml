@@ -16,14 +16,24 @@
   robots_policy: review_before_enable_no_browser_bypass
   use: Regla extrapolada de confederaciones y anfitriones.
   enabled: true
+- id: fifa_format_2026
+  name: FIFA Council — formato Mundial 2026
+  grade: A
+  kind: html
+  url: https://inside.fifa.com/organisation/fifa-council/media-releases/fifa-council-approves-international-match-calendars
+  terms_url: https://www.fifa.com/terms-of-service
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Fuente oficial para 12 grupos de cuatro, dos primeros y ocho mejores terceros en la alternativa de 48.
+  enabled: true
 - id: fifa_ranking
   name: FIFA/Coca-Cola Men's World Ranking
   grade: A
-  kind: html
-  url: https://inside.fifa.com/fifa-rankings/world-ranking/men
+  kind: official_json_api
+  url: https://api.fifa.com/api/v3/fifarankings/rankingschedules/all?type=0&gender=1&language=en
+  page_url: https://inside.fifa.com/fifa-rankings/world-ranking/men
   terms_url: https://www.fifa.com/terms-of-service
-  robots_policy: review_before_enable_no_browser_bypass
-  use: Referencia futura para ratings y bombos; el parser productivo aún requiere contrato estable.
+  robots_policy: official_endpoint_used_by_public_page_low_rate_no_browser_bypass
+  use: Snapshot oficial observacional de la última publicación aprobada; no se convierte a Elo ni a bombos 2030 sin una regla preregistrada.
   enabled: true
 - id: openfootball
   name: OpenFootball World Cup
@@ -37,11 +47,20 @@
 - id: sirius_blog
   name: Juan Cruz Sirius — Astrología con rigurosidad
   grade: B
-  kind: html
+  kind: blogger_archive
   url: https://astrologiadeportivaa.blogspot.com/
   terms_url: https://policies.google.com/terms
   robots_policy: review_before_enable_archive_at_low_rate
-  use: Archivo público primario para reconstrucción y congelado de pronósticos previos al evento.
+  use: Archivo público primario paginado desde el primer post; genera candidatos que requieren revisión humana antes de entrar al modelo.
+  enabled: true
+- id: argumental_blog
+  name: Astrología Argumental — Santiago Rodríguez Spuch
+  grade: B
+  kind: blogger_archive
+  url: https://astrologiaargumental.blogspot.com/
+  terms_url: https://policies.google.com/terms
+  robots_policy: review_before_enable_archive_at_low_rate
+  use: Segunda fuente astrológica pública (método Frawley, astrología electiva y mundana); genera candidatos que requieren revisión humana antes de entrar al modelo.
   enabled: true
 - id: federations
   name: Federaciones nacionales
@@ -52,3 +71,2217 @@
   robots_policy: adapter_not_configured
   use: Entrenadores, capitanes y datos oficiales; se incorpora por adaptadores específicos.
   enabled: false
+- id: messi_international_retirement_2026
+  name: Reuters — retiro internacional de Lionel Messi
+  grade: B
+  kind: html
+  url: https://noticias.uol.com.br/ultimas-noticias/reuters/2026/08/31/messi-anuncia-aposentadoria-da-selecao-argentina.amp.htm
+  consulted_at: 2026-08-31
+  terms_url: https://sobreuol.noticias.uol.com.br/normas-de-seguranca-e-privacidade.html
+  robots_policy: review_before_enable_no_browser_bypass
+  use: Confirma el retiro de Messi de la selección argentina; no confirma a su sucesor en la capitanía.
+  enabled: true
+- id: natal_scaloni
+  name: Lionel Scaloni — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Lionel_Scaloni
+  local_path: data/natal_scaloni.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del DT de Argentina (asumido continuidad 2030 en data/scenario.yaml); hora desconocida, nunca imputada a las 12:00 — alimenta un análisis de sensibilidad horaria (signos invariantes), no una carta con hora exacta.
+  enabled: true
+- id: natal_messi
+  name: Lionel Messi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Lionel_Messi
+  local_path: data/natal_messi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del excapitán de Argentina; su retiro internacional del 31/8/2026 se documenta en messi_international_retirement_2026. Se conserva para historia y no se usa como capitán del escenario 2030. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_enzo_fernandez
+  name: Enzo Fernández — AFA + referencia geográfica Wikidata
+  grade: B
+  kind: local_natal_data
+  url: https://www.afa.com.ar/4805/posts/origen-futbolistas
+  local_path: data/natal_enzo_fernandez.json
+  consulted_at: 2026-08-31
+  terms_url: https://www.afa.com.ar/
+  robots_policy: curated_local_file_cites_public_biography
+  field_sources:
+    - fields: [person_name, birth_date, place]
+      source: Asociación del Fútbol Argentino
+      url: https://www.afa.com.ar/4805/posts/origen-futbolistas
+      consulted_at: 2026-08-31
+      grade: A
+    - fields: [latitude, longitude]
+      source: Wikidata Q781245, punto de referencia de la ciudad de General San Martín
+      url: https://www.wikidata.org/wiki/Q781245
+      consulted_at: 2026-08-31
+      grade: B
+  use: Dato histórico del capitán proyectado para Argentina en el escenario v2, reemplazado por Cristian Romero en v3. La calidad agregada es B por combinar la biografía oficial AFA (A) con un punto geográfico urbano de referencia (B), no el lugar exacto del parto. Hora desconocida, nunca imputada; sólo admite sensibilidad horaria explícita.
+  enabled: true
+- id: natal_cristian_romero
+  name: Cristian "Cuti" Romero — AFA + referencia geográfica Wikidata
+  grade: B
+  kind: local_natal_data
+  url: https://www.afa.com.ar/4374/posts/origen-futbolistas
+  local_path: data/natal_cristian_romero.json
+  consulted_at: 2026-08-31
+  terms_url: https://www.afa.com.ar/
+  robots_policy: curated_local_file_cites_public_biography
+  field_sources:
+    - fields: [person_name, birth_date, place]
+      source: Asociación del Fútbol Argentino
+      url: https://www.afa.com.ar/4374/posts/origen-futbolistas
+      consulted_at: 2026-08-31
+      grade: A
+    - fields: [latitude, longitude]
+      source: Wikidata Q44210, punto de referencia de la ciudad de Córdoba
+      url: https://www.wikidata.org/wiki/Q44210
+      consulted_at: 2026-08-31
+      grade: B
+  use: Fecha y lugar de nacimiento del capitán proyectado por el usuario para Argentina en el escenario v3. La calidad agregada es B por combinar la biografía oficial AFA (A) con un punto geográfico urbano de referencia (B), no el lugar exacto del parto. Hora desconocida, nunca imputada; sólo admite sensibilidad horaria explícita.
+  enabled: true
+- id: natal_de_la_fuente
+  name: Luis de la Fuente — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Luis_de_la_Fuente_Castillo
+  local_path: data/natal_de_la_fuente.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de España. Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_rodri
+  name: Rodri Hernández — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Rodri_Hern%C3%A1ndez
+  local_path: data/natal_rodri.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de España (confirmado durante el Mundial 2026 real). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_zidane
+  name: Zinedine Zidane — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Zinedine_Zidane
+  local_path: data/natal_zidane.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Francia (asumió el cargo el 28/07/2026, contrato hasta 2030). Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_bubista
+  name: Pedro Leitão Brito "Bubista" — Coaches' Voice (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://es.coachesvoice.com/cv/bubista-alma-humildade-e-coragem-cabo-verde/
+  local_path: data/natal_bubista.json
+  terms_url: https://es.coachesvoice.com/terms-of-use/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Cabo Verde — histórico, ya no vigente. Clasificó al país por primera vez a un Mundial (13/10/2025) y lo dirigió allí; dejó el cargo tras la eliminación en octavos ante Argentina para dirigir al RS Berkane (Marruecos); reemplazado por su exasistente Humberto Bettencourt (ver natal_bettencourt) el 19/8/2026. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_mendes_ryan
+  name: Ryan Mendes — FIFA.com / Infobae (perfil oficial)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/ryan-mendes-reaccion-empate-historico-para-cabo-verde
+  local_path: data/natal_mendes_ryan.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán oficial de Cabo Verde en el Mundial 2026 (máximo goleador histórico del equipo). Corrige una atribución inicial errónea a Roberto Lopes (defensor convocado, pero no capitán — la prensa deportiva lo mencionaba como "capitán" en un sentido informal/de liderazgo, no el brazalete oficial confirmado por la convocatoria de la FIFA). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bettencourt
+  name: Humberto Bettencourt — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Humberto_Bettencourt
+  local_path: data/natal_bettencourt.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Cabo Verde (nombrado el 19/8/2026, exasistente de Bubista, promovido tras su salida al RS Berkane). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_mbappe
+  name: Kylian Mbappé — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Kylian_Mbapp%C3%A9
+  local_path: data/natal_mbappe.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Francia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ancelotti
+  name: Carlo Ancelotti — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Carlo_Ancelotti
+  local_path: data/natal_ancelotti.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Brasil. Hora desconocida, nunca imputada a las 12:00.
+  enabled: true
+- id: natal_marquinhos
+  name: Marquinhos (Marcos Aoás Corrêa) — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Marcos_Ao%C3%A1s_Corr%C3%AAa
+  local_path: data/natal_marquinhos.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Brasil (confirmado durante el Mundial 2026 real). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_tuchel
+  name: Thomas Tuchel — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Thomas_Tuchel
+  local_path: data/natal_tuchel.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Inglaterra (la FA lo ratificó hasta julio de 2028 tras el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_kane
+  name: Harry Kane — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Harry_Kane
+  local_path: data/natal_kane.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Inglaterra. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_solbakken
+  name: Ståle Solbakken — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/St%C3%A5le_Solbakken
+  local_path: data/natal_solbakken.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Noruega. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_haaland
+  name: Erling Haaland — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Erling_Haaland
+  local_path: data/natal_haaland.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Noruega (corrige a Ødegaard, quien no es el capitán actual). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_van_bommel
+  name: Mark van Bommel — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Mark_van_Bommel
+  local_path: data/natal_van_bommel.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Bélgica (asumió el cargo el 15/08/2026, contrato hasta la Eurocopa 2028, sucediendo a Rudi García). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_tielemans
+  name: Youri Tielemans — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Youri_Tielemans
+  local_path: data/natal_tielemans.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Bélgica (nombrado por Rudi García antes del cambio de DT; sin evidencia de que van Bommel lo haya reemplazado). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_pochettino
+  name: Mauricio Pochettino — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Mauricio_Pochettino
+  local_path: data/natal_pochettino.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del entrenador de Estados Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ream
+  name: Tim Ream — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Tim_Ream
+  local_path: data/natal_ream.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Estados Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_forlan
+  name: Diego Forlán — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Diego_Forl%C3%A1n
+  local_path: data/natal_forlan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Uruguay (corrige a Bielsa, reemplazado en agosto de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_valverde
+  name: Federico Valverde — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Federico_Valverde
+  local_path: data/natal_valverde.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Uruguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_klopp
+  name: Jürgen Klopp — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Jurgen_Klopp
+  local_path: data/natal_klopp.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Alemania (asumió el cargo el 24/07/2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_kimmich
+  name: Joshua Kimmich — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Joshua_Kimmich
+  local_path: data/natal_kimmich.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Alemania. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_alfaro
+  name: Gustavo Alfaro — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Gustavo_Alfaro
+  local_path: data/natal_alfaro.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Paraguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_gomez_paraguay
+  name: Gustavo Gómez Portillo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Gustavo_G%C3%B3mez_Portillo
+  local_path: data/natal_gomez_paraguay.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Paraguay. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_jorge_jesus
+  name: Jorge Jesus — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jorge_Jesus
+  local_path: data/natal_jorge_jesus.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Portugal (corrige a Roberto Martínez, quien dejó el cargo tras la eliminación en octavos de final del Mundial 2026 ante España; Jorge Jesús asumió el 10/7/2026 hasta el Mundial 2030). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ronaldo
+  name: Cristiano Ronaldo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Cristiano_Ronaldo
+  local_path: data/natal_ronaldo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Portugal. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_xavi
+  name: Xavi Hernández — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Xavi_Hern%C3%A1ndez
+  local_path: data/natal_xavi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Países Bajos (asumió el cargo el 12/08/2026, sucediendo a Koeman). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_van_dijk
+  name: Virgil van Dijk — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Virgil_van_Dijk
+  local_path: data/natal_van_dijk.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Países Bajos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ouahbi
+  name: Mohamed Ouahbi — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.besoccer.com/coach/mohamed-ouahbi-58647
+  local_path: data/natal_ouahbi.json
+  terms_url: https://www.besoccer.com/static/terms
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Marruecos (sucesor de Walid Regragui). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hakimi
+  name: Achraf Hakimi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Achraf_Hakimi
+  local_path: data/natal_hakimi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Marruecos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lorenzo
+  name: Néstor Lorenzo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Nestor_Lorenzo
+  local_path: data/natal_lorenzo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Colombia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_james_rodriguez
+  name: James Rodríguez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/James_Rodr%C3%ADguez
+  local_path: data/natal_james_rodriguez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Colombia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_moriyasu
+  name: Hajime Moriyasu — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hajime_Moriyasu
+  local_path: data/natal_moriyasu.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Japón. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_itakura
+  name: Kō Itakura — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/K%C5%8D_Itakura
+  local_path: data/natal_itakura.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Japón (asumió el brazalete tras el retiro de Wataru Endo por lesión durante el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_dalic
+  name: Zlatko Dalić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Zlatko_Dali%C4%87
+  local_path: data/natal_dalic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de los Emiratos Árabes Unidos (dejó Croacia tras la eliminación en dieciseisavos ante Portugal y fue nombrado por la UAEFA a inicios de agosto de 2026; corrige la asociación previa con la selección de Croacia). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_modric
+  name: Luka Modrić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Luka_Modric
+  local_path: data/natal_modric.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Croacia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_marquez_rafael
+  name: Rafael Márquez Álvarez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Rafael_M%C3%A1rquez
+  local_path: data/natal_marquez_rafael.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de México (asumió el cargo tras la eliminación de Javier Aguirre en el Mundial 2026). Capitán ver natal_montes_cesar (César Montes, brazalete confirmado en el Mundial 2026).
+  enabled: true
+- id: natal_montes_cesar
+  name: César Montes — Wikipedia / Excélsior (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/C%C3%A9sar_Montes
+  local_path: data/natal_montes_cesar.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de México en el Mundial 2026 (portó el brazalete en el debut vs Sudáfrica y en los octavos vs Inglaterra, pese a que Aguirre rotaba el brazalete en amistosos previos). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_thiaw
+  name: Pape Bouna Thiaw — CeroCero (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.ceroacero.es/entrenador/pape-thiaw/61906
+  local_path: data/natal_thiaw.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Senegal — histórico, ya no vigente. Removido tras la eliminación en octavos del Mundial 2026; reemplazado por Patrick Vieira (ver natal_vieira_patrick) el 18/8/2026.
+  enabled: true
+- id: natal_vieira_patrick
+  name: Patrick Vieira — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Patrick_Vieira
+  local_path: data/natal_vieira_patrick.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Senegal (nombrado el 18/8/2026, contrato de 4 años; exinternacional francés nacido en Dakar).
+  enabled: true
+- id: natal_koulibaly
+  name: Kalidou Koulibaly — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Kalidou_Koulibaly
+  local_path: data/natal_koulibaly.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Senegal (confirmado tras el retiro internacional de Sadio Mané). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_riemer
+  name: Brian Riemer — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Brian_Riemer
+  local_path: data/natal_riemer.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Dinamarca. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hjulmand
+  name: Morten Hjulmand — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Morten_Hjulmand
+  local_path: data/natal_hjulmand.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Dinamarca. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_yakin
+  name: Murat Yakin — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Murat_Yakin
+  local_path: data/natal_yakin.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Suiza. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_xhaka
+  name: Granit Xhaka — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Granit_Xhaka
+  local_path: data/natal_xhaka.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Suiza. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hong_myung_bo
+  name: Hong Myung-bo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hong_Myung-bo
+  local_path: data/natal_hong_myung_bo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Corea del Sur — histórico, ya no vigente. Renunció tras la eliminación en fase de grupos del Mundial 2026; la KFA está en un proceso abierto de búsqueda de un DT interino/permanente y no hay sucesor confirmado (vacante). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_son
+  name: Son Heung-min — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Son_Heung-min
+  local_path: data/natal_son.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Corea del Sur. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ghalenoei
+  name: Amir Ghalenoei — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Amir_Ghalenoei
+  local_path: data/natal_ghalenoei.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Irán. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_taremi
+  name: Mehdi Taremi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mehdi_Taremi
+  local_path: data/natal_taremi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Irán. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_marsch
+  name: Jesse Marsch — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jesse_Marsch
+  local_path: data/natal_marsch.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Canadá. Capitán ver natal_davies (Alphonso Davies, brazalete confirmado en el Mundial 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_davies
+  name: Alphonso Davies — beIN Sports / MLSSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.mlssoccer.com/news/refugee-to-canada-captain-alphonso-davies-enters-copa-america-spotlight
+  local_path: data/natal_davies.json
+  terms_url: https://www.mlssoccer.com/mls-digital-privacy-policy/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Canadá; portó el brazalete en el Mundial 2026. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_chelle
+  name: Éric Sékou Chelle — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/%C3%89ric_Chelle
+  local_path: data/natal_chelle.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nigeria (continúa en el cargo; renovación contractual a largo plazo aún sin firmar en agosto de 2026, pero sin reemplazo nombrado). Capitán ver natal_ndidi (Wilfred Ndidi, tomó el brazalete tras el retiro de William Troost-Ekong en diciembre de 2025).
+  enabled: true
+- id: natal_ndidi
+  name: Wilfred Ndidi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Wilfred_Ndidi
+  local_path: data/natal_ndidi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nigeria (desde diciembre de 2025, tras el retiro internacional de William Troost-Ekong). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_hossam_hassan
+  name: Hossam Hassan — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.besoccer.com/coach/hossam-hassan-1862
+  local_path: data/natal_hossam_hassan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Egipto. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_salah
+  name: Mohamed Salah — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mohamed_Salah
+  local_path: data/natal_salah.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Egipto. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_petkovic
+  name: Vladimir Petković — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q123937
+  local_path: data/natal_petkovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Argelia — histórico, ya no vigente. Destituido el 4/8/2026 tras la eliminación en octavos ante Suiza; al 25/8/2026 la prensa argelina reporta el proceso de sucesión como no resuelto (varios nombres rumoreados — Chelle, Xavi, Belhocine, Antar Yahia — ninguno confirmado oficialmente por la FAF; una atribución inicial a "Paulo Pinto" no pudo verificarse en ninguna fuente y se descarta). Sin sucesor confirmado (vacante). Capitán ver natal_mahrez (Riyad Mahrez, brazalete en el Mundial 2026; anunció su retiro de la selección el 2/7/2026 tras la eliminación ante Suiza — dato histórico, ya no vigente hacia adelante pero real para el ciclo mundialista); tampoco tiene sucesor confirmado (Ramy Bensebaini es el favorito extraoficial).
+  enabled: true
+- id: natal_mahrez
+  name: Riyad Mahrez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Riyad_Mahrez
+  local_path: data/natal_mahrez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Argelia durante el Mundial 2026; se retiró de la selección el 2/7/2026 tras la eliminación en dieciseisavos ante Suiza. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_popovic
+  name: Tony Popovic — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Tony_Popovic
+  local_path: data/natal_popovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Australia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ryan_mat
+  name: Mathew Ryan — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mathew_Ryan
+  local_path: data/natal_ryan_mat.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Australia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_donis
+  name: Georgios Donis — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Georgios_Donis
+  local_path: data/natal_donis.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Arabia Saudita (nombrado el 23/04/2026 tras la destitución de Hervé Renard). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_al_dawsari
+  name: Salem Al-Dawsari — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Salem_Al-Dawsari
+  local_path: data/natal_al_dawsari.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Arabia Saudita. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_christiansen
+  name: Thomas Christiansen — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Thomas_Christiansen
+  local_path: data/natal_christiansen.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Panamá. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_godoy
+  name: Aníbal Godoy — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Anibal_Godoy
+  local_path: data/natal_godoy.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Panamá. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_fae
+  name: Emerse Faé — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Emerse_Fa%C3%A9
+  local_path: data/natal_fae.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Costa de Marfil — histórico, ya no vigente. Su contrato no fue renovado (venció el 31/7/2026) tras la eliminación en octavos ante Noruega; reemplazado por Hervé Renard (ver natal_renard), en su segundo ciclo al frente del equipo.
+  enabled: true
+- id: natal_kessie
+  name: Franck Kessié — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Franck_Kessi%C3%A9
+  local_path: data/natal_kessie.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Costa de Marfil. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_rangnick
+  name: Ralf Rangnick — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ralf_Rangnick
+  local_path: data/natal_rangnick.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Austria. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_alaba
+  name: David Alaba — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/David_Alaba
+  local_path: data/natal_alaba.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Austria. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_montella
+  name: Vincenzo Montella — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Vincenzo_Montella
+  local_path: data/natal_montella.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Turquía. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_calhanoglu
+  name: Hakan Çalhanoğlu — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hakan_%C3%87alhano%C4%9Flu
+  local_path: data/natal_calhanoglu.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Turquía. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_paunovic
+  name: Veljko Paunović — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Veljko_Paunovi%C4%87
+  local_path: data/natal_paunovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Serbia (contrato confirmado hasta 2030). Capitán ver natal_mitrovic (Aleksandar Mitrović, máximo goleador histórico del equipo).
+  enabled: true
+- id: natal_mitrovic
+  name: Aleksandar Mitrović — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Aleksandar_Mitrovi%C4%87
+  local_path: data/natal_mitrovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Serbia, máximo goleador histórico de la selección (64 goles). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_maldera
+  name: Andrea Maldera — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andrea_Maldera
+  local_path: data/natal_maldera.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Ucrania (nombrado el 18/5/2026, primer técnico extranjero en el cargo, contrato de 2 años con opción de extensión).
+  enabled: true
+- id: natal_matviyenko
+  name: Mykola Matviyenko — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mykola_Matviyenko
+  local_path: data/natal_matviyenko.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán habitual de Ucrania. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_rebrov
+  name: Serhii Rebrov — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q296992
+  local_path: data/natal_rebrov.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Ucrania — histórico, ya no vigente. Su contrato fue rescindido de mutuo acuerdo tras no clasificar Ucrania al Mundial 2026; reemplazado por Andrea Maldera (ver natal_maldera) el 18/5/2026. Capitán ver natal_matviyenko (Mykola Matviyenko; Zinchenko, capitán histórico, no recuperó el puesto tras su lesión de ligamento cruzado de febrero de 2026).
+  enabled: true
+- id: natal_vidal
+  name: Arturo Vidal — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Arturo_Vidal
+  local_path: data/natal_vidal.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Chile. DT no incluido a propósito (fuentes contradictorias sobre si Ricardo Gareca seguía a cargo o fue reemplazado por un interinato de Nicolás Córdova hacia mediados de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_menezes
+  name: Mano Menezes — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mano_Menezes
+  local_path: data/natal_menezes.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Perú (confirmado en el cargo para agosto de 2026, tras el paso de Jorge Fossati). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_batista
+  name: Fernando Batista — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Fernando_Batista
+  local_path: data/natal_batista.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Costa Rica (asumió en febrero de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_galo
+  name: Orlando Galo — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Orlando_Galo
+  local_path: data/natal_galo.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Costa Rica (designado por Fernando Batista). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_blake
+  name: André Blake — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andre_Blake
+  local_path: data/natal_blake.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Jamaica. DT no incluido a propósito (Rudolph Speid solo fue confirmado como interino para el repechaje intercontinental, sin confirmación de continuidad). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_renard
+  name: Hervé Renard — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q463158
+  local_path: data/natal_renard.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Costa de Marfil (segundo ciclo; asumió el 4/8/2026, tras dejar Túnez sin ganar un partido del Mundial 2026, reemplazando a Emerse Faé — ver natal_fae). Corrige la asociación previa con la selección de Túnez, cargo que dejó vacante para tomar este. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_skhiri
+  name: Ellyes Skhiri — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ellyes_Skhiri
+  local_path: data/natal_skhiri.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Túnez (asumió tras la baja de Ferjani Sassi de la convocatoria). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_chaabani
+  name: Mouin Chaâbani — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Mo%C3%AFne_Cha%C3%A2bani
+  local_path: data/natal_chaabani.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Túnez (nombrado el 28/7/2026, reemplazando a Hervé Renard, quien se fue a dirigir a Costa de Marfil — ver natal_renard). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_pagou
+  name: David Pagou — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.besoccer.com/entrenador/david-pagou-79877
+  local_path: data/natal_pagou.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Camerún (asumió el cargo en diciembre de 2025 tras la renuncia de Marc Brys por salarios impagos). Capitanía no incluida a propósito (sin confirmación clara del capitán fijo tras el ciclo de Vincent Aboubakar). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_queiroz
+  name: Carlos Queiroz — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Carlos_Queiroz
+  local_path: data/natal_queiroz.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Ghana (asumió en abril de 2026) — histórico, ya no vigente. Su contrato (con cláusula de renovación solo si Ghana llegaba a cuartos del Mundial 2026, lo cual no ocurrió) venció el 31/7/2026; las negociaciones de renovación con la GFA se rompieron por diferencias salariales y no hay sucesor confirmado (vacante). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_ayew
+  name: Jordan Ayew — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jordan_Ayew
+  local_path: data/natal_ayew.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Ghana. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lopetegui
+  name: Julen Lopetegui — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Julen_Lopetegui
+  local_path: data/natal_lopetegui.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Qatar (desde mayo de 2025). Capitán ver natal_al_haydos (Hassan Al-Haydos, brazalete oficial confirmado en la convocatoria del Mundial 2026; Akram Afif es la figura ofensiva pero no el capitán oficial).
+  enabled: true
+- id: natal_al_haydos
+  name: Hassan Al-Haydos — beIN Sports / Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.beinsports.com/en-us/soccer/fifa-world-cup-2026/articles/julen-lopetegui-s-official-squad-for-qatar-at-the-2026-fifa-world-cup-2026-06-01
+  local_path: data/natal_al_haydos.json
+  terms_url: https://www.beinsports.com/es-us/terms-and-conditions
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán oficial de Qatar en el Mundial 2026 (confirmado en la convocatoria oficial de Julen Lopetegui). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_cannavaro
+  name: Fabio Cannavaro — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Fabio_Cannavaro
+  local_path: data/natal_cannavaro.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Uzbekistán (desde octubre de 2025, reemplazó a Timur Kapadze). Capitán ver natal_shomurodov (Eldor Shomurodov, capitán en la primera clasificación mundialista histórica del país).
+  enabled: true
+- id: natal_shomurodov
+  name: Eldor Shomurodov — Wikipedia / FIFA.com (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/en/tournaments/mens/worldcup/canadamexicousa2026/articles/eldor-shomurodov-uzbekistan-interview
+  local_path: data/natal_shomurodov.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Uzbekistán, que llevó al país a su primer Mundial de la historia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_arnold_graham
+  name: Graham Arnold — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Graham_Arnold
+  local_path: data/natal_arnold_graham.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Irak. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_jalal_hassan
+  name: Jalal Hassan — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jalal_Hassan
+  local_path: data/natal_jalal_hassan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Irak. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bazeley
+  name: Darren Bazeley — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Darren_Bazeley
+  local_path: data/natal_bazeley.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nueva Zelanda. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_wood_chris
+  name: Chris Wood — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Chris_Wood_(footballer,_born_1991)
+  local_path: data/natal_wood_chris.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nueva Zelanda. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_potter
+  name: Graham Potter — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Graham_Potter
+  local_path: data/natal_potter.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Suecia (nombrado el 20/10/2025, guió el repechaje ante Ucrania y Polonia). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lindelof
+  name: Victor Lindelöf — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Victor_Lindel%C3%B6f
+  local_path: data/natal_lindelof.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Suecia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_urban_jan
+  name: Jan Urban — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q562409
+  local_path: data/natal_urban_jan.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Polonia (nombrado el 16/07/2025, tras la destitución de Probierz). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_lewandowski
+  name: Robert Lewandowski — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Robert_Lewandowski
+  local_path: data/natal_lewandowski.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Polonia (recuperó el brazalete con la llegada de Jan Urban, tras el conflicto con el DT anterior). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_koubek
+  name: Miroslav Koubek — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Miroslav_Koubek
+  local_path: data/natal_koubek.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Chequia (nombrado el 19/12/2025, clasificó al equipo tras 20 años de ausencia mundialista) — histórico, ya no vigente. Dejó el cargo tras terminar último en su grupo del Mundial 2026; reemplazado por Santi Denia (ver natal_denia_santi) el 31/7/2026, primer extranjero en dirigir a la selección checa.
+  enabled: true
+- id: natal_denia_santi
+  name: Santi Denia — Infobae / Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.infobae.com/espana/agencias/2026/07/31/santi-denia-nuevo-entrenador-de-la-seleccion-checa-de-futbol/
+  local_path: data/natal_denia_santi.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Chequia (nombrado el 31/7/2026, primer técnico extranjero en el cargo; contrato de 2 años con opción a 2 más). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_soucek
+  name: Tomáš Souček — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Tom%C3%A1%C5%A1_Sou%C4%8Dek
+  local_path: data/natal_soucek.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del excapitán de Chequia — histórico, ya no vigente. Perdió el brazalete en marzo de 2026 por un problema disciplinario (el plantel no saludó a los hinchas tras un partido en noviembre de 2025); reemplazado por Ladislav Krejčí (ver natal_krejci_ladislav), quien fue capitán durante todo el repechaje y el Mundial 2026. Esto resuelve la ambigüedad marcada anteriormente entre ambos nombres — los dos fueron correctos, en momentos distintos.
+  enabled: true
+- id: natal_krejci_ladislav
+  name: Ladislav Krejčí — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Ladislav_Krej%C4%8D%C3%AD_(futbolista_nacido_en_1999)
+  local_path: data/natal_krejci_ladislav.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Chequia (desde marzo de 2026, tras la pérdida del brazalete de Tomáš Souček). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_jovanovic
+  name: Ivan Jovanović — Wikipedia serbia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://sr.wikipedia.org/sr-el/%D0%98%D0%B2%D0%B0%D0%BD_%D0%88%D0%BE%D0%B2%D0%B0%D0%BD%D0%BE%D0%B2%D0%B8%D1%9B
+  local_path: data/natal_jovanovic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Grecia (extendió contrato en mayo de 2025 hasta 2028). Capitán ver natal_bakasetas (Anastasios Bakasetas).
+  enabled: true
+- id: natal_bakasetas
+  name: Anastasios Bakasetas — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Anastasios_Bakasetas
+  local_path: data/natal_bakasetas.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Grecia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_molina
+  name: José Francisco Molina — Transfermarkt (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.transfermarkt.us/jose-francisco-molina/profil/trainer/19302
+  local_path: data/natal_molina.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Honduras (asumió en marzo de 2026, proyecto de cuatro años rumbo al Mundial 2030). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_tena
+  name: Luis Fernando Tena — Transfermarkt (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.transfermarkt.us/luis-fernando-tena/profil/trainer/3718
+  local_path: data/natal_tena.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Guatemala (continuidad confirmada para el proceso 2026-2030). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_broos
+  name: Hugo Broos — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Hugo_Broos
+  local_path: data/natal_broos.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Sudáfrica (en el cargo desde mayo de 2021) — histórico, ya no vigente. Anunció su salida el 10/7/2026 tras el Mundial; reemplazado por Pitso Mosimane (ver natal_mosimane), aprobado por la SAFA el 8/8/2026 (segundo ciclo).
+  enabled: true
+- id: natal_mosimane
+  name: Pitso Mosimane — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Pitso_Mosimane
+  local_path: data/natal_mosimane.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Sudáfrica (segundo ciclo, aprobado por la SAFA el 8/8/2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_williams_ronwen
+  name: Ronwen Williams — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ronwen_Williams
+  local_path: data/natal_williams_ronwen.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Sudáfrica. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_desabre
+  name: Sébastien Desabre — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/S%C3%A9bastien_Desabre
+  local_path: data/natal_desabre.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de la República Democrática del Congo. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_mbemba
+  name: Chancel Mbemba — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Chancel_Mbemba
+  local_path: data/natal_mbemba.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de la República Democrática del Congo. Se usa la fecha oficial determinada por la investigación de la FIFA (08/08/1994) entre varios registros contradictorios. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_khaseif
+  name: Ali Khaseif — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Ali_Khasif
+  local_path: data/natal_khaseif.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de los Emiratos Árabes Unidos. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bilic
+  name: Slaven Bilić — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Slaven_Bili%C4%87
+  local_path: data/natal_bilic.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Croacia (nombrado a mediados de julio de 2026, tras la dimisión de Zlatko Dalić; Modrić continúa como capitán, sin cambios). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_shao_jiayi
+  name: Shao Jiayi — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Shao_Jiayi
+  local_path: data/natal_shao_jiayi.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de China (desde 2025). Capitanía no incluida a propósito (sin confirmación clara). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_sellami
+  name: Jamal Sellami — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Jamal_Sellami
+  local_path: data/natal_sellami.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Jordania — histórico, ya no vigente. Dejó el cargo aproximadamente una semana después de la eliminación en fase de grupos del Mundial 2026; reemplazado por Badou Zaki (ver natal_zaki_badou).
+  enabled: true
+- id: natal_zaki_badou
+  name: Badou Zaki (Ezzaki Badou) — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.wikipedia.org/wiki/Ezzaki_Badou
+  local_path: data/natal_zaki_badou.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Jordania (nombrado julio de 2026, contrato de un año). Exarquero y capitán histórico de la selección de Marruecos (Mundial 1986), Balón de Oro africano 1986.
+  enabled: true
+- id: natal_al_tamari
+  name: Mousa Al-Tamari — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Musa_Al-Taamari
+  local_path: data/natal_al_tamari.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Jordania (primera participación mundialista histórica del país). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_herdman
+  name: John Herdman — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/John_Herdman
+  local_path: data/natal_herdman.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Indonesia (nombrado el 03/01/2026, contrato hasta 2028, sucedió a Patrick Kluivert). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_klok
+  name: Marc Klok — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q15729575
+  local_path: data/natal_klok.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Indonesia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_sidaner
+  name: Johann Sidaner — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Johann_Sidaner
+  local_path: data/natal_sidaner.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Nueva Caledonia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_zeoula
+  name: César Zeoula — Wikidata (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://www.wikidata.org/wiki/Q1150736
+  local_path: data/natal_zeoula.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Nueva Caledonia. Hora desconocida, nunca imputada.
+  enabled: true
+- id: events_arg_world_cup_debut
+  name: Argentina — debut mundialista 1930 (Wikipedia)
+  grade: B
+  kind: local_team_events
+  url: https://es.wikipedia.org/wiki/Anexo:Partidos_de_la_selecci%C3%B3n_de_f%C3%BAtbol_de_Argentina
+  local_path: data/events_arg_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Argentina (15/7/1930, 16hs, Montevideo vs Francia), tal como la cita Juan Cruz Sirius en su metodología pública ("carta debut de Argentina en los mundiales"). Evento real con hora documentada, no una carta natal personal.
+  enabled: true
+- id: events_arg_coach_debut
+  name: Debut de Lionel Scaloni como DT de Argentina — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.ar/futbol/guatemala/nota/_/id/11383599/amistoso-guatemala-marco-inicio-lionel-scaloni-argentina-convertirse-campen-del-mundo
+  local_path: data/events_arg_coach_debut.json
+  terms_url: https://espn.com.ar/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Lionel Scaloni como DT interino de Argentina (7/9/2018, Los Angeles Memorial Coliseum, vs Guatemala) — el equivalente real y verificable a la "carta del ciclo Scaloni" que cita Sirius, sin usar su hora de nacimiento personal (que él mismo declara no tener).
+  enabled: true
+- id: events_esp_coach_debut
+  name: Debut de Luis de la Fuente como seleccionador de España — RFEF
+  grade: B
+  kind: local_team_events
+  url: https://rfef.es/es/noticias/cronica-espana-noruega-la-rosaleda
+  local_path: data/events_esp_coach_debut.json
+  terms_url: https://rfef.es/es/aviso-legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Luis de la Fuente como seleccionador de España (25/3/2023, La Rosaleda, Málaga, vs Noruega). Evento real con hora documentada, técnica "coach_cycle" de la metodología pública de Sirius.
+  enabled: true
+- id: events_esp_world_cup_debut
+  name: Debut mundialista de España — Mundial 1934 (Los Mundiales de Fútbol / RFEF)
+  grade: B
+  kind: local_team_events
+  url: https://www.losmundialesdefutbol.com/partidos/1934_espana_brasil.php
+  local_path: data/events_esp_world_cup_debut.json
+  terms_url: https://www.losmundialesdefutbol.com/aviso-legal.php
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de España (27/5/1934, Estadio Luigi Ferraris, Génova, vs Brasil, 3-1, octavos de final del Mundial 1934). Evento real con hora documentada (15:30), técnica "wc_debut" de la metodología pública de Sirius.
+  enabled: true
+- id: events_bra_coach_debut
+  name: Debut de Carlo Ancelotti como DT de Brasil — Infobae
+  grade: B
+  kind: local_team_events
+  url: https://www.infobae.com/colombia/deportes/2025/06/05/ecuador-vs-brasil-hora-y-donde-ver-en-colombia-el-debut-de-carlo-ancelotti-por-la-fecha-15-de-las-eliminatorias-sudamericanas-2026/
+  local_path: data/events_bra_coach_debut.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Carlo Ancelotti como DT de Brasil (6/6/2025, Estadio Banco Pichincha, Guayaquil, vs Ecuador). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_eng_coach_debut
+  name: Debut de Thomas Tuchel como seleccionador de Inglaterra — Sky Sports
+  grade: B
+  kind: local_team_events
+  url: https://www.skysports.com/football/news/12098/13331110/england-2-0-albania-thomas-tuchels-team-assessed-after-world-cup-qualifier-win-at-wembley
+  local_path: data/events_eng_coach_debut.json
+  terms_url: https://www.skysports.com/termsandconditions
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Thomas Tuchel como seleccionador de Inglaterra (21/3/2025, Wembley, vs Albania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_por_coach_debut
+  name: Debut de Roberto Martínez como seleccionador de Portugal — The National
+  grade: B
+  kind: local_team_events
+  url: https://www.thenationalnews.com/sport/2023/03/22/roberto-martinez-starts-portugal-reign-with-shadow-of-cristiano-ronaldo-looming-large/
+  local_path: data/events_por_coach_debut.json
+  terms_url: https://www.thenationalnews.com/terms-and-conditions/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Roberto Martínez como seleccionador de Portugal (23/3/2023, Estádio José Alvalade, Lisboa, vs Liechtenstein). Ciclo histórico, ya no vigente — Martínez dejó el cargo tras el Mundial 2026 y Jorge Jesús asumió el 10/7/2026; el debut de Jesús está programado para el 24/9/2026 (aún no ocurrido) y se agregará como evento propio cuando se dispute. Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_mar_coach_debut
+  name: Debut de Mohamed Ouahbi como seleccionador de Marruecos — beIN Sports
+  grade: B
+  kind: local_team_events
+  url: https://www.beinsports.com/es-us/football/amistosos/articles/marruecos-vs-ecuador-fecha-horario-y-todo-lo-que-debes-saber-del-amistoso-rumbo-al-mundial-2026-2026-03-27
+  local_path: data/events_mar_coach_debut.json
+  terms_url: https://www.beinsports.com/es-us/terms-and-conditions
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Mohamed Ouahbi como seleccionador de Marruecos (27/3/2026, Estadio Cívitas Metropolitano, Madrid, vs Ecuador). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_den_coach_debut
+  name: Debut de Brian Riemer como seleccionador de Dinamarca — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/698995/espana-dinamarca
+  local_path: data/events_den_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Brian Riemer como seleccionador de Dinamarca (15/11/2024, Parken, Copenhague, vs España). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_kor_coach_debut
+  name: Debut de Hong Myung-bo en su segunda etapa como seleccionador de Corea del Sur — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/710436/palestina-corea-del-sur
+  local_path: data/events_kor_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hong Myung-bo en su segunda etapa como seleccionador de Corea del Sur (5/9/2024, Seoul World Cup Stadium, vs Palestina). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_can_coach_debut
+  name: Debut de Jesse Marsch como seleccionador de Canadá — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/700290/canada-paises-bajos
+  local_path: data/events_can_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jesse Marsch como seleccionador de Canadá (6/6/2024, De Kuip, Róterdam, vs Países Bajos). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_swe_coach_debut
+  name: Debut de Graham Potter como seleccionador de Suecia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/724897/suecia-suiza
+  local_path: data/events_swe_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Graham Potter como seleccionador de Suecia (15/11/2025, Stade de Genève, vs Suiza). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_pol_coach_debut
+  name: Debut de Jan Urban como seleccionador de Polonia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/724978/polonia-paises-bajos
+  local_path: data/events_pol_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jan Urban como seleccionador de Polonia (4/9/2025, De Kuip, Róterdam, vs Países Bajos). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_gre_coach_debut
+  name: Debut de Ivan Jovanović como seleccionador de Grecia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/698905/finlandia-grecia
+  local_path: data/events_gre_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ivan Jovanović como seleccionador de Grecia (7/9/2024, Georgios Karaiskakis, El Pireo, vs Finlandia). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_nga_coach_debut
+  name: Debut de Éric Chelle como seleccionador de Nigeria — Soccernet NG
+  grade: B
+  kind: local_team_events
+  url: https://soccernet.ng/2025/03/rwanda-vs-nigeria-super-eagles.html
+  local_path: data/events_nga_coach_debut.json
+  terms_url: https://soccernet.ng/about
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Éric Chelle como seleccionador de Nigeria (21/3/2025, Estadio Amahoro, Kigali, vs Ruanda). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_aut_coach_debut
+  name: Debut de Ralf Rangnick como seleccionador de Austria — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/624022
+  local_path: data/events_aut_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ralf Rangnick como seleccionador de Austria (3/6/2022, Opus Arena, Osijek, vs Croacia). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_tur_coach_debut
+  name: Debut de Vincenzo Montella como seleccionador de Turquía — Fotmob/ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/655392
+  local_path: data/events_tur_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Vincenzo Montella como seleccionador de Turquía (12/10/2023, Opus Arena, Osijek, vs Croacia — no confundir con el partido de la Eurocopa 2024 vs Georgia, ya jugado bajo su mandato pero no su debut). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_ukr_coach_debut
+  name: Debut de Serhii Rebrov como seleccionador de Ucrania — Mediotiempo
+  grade: B
+  kind: local_team_events
+  url: https://www.mediotiempo.com/futbol/resumen-partido-alemania-vs-ucrania-amistoso-2023
+  local_path: data/events_ukr_coach_debut.json
+  terms_url: https://www.mediotiempo.com/aviso-legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Serhii Rebrov como seleccionador de Ucrania (12/6/2023, Weserstadion, Bremen, vs Alemania, el partido número 1000 de Alemania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_pan_coach_debut
+  name: Debut de Thomas Christiansen como seleccionador de Panamá — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/586120/panama-costa-rica
+  local_path: data/events_pan_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Thomas Christiansen como seleccionador de Panamá (10/10/2020, Estadio Nacional, San José, vs Costa Rica). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_uzb_coach_debut
+  name: Debut de Fabio Cannavaro como seleccionador de Uzbekistán — Kursiv Media
+  grade: B
+  kind: local_team_events
+  url: https://uz.kursiv.media/en/2025-10-10/uzbekistan-defeat-kuwait-2-0-under-fabio-cannavaros-leadership/
+  local_path: data/events_uzb_coach_debut.json
+  terms_url: https://uz.kursiv.media/en/terms/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Fabio Cannavaro como seleccionador de Uzbekistán (9/10/2025, Estadio Olímpico, Taskent, vs Kuwait). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_ksa_coach_debut
+  name: Debut de Georgios Donis como seleccionador de Arabia Saudita — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/401869431/saudi-arabia-ecuador
+  local_path: data/events_ksa_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Georgios Donis como seleccionador de Arabia Saudita (30/5/2026, Sports Illustrated Stadium, Harrison NJ, vs Ecuador — no confundir con el debut mundialista vs Uruguay del 15/6/2026, ya jugado bajo su mandato pero no su debut real). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_aus_coach_debut
+  name: Debut de Tony Popovic como seleccionador de Australia — Socceroos
+  grade: B
+  kind: local_team_events
+  url: https://socceroos.com.au/news/popovic-era-begins-3-1-victory-over-china-pr-adelaide-oval
+  local_path: data/events_aus_coach_debut.json
+  terms_url: https://www.footballaustralia.com.au/terms-of-use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Tony Popovic como seleccionador de Australia (10/10/2024, Adelaide Oval, vs China). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_qat_coach_debut
+  name: Debut de Julen Lopetegui como seleccionador de Qatar — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.co.uk/football/match/_/gameId/710510/iran-qatar
+  local_path: data/events_qat_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Julen Lopetegui como seleccionador de Qatar (5/6/2025, Jassim Bin Hamad, Doha, vs Irán). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_crc_coach_debut
+  name: Debut de Fernando Batista como seleccionador de Costa Rica — La Nación
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/401862038/costa-rica-jordania
+  local_path: data/events_crc_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Fernando Batista como seleccionador de Costa Rica (27/3/2026, Mardan Sports Complex, Antalya, vs Jordania). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_tun_coach_debut
+  name: Debut de Hervé Renard como seleccionador de Túnez — FIFA
+  grade: B
+  kind: local_team_events
+  url: https://www.fifa.com/es/match-centre/match/17/285023/289273/400021475
+  local_path: data/events_tun_coach_debut.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hervé Renard como seleccionador de Túnez (20/6/2026, Estadio BBVA, Monterrey, vs Japón, el partido número 1000 de la historia de los Mundiales). Asumió en pleno Mundial 2026 tras la salida de Sabri Lamouchi, sin partidos previos de preparación. Ciclo histórico, ya no vigente — dejó Túnez el 4/8/2026 para asumir en Costa de Marfil (ver natal_renard). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cmr_coach_debut
+  name: Debut de David Pagou como seleccionador de Camerún — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/732141/gabon-camerun
+  local_path: data/events_cmr_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de David Pagou como seleccionador de Camerún (24/12/2025, Stade Adrar, Agadir, vs Gabón, Copa Africana de Naciones 2025). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_col_coach_debut
+  name: Debut de Néstor Lorenzo como seleccionador de Colombia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/645879
+  local_path: data/events_col_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Néstor Lorenzo como seleccionador de Colombia (24/9/2022, Red Bull Arena, Harrison NJ, vs Guatemala). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_irq_coach_debut
+  name: Debut de Graham Arnold como seleccionador de Irak — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/710507
+  local_path: data/events_irq_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Graham Arnold como seleccionador de Irak (5/6/2025, Basra International Stadium, vs Corea del Sur). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_per_coach_debut
+  name: Debut de Mano Menezes como seleccionador de Perú — Sofascore/365scores
+  grade: B
+  kind: local_team_events
+  url: https://www.365scores.com/es/football/match/friendly-international-570/peru-senegal-5076-5102-570
+  local_path: data/events_per_coach_debut.json
+  terms_url: https://www.365scores.com/es/terms-of-service
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Mano Menezes como seleccionador de Perú (28/3/2026, Stade de France, vs Senegal). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_fra_coach_debut
+  name: Debut programado de Zinedine Zidane como seleccionador de Francia — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.sofascore.com/football/match/turkiye-france/GObsaUb
+  local_path: data/events_fra_coach_debut.json
+  terms_url: https://www.sofascore.com/terms
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Zinedine Zidane como seleccionador de Francia (25/9/2026, Estadio de Kocaeli, vs Turquía). Fixture oficial de la UEFA Nations League con fecha y horario ya confirmados por la organización; el partido aún no se ha disputado a la fecha de esta carga, pero el momento está fijado, no es una hora imputada. Técnica "coach_cycle".
+  enabled: true
+- id: events_ger_coach_debut
+  name: Debut programado de Jürgen Klopp como seleccionador de Alemania — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.mx/futbol/partido/_/juegoId/401861041/alemania-paises-bajos
+  local_path: data/events_ger_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Jürgen Klopp como seleccionador de Alemania (24/9/2026, Johan Cruijff Arena, Ámsterdam, vs Países Bajos). Fixture oficial de la UEFA Nations League con fecha y horario ya confirmados; aún no disputado a la fecha de esta carga, pero el momento está fijado. Técnica "coach_cycle".
+  enabled: true
+- id: events_ned_coach_debut
+  name: Debut programado de Xavi Hernández como seleccionador de Países Bajos — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com.mx/futbol/partido/_/juegoId/401861041/alemania-paises-bajos
+  local_path: data/events_ned_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Xavi Hernández como seleccionador de Países Bajos (24/9/2026, Johan Cruijff Arena, Ámsterdam, vs Alemania — el mismo partido en el que debuta Klopp). Fixture oficial con fecha y horario ya confirmados. Técnica "coach_cycle".
+  enabled: true
+- id: events_mex_coach_debut
+  name: Debut programado de Rafael Márquez como seleccionador de México — fixture oficial
+  grade: B
+  kind: local_team_events
+  url: https://www.baltimoresun.com/2026/07/30/mexico-colombia-soccer-match-mt-bank-stadium-baltimore/
+  local_path: data/events_mex_coach_debut.json
+  terms_url: https://www.baltimoresun.com/terms-of-service/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Rafael Márquez como seleccionador de México (26/9/2026, M&T Bank Stadium, Baltimore, vs Colombia, amistoso del MexTour). Fixture oficial con fecha y horario ya confirmados; aún no disputado a la fecha de esta carga. Técnica "coach_cycle".
+  enabled: true
+- id: events_par_coach_debut
+  name: Debut de Gustavo Alfaro como seleccionador de Paraguay — La Nación
+  grade: B
+  kind: local_team_events
+  url: https://www.lanacion.com.ar/deportes/futbol/a-que-hora-juega-uruguay-vs-paraguay-por-las-eliminatorias-sudamericanas-2026-nid06092024/
+  local_path: data/events_par_coach_debut.json
+  terms_url: https://www.lanacion.com.ar/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Gustavo Alfaro como seleccionador de Paraguay (6/9/2024, Estadio Centenario, Montevideo, vs Uruguay). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_rsa_coach_debut
+  name: Debut de Hugo Broos como seleccionador de Sudáfrica — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/601982/zimbabwe-sudafrica
+  local_path: data/events_rsa_coach_debut.json
+  terms_url: https://espndeportes.espn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hugo Broos como seleccionador de Sudáfrica (3/9/2021, Estadio Nacional de Harare, vs Zimbabue). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_hon_coach_debut
+  name: Debut de José Francisco Molina como seleccionador de Honduras — Tiempo.hn
+  grade: B
+  kind: local_team_events
+  url: https://tiempo.hn/cronometro/2026/03/31/jose-francisco-molina-demostramos-caracter-fuerza-me-voy-contento-pero-hay-que-mejorar/
+  local_path: data/events_hon_coach_debut.json
+  terms_url: https://tiempo.hn/aviso-legal/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de José Francisco Molina como seleccionador de Honduras (31/3/2026, Estadio Municipal de Butarque, Leganés, vs Perú — el mismo partido en el que Perú, con Mano Menezes, jugó su segundo encuentro). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_gua_coach_debut
+  name: Debut de Luis Fernando Tena como seleccionador de Guatemala — Prensa Libre
+  grade: B
+  kind: local_team_events
+  url: https://www.prensalibre.com/deportes/futbol-nacional/guatemala-vs-cuba-cuando-y-a-que-hora-es-el-partido-de-la-eliminatoria-rumbo-a-qatar-2022/
+  local_path: data/events_gua_coach_debut.json
+  terms_url: https://www.prensalibre.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Luis Fernando Tena como seleccionador de Guatemala (24/3/2022, Estadio Pensativo, Antigua Guatemala, vs Cuba). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_idn_coach_debut
+  name: Debut de John Herdman como seleccionador de Indonesia — Suara Merdeka
+  grade: B
+  kind: local_team_events
+  url: https://www.suaramerdeka.com/bola/0416898561/jadwal-timnas-indonesia-di-fifa-series-2026-hadapi-saint-kitts-and-nevis-di-gbk
+  local_path: data/events_idn_coach_debut.json
+  terms_url: https://www.suaramerdeka.com/ketentuan-layanan
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de John Herdman como seleccionador de Indonesia (27/3/2026, Gelora Bung Karno, Yakarta, vs San Cristóbal y Nieves, FIFA Series 2026). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_irn_coach_debut
+  name: Debut de Amir Ghalenoei como seleccionador de Irán — HispanTV
+  grade: B
+  kind: local_team_events
+  url: https://www.hispantv.com/noticias/deporte/562737/iran-rusia-futbol-amistoso
+  local_path: data/events_irn_coach_debut.json
+  terms_url: https://www.hispantv.com/paginas/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Amir Ghalenoei como seleccionador de Irán, segundo ciclo tras 16 años (23/3/2023, Azadi Stadium, Teherán, vs Rusia, 1-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_egy_coach_debut
+  name: Debut de Hossam Hassan como seleccionador de Egipto — TUDN
+  grade: B
+  kind: local_team_events
+  url: https://www.tudn.com/futbol/amistoso/egipto-vs-nueva-zelanda-amistosos-internacionales-2024-03-22
+  local_path: data/events_egy_coach_debut.json
+  terms_url: https://www.tudn.com/terminos-de-uso
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hossam Hassan como seleccionador de Egipto (22/3/2024, New Administrative Capital Stadium, El Cairo, vs Nueva Zelanda, 1-0). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_alg_coach_debut
+  name: Debut de Vladimir Petković como seleccionador de Argelia — 365Scores
+  grade: B
+  kind: local_team_events
+  url: https://www.365scores.com/es/football/match/friendly-international-570/algeria-bolivia-5077-5109-570
+  local_path: data/events_alg_coach_debut.json
+  terms_url: https://www.365scores.com/es/terms-of-use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Vladimir Petković como seleccionador de Argelia (22/3/2024, Estadio Nelson Mandela, Argel, vs Bolivia, remontada 3-2). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_sui_coach_debut
+  name: Debut de Murat Yakin como seleccionador de Suiza — Infobae
+  grade: B
+  kind: local_team_events
+  url: https://www.infobae.com/america/agencias/2021/09/01/2-1-grecia-cae-en-el-estreno-de-murat-yakin-como-nuevo-seleccionador-suizo/
+  local_path: data/events_sui_coach_debut.json
+  terms_url: https://www.infobae.com/terminos-y-condiciones/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Murat Yakin como seleccionador de Suiza (1/9/2021, St. Jakob-Park, Basilea, vs Grecia, 2-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cze_coach_debut
+  name: Debut de Ivan Hašek como seleccionador de Chequia — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://espndeportes.espn.com/futbol/partido/_/juegoId/694651/republica-checa-noruega
+  local_path: data/events_cze_coach_debut.json
+  terms_url: https://espndeportes.espn.com/page/terms-of-use/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Ivan Hašek como seleccionador de Chequia (22/3/2024, Ullevaal Stadion, Oslo, vs Noruega, 2-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_civ_coach_debut
+  name: Debut de Emerse Faé como seleccionador de Costa de Marfil — France 24
+  grade: B
+  kind: local_team_events
+  url: https://www.france24.com/es/deportes/20240130-la-anfitriona-costa-de-marfil-elimina-al-actual-campe%C3%B3n-senegal-en-un-thriller-de-la-copa-africana
+  local_path: data/events_civ_coach_debut.json
+  terms_url: https://www.france24.com/es/conditions-dutilisation/
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Emerse Faé como seleccionador interino de Costa de Marfil (29/1/2024, Stade Charles Konan Banny, Yamoussoukro, vs Senegal, 1-1, 5-4 en penales, octavos de la CAN 2024 que terminarían ganando). Ciclo histórico, ya no vigente — no renovado tras el Mundial 2026, reemplazado por Hervé Renard el 4/8/2026 (ver natal_renard). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_jpn_coach_debut
+  name: Debut de Hajime Moriyasu como seleccionador de Japón — JFA / Japan Times
+  grade: B
+  kind: local_team_events
+  url: https://www.jfa.jp/eng/samuraiblue/news/00018066/
+  local_path: data/events_jpn_coach_debut.json
+  terms_url: https://www.jfa.jp/eng/aboutus/agreement.html
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Hajime Moriyasu como seleccionador de Japón (11/9/2018, Panasonic Stadium Suita, Osaka, vs Costa Rica, 3-0, Kirin Challenge Cup 2018). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: events_cod_coach_debut
+  name: Debut de Sébastien Desabre como seleccionador de RD Congo — ESPN
+  grade: B
+  kind: local_team_events
+  url: https://www.espn.com/soccer/match/_/gameId/654038/burkina-faso-rd-del-congo
+  local_path: data/events_cod_coach_debut.json
+  terms_url: https://www.espn.com/espn/page/terms
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut de Sébastien Desabre como seleccionador de RD Congo (23/9/2022, Stade Père-Jégo, Bobo-Dioulasso, vs Burkina Faso, 0-1). Evento real con hora documentada, técnica "coach_cycle".
+  enabled: true
+- id: natal_advocaat
+  name: Dick Advocaat — FIFA.com (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://www.fifa.com/es/tournaments/mens/worldcup/canadamexicousa2026/articles/dick-advocaat-entrenador-curazao-viaje-emocional-copa-mundial
+  local_path: data/natal_advocaat.json
+  terms_url: https://www.fifa.com/es/legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Curazao (clasificó al país por primera vez a un Mundial; renunció en febrero de 2026 por motivos familiares y regresó en mayo de 2026 para dirigir el Mundial 2026, con 78 años). Continuidad tras el Mundial no confirmada en fuentes disponibles a agosto 2026 — se documenta como último dato confirmado. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_bacuna
+  name: Leandro Bacuna — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Leandro_Bacuna
+  local_path: data/natal_bacuna.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Curazao en el Mundial 2026 (nación más pequeña en clasificar a un Mundial, ~160.000 habitantes). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_badia_david
+  name: David Badía Cequier — Haitian Times (perfil)
+  grade: B
+  kind: local_natal_data
+  url: https://haitiantimes.com/2026/08/23/grenadye-alaso-men-mwen-spanish-coach-david-badia-takes-charge-of-haiti/
+  local_path: data/natal_badia_david.json
+  terms_url: https://haitiantimes.com/terms-of-service/
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador actual de Haití, nombrado el 22/8/2026 en reemplazo de Sébastien Migné (quien clasificó y dirigió al equipo en el Mundial 2026, su primera participación en 52 años, y dejó el cargo en julio de 2026). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_placide
+  name: Johny Placide — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Johny_Placide
+  local_path: data/natal_placide.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán (arquero) de Haití en el Mundial 2026, primera participación del país en 52 años. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_clarke_steve
+  name: Steve Clarke — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Steve_Clarke
+  local_path: data/natal_clarke_steve.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del exseleccionador de Escocia (en el cargo desde mayo de 2019; clasificó al país a su primer Mundial desde 1998) — histórico, ya no vigente. Renunció tras la eliminación en fase de grupos del Mundial 2026, apenas 30 días después de firmar una extensión de contrato hasta 2030; reemplazado por Sébastien Pocognoli (ver natal_pocognoli).
+  enabled: true
+- id: natal_pocognoli
+  name: Sébastien Pocognoli — BeSoccer (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://es.besoccer.com/entrenador/sebastien-pocognoli/63761
+  local_path: data/natal_pocognoli.json
+  terms_url: https://es.besoccer.com/aviso-legal
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Escocia (exentrenador del Union Saint-Gilloise y del Mónaco). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_robertson_andy
+  name: Andy Robertson — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Andrew_Robertson_(footballer)
+  local_path: data/natal_robertson_andy.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Escocia en el Mundial 2026. Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_barbarez
+  name: Sergej Barbarez — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Sergej_Barbarez
+  local_path: data/natal_barbarez.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Fecha de nacimiento del seleccionador de Bosnia y Herzegovina (nombrado en abril de 2024; clasificó al país a su segundo Mundial de la historia tras vencer a Italia en penales en la repesca). Hora desconocida, nunca imputada.
+  enabled: true
+- id: natal_dzeko
+  name: Edin Džeko — Wikipedia (biografía)
+  grade: B
+  kind: local_natal_data
+  url: https://en.wikipedia.org/wiki/Edin_D%C5%BEeko
+  local_path: data/natal_dzeko.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_biography
+  use: Dato histórico de nacimiento del capitán de Bosnia y Herzegovina en el Mundial 2026, máximo goleador histórico del equipo (6 goles en esta clasificación, a los 39-40 años). Hora desconocida, nunca imputada.
+  enabled: true
+- id: events_fra_world_cup_debut
+  name: Debut mundialista de Francia — Wikipedia (Mundial 1930, Grupo 1)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_1
+  local_path: data/events_fra_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Francia (13/7/1930, Estadio Pocitos, Montevideo, vs México, 4-1, hora oficial UYT histórica de Uruguay UTC-3:30). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ger_world_cup_debut
+  name: Debut mundialista de Alemania — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_ger_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Alemania (27/5/1934, Stadio Giovanni Berta, Florencia, vs Bélgica, 5-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_ned_world_cup_debut
+  name: Debut mundialista de Países Bajos — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_ned_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Países Bajos (27/5/1934, Stadio San Siro, Milán, vs Suiza, derrota 2-3). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_aut_world_cup_debut
+  name: Debut mundialista de Austria — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_aut_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Austria (27/5/1934, Stadio Benito Mussolini, Turín, vs Francia, 3-2 en prórroga). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_sui_world_cup_debut
+  name: Debut mundialista de Suiza — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_sui_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Suiza (27/5/1934, Stadio San Siro, Milán, vs Países Bajos, 3-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_swe_world_cup_debut
+  name: Debut mundialista de Suecia — Wikipedia (Mundial 1934)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup_final_tournament
+  local_path: data/events_swe_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Suecia (27/5/1934, Stadio Littoriale, Bolonia, vs Argentina, 3-2). Evento real con hora documentada (16:00 CET), técnica "wc_debut".
+  enabled: true
+- id: events_pol_world_cup_debut
+  name: Debut mundialista de Polonia — Wikipedia (Brasil vs Polonia 1938)
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/Brazil_v_Poland_(1938_FIFA_World_Cup)
+  local_path: data/events_pol_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Polonia (5/6/1938, Stade de la Meinau, Estrasburgo, vs Brasil, derrota 5-6 en prórroga). Evento real con hora documentada (17:00, confirmada por relato del árbitro), técnica "wc_debut".
+  enabled: true
+- id: events_alg_world_cup_debut
+  name: Debut mundialista de Argelia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_2
+  local_path: data/events_alg_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Argelia (16/6/1982, El Molinón, Gijón, vs Alemania Occidental, 2-1 (el 'Milagro de Gijón')). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_aus_world_cup_debut
+  name: Debut mundialista de Australia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1974_FIFA_World_Cup_Group_1
+  local_path: data/events_aus_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Australia (14/6/1974, Volksparkstadion, Hamburgo, vs Alemania Oriental, derrota 0-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_bra_world_cup_debut
+  name: Debut mundialista de Brasil — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_2
+  local_path: data/events_bra_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Brasil (14/7/1930, Estadio Parque Central, Montevideo, vs Yugoslavia, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_can_world_cup_debut
+  name: Debut mundialista de Canadá — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_C
+  local_path: data/events_can_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Canadá (1/6/1986, Estadio Nou Camp, León, vs Francia, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_civ_world_cup_debut
+  name: Debut mundialista de Costa de Marfil — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_C
+  local_path: data/events_civ_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Costa de Marfil (10/6/2006, Volksparkstadion, Hamburgo, vs Argentina, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cmr_world_cup_debut
+  name: Debut mundialista de Camerún — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_1
+  local_path: data/events_cmr_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Camerún (19/6/1982, Estadio Riazor, La Coruña, vs Polonia, empate 0-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cod_world_cup_debut
+  name: Debut mundialista de República Democrática del Congo — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1974_FIFA_World_Cup_Group_2
+  local_path: data/events_cod_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de República Democrática del Congo (14/6/1974, Westfalenstadion, Dortmund, vs Escocia, derrota 0-2, bajo el nombre Zaire (misma federación continua, renombrada RD Congo en 1997)). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_col_world_cup_debut
+  name: Debut mundialista de Colombia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1962_FIFA_World_Cup_Group_1
+  local_path: data/events_col_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Colombia (30/5/1962, Estadio Carlos Dittborn, Arica, vs Uruguay, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_crc_world_cup_debut
+  name: Debut mundialista de Costa Rica — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1990_FIFA_World_Cup_Group_C
+  local_path: data/events_crc_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Costa Rica (11/6/1990, Estadio Luigi Ferraris, Génova, vs Escocia, victoria 1-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_cze_world_cup_debut
+  name: Debut mundialista de Chequia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_E
+  local_path: data/events_cze_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Chequia (12/6/2006, Arena AufSchalke, Gelsenkirchen, vs Estados Unidos, victoria 3-0, de la Chequia moderna (federación distinta de Checoslovaquia, disuelta en 1993)). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_den_world_cup_debut
+  name: Debut mundialista de Dinamarca — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_E
+  local_path: data/events_den_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Dinamarca (4/6/1986, Estadio Neza 86, Ciudad Nezahualcóyotl, vs Escocia, victoria 1-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_egy_world_cup_debut
+  name: Debut mundialista de Egipto — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1934_FIFA_World_Cup
+  local_path: data/events_egy_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Egipto (27/5/1934, Stadio Giorgio Ascarelli, Nápoles, vs Hungría, derrota 2-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_eng_world_cup_debut
+  name: Debut mundialista de Inglaterra — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1950_FIFA_World_Cup_Group_2
+  local_path: data/events_eng_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Inglaterra (25/6/1950, Estadio do Maracaná, Río de Janeiro, vs Chile, victoria 2-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_gre_world_cup_debut
+  name: Debut mundialista de Grecia — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_D
+  local_path: data/events_gre_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Grecia (21/6/1994, Estadio Foxboro, Foxborough, vs Argentina, derrota 0-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_hon_world_cup_debut
+  name: Debut mundialista de Honduras — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1982_FIFA_World_Cup_Group_5
+  local_path: data/events_hon_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Honduras (16/6/1982, Estadio Luis Casanova, Valencia, vs España, empate 1-1, partido inaugural del Mundial 1982). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_irn_world_cup_debut
+  name: Debut mundialista de Irán — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1978_FIFA_World_Cup_Group_4
+  local_path: data/events_irn_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Irán (3/6/1978, Estadio Ciudad de Mendoza, Mendoza, vs Países Bajos, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_irq_world_cup_debut
+  name: Debut mundialista de Irak — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1986_FIFA_World_Cup_Group_B
+  local_path: data/events_irq_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Irak (4/6/1986, Estadio Toluca 70-86, Toluca, vs Paraguay, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_jpn_world_cup_debut
+  name: Debut mundialista de Japón — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_H
+  local_path: data/events_jpn_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Japón (14/6/1998, Stade de Toulouse, Toulouse, vs Argentina, derrota 0-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_kor_world_cup_debut
+  name: Debut mundialista de Corea del Sur — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1954_FIFA_World_Cup_Group_2
+  local_path: data/events_kor_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Corea del Sur (17/6/1954, Estadio Hardturm, Zúrich, vs Hungría, derrota 0-9). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ksa_world_cup_debut
+  name: Debut mundialista de Arabia Saudita — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_F
+  local_path: data/events_ksa_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Arabia Saudita (20/6/1994, RFK Stadium, Washington D.C., vs Países Bajos, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_mar_world_cup_debut
+  name: Debut mundialista de Marruecos — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1970_FIFA_World_Cup_Group_4
+  local_path: data/events_mar_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Marruecos (3/6/1970, Estadio Nou Camp, León, vs Alemania Occidental, derrota 1-2). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_mex_world_cup_debut
+  name: Debut mundialista de México — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/France_v_Mexico_(1930_FIFA_World_Cup)
+  local_path: data/events_mex_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de México (13/7/1930, Estadio Pocitos, Montevideo, vs Francia, derrota 1-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_nga_world_cup_debut
+  name: Debut mundialista de Nigeria — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1994_FIFA_World_Cup_Group_D
+  local_path: data/events_nga_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Nigeria (21/6/1994, Cotton Bowl, Dallas, vs Bulgaria, victoria 3-0). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_pan_world_cup_debut
+  name: Debut mundialista de Panamá — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2018_FIFA_World_Cup_Group_G
+  local_path: data/events_pan_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Panamá (18/6/2018, Estadio Olímpico Fisht, Sochi, vs Bélgica, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_par_world_cup_debut
+  name: Debut mundialista de Paraguay — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_4
+  local_path: data/events_par_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Paraguay (17/7/1930, Estadio Gran Parque Central, Montevideo, vs Estados Unidos, derrota 0-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_per_world_cup_debut
+  name: Debut mundialista de Perú — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1930_FIFA_World_Cup_Group_3
+  local_path: data/events_per_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Perú (14/7/1930, Estadio Pocitos, Montevideo, vs Rumania, derrota 1-3). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_por_world_cup_debut
+  name: Debut mundialista de Portugal — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1966_FIFA_World_Cup_Group_3
+  local_path: data/events_por_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Portugal (13/7/1966, Old Trafford, Mánchester, vs Hungría, victoria 3-1). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_qat_world_cup_debut
+  name: Debut mundialista de Qatar — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://www.fifa.com/en/articles/qatar-v-ecuador-to-kick-off-fifa-world-cup-2022-tm-on-20-november
+  local_path: data/events_qat_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Qatar (20/11/2022, Estadio Al Bayt, Al Khor, vs Ecuador, derrota 0-2, partido inaugural del Mundial 2022 como anfitrión). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_rsa_world_cup_debut
+  name: Debut mundialista de Sudáfrica — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1998_FIFA_World_Cup_Group_C
+  local_path: data/events_rsa_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Sudáfrica (12/6/1998, Stade Vélodrome, Marsella, vs Francia, derrota 0-3, primera participación tras el fin del apartheid). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_tun_world_cup_debut
+  name: Debut mundialista de Túnez — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1978_FIFA_World_Cup_Group_2
+  local_path: data/events_tun_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Túnez (2/6/1978, Estadio Gigante de Arroyito, Rosario, vs México, victoria 3-1, primera victoria mundialista de un equipo africano). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_tur_world_cup_debut
+  name: Debut mundialista de Turquía — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/1954_FIFA_World_Cup_Group_2
+  local_path: data/events_tur_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Turquía (17/6/1954, Estadio Wankdorf, Berna, vs Alemania Occidental, derrota 1-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_ukr_world_cup_debut
+  name: Debut mundialista de Ucrania — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2006_FIFA_World_Cup_Group_H
+  local_path: data/events_ukr_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Ucrania (14/6/2006, Zentralstadion, Leipzig, vs España, derrota 0-4). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true
+- id: events_uzb_world_cup_debut
+  name: Debut mundialista de Uzbekistán — Wikipedia
+  grade: B
+  kind: local_team_events
+  url: https://en.wikipedia.org/wiki/2026_FIFA_World_Cup_Group_K
+  local_path: data/events_uzb_world_cup_debut.json
+  terms_url: https://foundation.wikimedia.org/wiki/Policy:Terms_of_Use
+  robots_policy: curated_local_file_cites_public_record
+  use: Carta del momento exacto del debut mundialista de Uzbekistán (17/6/2026, Estadio Azteca, Ciudad de México, vs Colombia, derrota 1-3, primera clasificación histórica del país). Evento real con hora documentada, técnica "wc_debut".
+  enabled: true

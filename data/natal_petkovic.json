@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Vladimir Petković",
+      "birth_date": "1963-08-15",
+      "birth_time": null,
+      "timezone": "Europe/Sarajevo",
+      "place": "Sarajevo, Bosnia y Herzegovina",
+      "latitude": 43.8563,
+      "longitude": 18.4131,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

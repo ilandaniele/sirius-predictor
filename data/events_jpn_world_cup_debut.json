@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "JPN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1998-06-14T14:30:00+02:00",
+      "location": {
+        "latitude": 43.5828,
+        "longitude": 1.4342,
+        "name": "Stade de Toulouse, Toulouse, Francia"
+      },
+      "label": "Argentina 1-0 Japón, debut mundialista de Japón, Mundial 1998",
+      "coach_name": null
+    }
+  ]
+}

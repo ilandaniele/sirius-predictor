@@ -51,7 +51,10 @@ class SourceClaim(Base, IdMixin, TimestampMixin):
     entity_key: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
     field_name: Mapped[str] = mapped_column(String(100), nullable=False)
     value: Mapped[Any] = mapped_column(JSON, nullable=False)
+    fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     source_id: Mapped[str] = mapped_column(ForeignKey("sources.id"), nullable=False)
+    source_url: Mapped[str | None] = mapped_column(Text)
+    quality_code: Mapped[str] = mapped_column(ForeignKey("data_qualities.code"), nullable=False)
     consulted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     confidence: Mapped[float] = mapped_column(Float, nullable=False)
     official: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -98,7 +101,7 @@ class Tournament(Base, IdMixin, TimestampMixin):
     name: Mapped[str] = mapped_column(String(200), nullable=False)
     edition: Mapped[int] = mapped_column(Integer, nullable=False)
     format_id: Mapped[str] = mapped_column(ForeignKey("tournament_formats.id"), nullable=False)
-    status: Mapped[str] = mapped_column(String(40), nullable=False)
+    status: Mapped[str] = mapped_column(String(100), nullable=False)
     assumptions: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False, default=dict)
     __table_args__ = (UniqueConstraint("name", "edition"),)
 
@@ -201,7 +204,7 @@ class BirthData(Base, IdMixin, TimestampMixin):
     rodden_rating: Mapped[str | None] = mapped_column(String(8))
     __table_args__ = (
         CheckConstraint(
-            "time_known = 0 OR (birth_time IS NOT NULL AND timezone IS NOT NULL)",
+            "time_known IS FALSE OR (birth_time IS NOT NULL AND timezone IS NOT NULL)",
             name="known_time_requires_value",
         ),
     )
@@ -248,12 +251,36 @@ class AstrologyChart(Base, IdMixin, TimestampMixin):
 
     subject_type: Mapped[str] = mapped_column(String(60), nullable=False)
     subject_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    input_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
     chart_time_utc: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
     latitude: Mapped[float | None] = mapped_column(Float)
     longitude: Mapped[float | None] = mapped_column(Float)
     house_system: Mapped[str | None] = mapped_column(String(4))
     ephemeris_version: Mapped[str] = mapped_column(String(80), nullable=False)
     parameters: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    result: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+
+
+class AstrologyTimeSensitivity(Base, IdMixin, TimestampMixin):
+    """Marginalized result for a subject whose exact birth/event time is unknown.
+
+    Never stores a single guessed moment (no imputed noon): the result is a
+    scan across the full civil day, keeping only placements that are the same
+    regardless of which hour is picked (invariant_signs) plus the full
+    variable spread for transparency.
+    """
+
+    __tablename__ = "astrology_time_sensitivity"
+
+    subject_type: Mapped[str] = mapped_column(String(60), nullable=False)
+    subject_id: Mapped[str] = mapped_column(String(64), nullable=False, index=True)
+    input_hash: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    birth_date: Mapped[date] = mapped_column(Date, nullable=False)
+    timezone: Mapped[str] = mapped_column(String(80), nullable=False)
+    latitude: Mapped[float | None] = mapped_column(Float)
+    longitude: Mapped[float | None] = mapped_column(Float)
+    step_minutes: Mapped[int] = mapped_column(Integer, nullable=False)
+    ephemeris_version: Mapped[str] = mapped_column(String(80), nullable=False)
     result: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
 
 
@@ -265,6 +292,51 @@ class AstrologyTechniqueResult(Base, IdMixin, TimestampMixin):
     parameters: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     result: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     data_confidence: Mapped[float] = mapped_column(Float, nullable=False)
+
+
+class SiriusReviewCandidate(Base, IdMixin, TimestampMixin):
+    """Immutable sentence extracted from the public Sirius archive for human review."""
+
+    __tablename__ = "sirius_review_candidates"
+
+    fingerprint: Mapped[str] = mapped_column(String(64), unique=True, nullable=False)
+    post_id: Mapped[str] = mapped_column(String(160), index=True, nullable=False)
+    claim_index: Mapped[int] = mapped_column(Integer, nullable=False)
+    claim_text: Mapped[str] = mapped_column(Text, nullable=False)
+    title: Mapped[str] = mapped_column(Text, nullable=False)
+    published_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    source_id: Mapped[str] = mapped_column(String(100), nullable=False)
+    source_url: Mapped[str] = mapped_column(Text, nullable=False)
+    consulted_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    quality_code: Mapped[str] = mapped_column(ForeignKey("data_qualities.code"), nullable=False)
+    content_sha256: Mapped[str] = mapped_column(String(64), nullable=False)
+    technique_mentions: Mapped[list[str]] = mapped_column(JSON, nullable=False, default=list)
+    inferred: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    __table_args__ = (
+        UniqueConstraint("post_id", "content_sha256", "claim_index"),
+        CheckConstraint("claim_index >= 0", name="non_negative_claim_index"),
+    )
+
+
+class SiriusReviewDecision(Base, IdMixin, TimestampMixin):
+    """Append-only human decision; the latest decision determines effective status."""
+
+    __tablename__ = "sirius_review_decisions"
+
+    candidate_id: Mapped[str] = mapped_column(
+        ForeignKey("sirius_review_candidates.id"), nullable=False, index=True
+    )
+    action: Mapped[str] = mapped_column(String(16), nullable=False)
+    reviewer: Mapped[str] = mapped_column(String(160), nullable=False)
+    reason: Mapped[str] = mapped_column(Text, nullable=False)
+    decided_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), nullable=False)
+    supersedes_decision_id: Mapped[str | None] = mapped_column(
+        ForeignKey("sirius_review_decisions.id")
+    )
+    observation: Mapped[dict[str, Any] | None] = mapped_column(JSON)
+    __table_args__ = (
+        CheckConstraint("action IN ('approved','rejected')", name="valid_review_action"),
+    )
 
 
 class ModelVersion(Base, IdMixin, TimestampMixin):
@@ -283,6 +355,9 @@ class ModelVersion(Base, IdMixin, TimestampMixin):
 class PredictionSnapshot(Base, IdMixin, TimestampMixin):
     __tablename__ = "prediction_snapshots"
 
+    snapshot_key: Mapped[str | None] = mapped_column(String(64), nullable=True)
+    mode: Mapped[str | None] = mapped_column(String(40), nullable=True)
+    format_size: Mapped[int | None] = mapped_column(Integer, nullable=True)
     tournament_id: Mapped[str] = mapped_column(ForeignKey("tournaments.id"), nullable=False)
     model_version_id: Mapped[str] = mapped_column(ForeignKey("model_versions.id"), nullable=False)
     git_commit: Mapped[str] = mapped_column(String(64), nullable=False)
@@ -293,11 +368,19 @@ class PredictionSnapshot(Base, IdMixin, TimestampMixin):
     simulations: Mapped[int] = mapped_column(Integer, nullable=False)
     weights: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
     results: Mapped[dict[str, Any]] = mapped_column(JSON, nullable=False)
+    __table_args__ = (
+        UniqueConstraint("snapshot_key", "mode"),
+        CheckConstraint(
+            "format_size IS NULL OR format_size IN (48,64)",
+            name="valid_prediction_format_size",
+        ),
+    )
 
 
 class SimulationRun(Base, IdMixin, TimestampMixin):
     __tablename__ = "simulation_runs"
 
+    run_id: Mapped[str | None] = mapped_column(String(64), unique=True, nullable=True)
     prediction_snapshot_id: Mapped[str] = mapped_column(
         ForeignKey("prediction_snapshots.id"), nullable=False
     )
@@ -333,7 +416,18 @@ class BacktestRun(Base, IdMixin, TimestampMixin):
     inputs_hash: Mapped[str] = mapped_column(String(64), nullable=False)
 
 
-IMMUTABLE_MODELS = (ModelVersion, PredictionSnapshot, SimulationPath, BacktestRun)
+IMMUTABLE_MODELS = (
+    SourceClaim,
+    AstrologyChart,
+    AstrologyTechniqueResult,
+    SiriusReviewCandidate,
+    SiriusReviewDecision,
+    ModelVersion,
+    PredictionSnapshot,
+    SimulationRun,
+    SimulationPath,
+    BacktestRun,
+)
 
 
 def _prevent_mutation(_mapper: object, _connection: object, target: object) -> None:

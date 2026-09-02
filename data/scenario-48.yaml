@@ -1,0 +1,49 @@
+id: mundial-2030-sirius-48-v3
+name: Mundial 2030 Sirius Engine · alternativa 48 · escenario v3
+status: hypothetical_48_team_scenario_using_official_2026_group_structure
+as_of: 2026-08-31
+format:
+  teams: 48
+  pots: 4
+  pot_size: 12
+  groups: 12
+  group_size: 4
+  qualifiers_per_group: 2
+  best_third_placed: 8
+hosts:
+  pot: 1
+  teams: [ESP, POR, MAR, ARG, PAR, UR]
+draw:
+  version: fifa-2026-structure-projection-v1
+  group_names: [A, B, C, D, E, F, G, H, I, J, K, L]
+  confederation_limits:
+    UEFA: 2
+    default: 1
+  sampling: randomized_backtracking_with_symmetric_swaps
+  mcmc_swap_steps: 72
+  anchor_groups:
+    ARG: A
+    ESP: G
+bracket:
+  version: seeded-32-projection-v1
+  description: Clasifican los dos primeros y los ocho mejores terceros; la asignación del R32 es una proyección interna reproducible, no un cuadro oficial de 2030.
+  opposite_group_offset: 6
+final:
+  city: Madrid
+  local_date: 2030-07-21
+  timezone: Europe/Madrid
+  base_hour: 18
+  sensitivity_hours: [17, 18, 20, 21]
+  sensitivity_minutes: [-15, 0, 15]
+assumptions:
+  argentina_coach: Lionel Scaloni
+  argentina_captain: Cristian Romero
+  argentina_captain_basis: Proyección solicitada por el usuario; sin designación oficial confirmada al 2026-08-31.
+  argentina_captain_natal_source: natal_cristian_romero
+  messi_retirement_source: messi_international_retirement_2026
+  scientific_status: La astrología es una capa experimental no validada científicamente.
+models:
+  baseline_version: elo-poisson-v1
+  sirius_version: public-method-evidence-v2
+  max_sirius_elo_adjustment: 35.0
+  sirius_observations_file: data/sirius_observations.yaml

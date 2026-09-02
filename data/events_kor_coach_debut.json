@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "KOR",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-09-05T13:00:00+09:00",
+      "location": {
+        "latitude": 37.5683,
+        "longitude": 126.8971,
+        "name": "Seoul World Cup Stadium, Seúl, Corea del Sur"
+      },
+      "label": "Corea del Sur 0-0 Palestina, debut de Hong Myung-bo en su segunda etapa como seleccionador",
+      "coach_name": "Hong Myung-bo"
+    }
+  ]
+}

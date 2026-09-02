@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ladislav Krejčí",
+      "birth_date": "1999-04-20",
+      "birth_time": null,
+      "timezone": "Europe/Prague",
+      "place": "Rosice, Chequia",
+      "latitude": 49.1667,
+      "longitude": 16.3667,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

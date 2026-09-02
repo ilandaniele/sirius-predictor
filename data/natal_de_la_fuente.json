@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Luis de la Fuente Castillo",
+      "birth_date": "1961-06-21",
+      "birth_time": null,
+      "timezone": "Europe/Madrid",
+      "place": "Haro, La Rioja, España",
+      "latitude": 42.5764,
+      "longitude": -2.8459,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

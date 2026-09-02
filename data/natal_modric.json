@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Luka Modrić",
+      "birth_date": "1985-09-09",
+      "birth_time": null,
+      "timezone": "Europe/Zagreb",
+      "place": "Zadar, Croacia",
+      "latitude": 44.1194,
+      "longitude": 15.2314,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

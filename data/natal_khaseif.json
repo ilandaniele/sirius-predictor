@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ali Khaseif Humaid Khaseif Al Hosani",
+      "birth_date": "1987-06-09",
+      "birth_time": null,
+      "timezone": "Asia/Dubai",
+      "place": "Abu Dabi, Emiratos Árabes Unidos",
+      "latitude": 24.4539,
+      "longitude": 54.3773,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

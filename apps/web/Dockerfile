@@ -14,7 +14,9 @@ RUN npm run build
 
 FROM node:24-alpine AS runtime
 ENV NODE_ENV=production \
-    NEXT_TELEMETRY_DISABLED=1
+    NEXT_TELEMETRY_DISABLED=1 \
+    HOSTNAME=0.0.0.0 \
+    PORT=3000
 RUN addgroup --system --gid 1001 nodejs && adduser --system --uid 1001 nextjs
 WORKDIR /app
 COPY --from=builder --chown=nextjs:nodejs /app/public ./public

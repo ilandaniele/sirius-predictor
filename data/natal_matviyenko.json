@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mykola Oleksandrovych Matviyenko",
+      "birth_date": "1996-05-02",
+      "birth_time": null,
+      "timezone": "Europe/Simferopol",
+      "place": "Saky, Crimea, Ucrania",
+      "latitude": 45.1167,
+      "longitude": 33.6167,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "HON",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1982-06-16T21:00:00+02:00",
+      "location": {
+        "latitude": 39.4744,
+        "longitude": -0.3583,
+        "name": "Estadio Luis Casanova (hoy Mestalla), Valencia, España"
+      },
+      "label": "España 1-1 Honduras, debut mundialista de Honduras, Mundial 1982",
+      "coach_name": null
+    }
+  ]
+}

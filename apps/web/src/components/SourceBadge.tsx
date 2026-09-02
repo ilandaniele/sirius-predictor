@@ -10,8 +10,11 @@ export function SourceBadge({ source }: { source: Provenance }) {
     );
   }
   return (
-    <button className={`source quality-${source.quality}`} title={`Consultado: ${source.consulted_at}`}>
+    <span
+      className={`source quality-${source.quality} static`}
+      title={`Fuente interna del proyecto, sin URL pública · Consultado: ${source.consulted_at}`}
+    >
       {label}
-    </button>
+    </span>
   );
 }

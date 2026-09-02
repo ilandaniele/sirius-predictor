@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Aleksandar Mitrović",
+      "birth_date": "1994-09-16",
+      "birth_time": null,
+      "timezone": "Europe/Belgrade",
+      "place": "Smederevo, Serbia",
+      "latitude": 44.6636,
+      "longitude": 20.9297,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

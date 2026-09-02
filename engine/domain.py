@@ -68,8 +68,20 @@ class TournamentResult:
 
     @property
     def density_signature(self) -> str:
-        semifinalists = ",".join(sorted(self.semifinalists))
-        return f"{self.champion_id}|{self.runner_up_id}|{semifinalists}"
+        semifinals = sorted(
+            (match for match in self.matches if match.round_name == "SF"),
+            key=lambda match: match.match_index,
+        )
+        final = next((match for match in self.matches if match.round_name == "F"), None)
+        if len(semifinals) != 2 or final is None:
+            raise ValueError("a density signature requires two semifinals and one final")
+
+        semifinal_signatures = sorted(
+            f"{'-'.join(sorted((match.home_id, match.away_id)))}>{match.winner_id}"
+            for match in semifinals
+        )
+        final_pair = "-".join(sorted((final.home_id, final.away_id)))
+        return f"SF:{';'.join(semifinal_signatures)}|F:{final_pair}>{final.winner_id}"
 
 
 @dataclass(frozen=True, slots=True)
@@ -104,3 +116,5 @@ class SimulationBundle:
     convergence: Any
     cluster_counts: dict[str, int] = field(default_factory=dict)
     samples: list[TournamentResult] = field(default_factory=list)
+    sirius_assessments: dict[str, dict[str, Any]] = field(default_factory=dict)
+    sirius_evidence_audit: dict[str, Any] = field(default_factory=dict)

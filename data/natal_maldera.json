@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Andrea Maldera",
+      "birth_date": "1971-05-18",
+      "birth_time": null,
+      "timezone": "Europe/Rome",
+      "place": "Milán, Italia",
+      "latitude": 45.4642,
+      "longitude": 9.19,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

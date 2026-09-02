@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Humberto Frederico Silva Bettencourt",
+      "birth_date": "1975-04-24",
+      "birth_time": null,
+      "timezone": "Atlantic/Cape_Verde",
+      "place": "São Domingos, Cabo Verde",
+      "latitude": 15.1667,
+      "longitude": -23.5667,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

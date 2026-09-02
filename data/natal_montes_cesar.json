@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "César Jasib Montes Castro",
+      "birth_date": "1997-02-24",
+      "birth_time": null,
+      "timezone": "America/Hermosillo",
+      "place": "Hermosillo, Sonora, México",
+      "latitude": 29.0729,
+      "longitude": -110.9559,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

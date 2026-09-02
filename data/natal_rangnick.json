@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ralf Rangnick",
+      "birth_date": "1958-06-29",
+      "birth_time": null,
+      "timezone": "Europe/Berlin",
+      "place": "Backnang, Alemania",
+      "latitude": 48.9439,
+      "longitude": 9.4308,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

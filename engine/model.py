@@ -37,7 +37,41 @@ def _poisson_mass(lam: float, maximum: int = 10) -> np.ndarray:
 
 
 class FootballMatchModel:
-    """Versioned Elo-Poisson football baseline with an optional bounded Sirius layer."""
+    """Versioned Elo-Poisson football baseline with an optional bounded Sirius layer.
+
+    Two football-analytics adjustments, independent of the Sirius layer:
+
+    - ``host_advantage_elo``: the intuitive claim ("hosts overperform their
+      seeding") does NOT survive contact with the real prequential backtest in
+      packages/football/backtest.py, which calibrates this exact parameter
+      by grid-searching log-loss against every real World Cup, walk-forward
+      with no leakage. That fit is unstable on this little data — trained
+      through 2022 it lands at 0.0 (South Africa 2010 and Qatar 2022
+      underperformed as hosts, canceling Brazil 2014's and Russia 2018's
+      overperformance), but adding just one more edition (2026) swings it to
+      +50. The publish pipeline computes and publishes this fit for
+      transparency (packages/football/backtest.py::HOST_BONUS_CANDIDATES /
+      _select_beta / next_edition_calibration) but deliberately does NOT
+      apply it: Sirius's own archive shows him explicitly weighing and
+      rejecting host status as a factor (his Brazil vs Croatia post, 2014
+      opener — he asks himself whether to favor the host, decides not to,
+      and is right when Brazil doesn't win). The class-level default of 0.0
+      is therefore both the safe fallback for callers that skip calibration
+      and, currently, the value real runs pass in too.
+    - ``penalty_skill_weight``: shootout research (e.g. Bar-Eli et al. on
+      penalty psychology) finds outcomes are close to a coin flip regardless
+      of overall team quality — pressure and individual randomness dominate
+      far more than in 90 minutes of open play. The Elo-implied skill edge is
+      therefore heavily dampened toward 0.5 rather than applied at full
+      strength.
+
+    Both are constructor parameters, not just class constants, so a caller
+    (e.g. the publish pipeline) can pass in a freshly recalibrated value
+    without touching this file.
+    """
+
+    HOST_ADVANTAGE_ELO = 0.0
+    PENALTY_SKILL_WEIGHT = 0.35
 
     def __init__(
         self,
@@ -45,6 +79,8 @@ class FootballMatchModel:
         sirius: SiriusExperimentalLayer,
         mode: str | ModelMode = ModelMode.HYBRID,
         total_goals: float = 2.65,
+        host_advantage_elo: float | None = None,
+        penalty_skill_weight: float | None = None,
     ):
         aliases = {
             "baseline": ModelMode.FOOTBALL_ONLY,
@@ -61,9 +97,31 @@ class FootballMatchModel:
         self.sirius = sirius
         self.mode = normalized_mode
         self.total_goals = float(total_goals)
+        self.HOST_ADVANTAGE_ELO = (
+            float(host_advantage_elo)
+            if host_advantage_elo is not None
+            else type(self).HOST_ADVANTAGE_ELO
+        )
+        self.PENALTY_SKILL_WEIGHT = (
+            float(penalty_skill_weight)
+            if penalty_skill_weight is not None
+            else type(self).PENALTY_SKILL_WEIGHT
+        )
+
+    def _host_bonus(self, team_id: str) -> float:
+        if self.mode == ModelMode.SIRIUS_ONLY:
+            return 0.0
+        team = self.teams.get(team_id)
+        return self.HOST_ADVANTAGE_ELO if team is not None and team.host else 0.0
 
     def expected_goals(self, home_rating: float, away_rating: float) -> tuple[float, float]:
-        share = 1.0 / (1.0 + 10.0 ** ((away_rating - home_rating) / 800.0))
+        # Reuses elo_expectation's standard /400 scale so the goal split a big Elo
+        # favorite gets here matches the win probability packages/football/backtest.py
+        # validates against real World Cup results -- a separate, flatter /800 scale
+        # used to live here and silently made every large mismatch (e.g. Argentina
+        # vs a Pot 4 minnow) resolve far less decisively than the calibrated model
+        # implies, inflating upsets and draws across the whole bracket.
+        share = elo_expectation(home_rating, away_rating)
         return self.total_goals * share, self.total_goals * (1.0 - share)
 
     def probabilities_from_ratings(
@@ -87,14 +145,18 @@ class FootballMatchModel:
         kickoff: datetime | None = None,
         round_name: str | None = None,
     ) -> MatchProbabilities:
-        baseline = self.probabilities_from_ratings(ratings[home_id], ratings[away_id])
+        home_host_bonus = self._host_bonus(home_id)
+        away_host_bonus = self._host_bonus(away_id)
+        baseline = self.probabilities_from_ratings(
+            ratings[home_id] + home_host_bonus, ratings[away_id] + away_host_bonus
+        )
         adjustment = 0.0
         if self.mode != ModelMode.FOOTBALL_ONLY:
             adjustment = self.sirius.matchup_delta(
                 self.teams[home_id], self.teams[away_id], kickoff, round_name
             )
-        model_home = ratings[home_id]
-        model_away = ratings[away_id]
+        model_home = ratings[home_id] + home_host_bonus
+        model_away = ratings[away_id] + away_host_bonus
         if self.mode == ModelMode.SIRIUS_ONLY:
             model_home = 1500.0
             model_away = 1500.0
@@ -125,8 +187,8 @@ class FootballMatchModel:
     ) -> MatchResult:
         probabilities = self.probabilities(home_id, away_id, ratings, kickoff, round_name)
         adjustment = probabilities.sirius_adjustment
-        model_home = ratings[home_id]
-        model_away = ratings[away_id]
+        model_home = ratings[home_id] + self._host_bonus(home_id)
+        model_away = ratings[away_id] + self._host_bonus(away_id)
         if self.mode == ModelMode.SIRIUS_ONLY:
             model_home = 1500.0
             model_away = 1500.0
@@ -156,10 +218,11 @@ class FootballMatchModel:
                 winner = away_id
                 decided_by = "extra_time"
             else:
-                penalty_probability = elo_expectation(
+                skill_probability = elo_expectation(
                     model_home + adjustment / 2,
                     model_away - adjustment / 2,
                 )
+                penalty_probability = 0.5 + (skill_probability - 0.5) * self.PENALTY_SKILL_WEIGHT
                 winner = home_id if rng.random() < penalty_probability else away_id
                 decided_by = "penalties"
         return MatchResult(

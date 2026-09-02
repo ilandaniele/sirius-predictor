@@ -39,14 +39,14 @@ class LocalFileCollector(Collector):
         return []
 
 
-def raw_collector_from_config(record: dict[str, object], project_root: Path) -> Collector:
+def collector_spec_from_config(record: dict[str, object]) -> CollectorSpec:
     url = str(record["url"])
     is_local = not url.startswith("http")
     host = urlsplit(url).hostname if not is_local else "local.invalid"
     grade = str(record["grade"])
     terms_url = record.get("terms_url")
     robots_policy = record.get("robots_policy")
-    spec = CollectorSpec(
+    return CollectorSpec(
         source_id=str(record["id"]),
         url=url,
         grade=DataGrade(grade),
@@ -56,6 +56,11 @@ def raw_collector_from_config(record: dict[str, object], project_root: Path) -> 
         robots_policy=str(robots_policy) if robots_policy else "",
         priority={"A": 10, "B": 20, "C": 30, "D": 40, "X": 50}[grade],
     )
+
+
+def raw_collector_from_config(record: dict[str, object], project_root: Path) -> Collector:
+    spec = collector_spec_from_config(record)
+    is_local = not spec.url.startswith("http")
     if is_local:
         return LocalFileCollector(spec, project_root)
     return RawRemoteCollector(spec)

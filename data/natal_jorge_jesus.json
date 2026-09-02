@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jorge Fernando Pinheiro de Jesus",
+      "birth_date": "1954-07-24",
+      "birth_time": null,
+      "timezone": "Europe/Lisbon",
+      "place": "Amadora, Portugal",
+      "latitude": 38.7536,
+      "longitude": -9.2302,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
