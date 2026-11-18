@@ -300,7 +300,8 @@ estado de código, sin mezclar los resultados de los tres modos.
 - Ninguna calibración modifica predicciones históricas.
 - Técnicas Sirius sin datos prematch se marcan no evaluables en el backtest.
 
-Más información: [arquitectura](docs/ARCHITECTURE.md),
+Más información: [estado y restauración](docs/ESTADO_Y_RESTAURACION.md),
+[arquitectura](docs/ARCHITECTURE.md),
 [auditoría de prompts](docs/PROMPT_COMPLETION_AUDIT.md),
 [contrato de datos](docs/DATA_CONTRACT.md), [metodología](docs/METHODOLOGY.md) y
 [auditoría de seguridad](docs/SECURITY_AUDIT.md).
