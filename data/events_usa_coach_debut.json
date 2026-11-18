@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "USA",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-10-12T20:07:00-05:00",
+      "location": {
+        "latitude": 30.2525,
+        "longitude": -97.7217,
+        "name": "Q2 Stadium, Austin, Texas, Estados Unidos"
+      },
+      "label": "Estados Unidos 2-0 Panamá, debut de Mauricio Pochettino como DT",
+      "coach_name": "Mauricio Pochettino Trossero"
+    }
+  ]
+}

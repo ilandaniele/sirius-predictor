@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ENG",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1950-06-25T15:00:00-03:00",
+      "location": {
+        "latitude": -22.9121,
+        "longitude": -43.2302,
+        "name": "Estadio do Maracaná, Río de Janeiro, Brasil"
+      },
+      "label": "Inglaterra 2-0 Chile, debut mundialista de Inglaterra, Mundial 1950",
+      "coach_name": null
+    }
+  ]
+}

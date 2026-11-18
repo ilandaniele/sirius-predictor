@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mark van Bommel",
+      "birth_date": "1977-04-22",
+      "birth_time": null,
+      "timezone": "Europe/Amsterdam",
+      "place": "Maasbracht, Limburgo, Países Bajos",
+      "latitude": 51.1394,
+      "longitude": 5.8663,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

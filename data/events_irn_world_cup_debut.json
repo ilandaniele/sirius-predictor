@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "IRN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1978-06-03T16:45:00-03:00",
+      "location": {
+        "latitude": -32.8908,
+        "longitude": -68.8272,
+        "name": "Estadio Ciudad de Mendoza (hoy Malvinas Argentinas), Mendoza, Argentina"
+      },
+      "label": "Países Bajos 3-0 Irán, debut mundialista de Irán, Mundial 1978",
+      "coach_name": null
+    }
+  ]
+}

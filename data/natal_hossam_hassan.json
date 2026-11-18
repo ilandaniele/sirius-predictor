@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hossam Hassan",
+      "birth_date": "1966-08-10",
+      "birth_time": null,
+      "timezone": "Africa/Cairo",
+      "place": "Helwan, El Cairo, Egipto",
+      "latitude": 29.85,
+      "longitude": 31.3333,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Pitso John Hamilton Mosimane",
+      "birth_date": "1964-07-26",
+      "birth_time": null,
+      "timezone": "Africa/Johannesburg",
+      "place": "Kagiso, Gauteng, Sudáfrica",
+      "latitude": -26.0167,
+      "longitude": 27.7333,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

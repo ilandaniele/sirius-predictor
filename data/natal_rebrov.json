@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Serhii Rebrov",
+      "birth_date": "1974-06-03",
+      "birth_time": null,
+      "timezone": "Europe/Kyiv",
+      "place": "Kiev, Ucrania",
+      "latitude": 50.4501,
+      "longitude": 30.5234,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

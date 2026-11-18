@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Luis Fernando Tena Garduño",
+      "birth_date": "1958-01-20",
+      "birth_time": null,
+      "timezone": "America/Mexico_City",
+      "place": "Ciudad de México, México",
+      "latitude": 19.4326,
+      "longitude": -99.1332,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

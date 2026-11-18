@@ -1,12 +1,20 @@
 import type {
   ApiEnvelope,
+  AstroSource,
   BacktestResult,
+  CombinedAssessment,
+  CycleFortune,
   Draw,
   HistoryPoint,
   Prediction,
   Scenario,
+  SiriusArchive,
+  SiriusReviewDecisionInput,
+  SiriusReviewQueue,
+  SiriusReviewStatus,
   SourceRecord,
   Team,
+  TrackRecordAudit,
   UpdateEvent
 } from "./types";
 
@@ -23,20 +31,52 @@ async function request<T>(path: string, init?: RequestInit): Promise<T> {
 }
 
 export const api = {
-  scenario: () => request<ApiEnvelope<Scenario>>("/scenario"),
-  teams: () => request<ApiEnvelope<Team[]>>("/teams"),
-  latest: () => request<ApiEnvelope<Prediction | null>>("/predictions/latest"),
-  history: () => request<ApiEnvelope<HistoryPoint[]>>("/predictions/history"),
-  draw: (seed = 2030) => request<ApiEnvelope<Draw>>(`/draw?seed=${seed}`),
+  scenario: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Scenario>>(`/scenario?format_size=${formatSize}`),
+  teams: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Team[]>>(`/teams?format_size=${formatSize}`),
+  latest: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Prediction | null>>(`/predictions/latest?format_size=${formatSize}`),
+  history: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<HistoryPoint[]>>(`/predictions/history?format_size=${formatSize}`),
+  draw: (seed = 2030, formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Draw>>(`/draw?seed=${seed}&format_size=${formatSize}`),
   sources: () => request<ApiEnvelope<SourceRecord[]>>("/sources"),
+  trackRecordAudit: () => request<ApiEnvelope<TrackRecordAudit>>("/audit/track-record"),
   backtest: () => request<ApiEnvelope<BacktestResult | null>>("/backtesting/latest"),
   latestUpdate: () => request<ApiEnvelope<UpdateEvent | null>>("/updates/latest"),
-  update: async () => {
-    const response = await fetch("/api/update", {
+  siriusArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/sirius/archive"),
+  argumentalArchive: () => request<ApiEnvelope<SiriusArchive | null>>("/argumental/archive"),
+  argumentalCycleFortune: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<Record<string, CycleFortune>>>(
+      `/argumental/cycle-fortune?format_size=${formatSize}`
+    ),
+  combinedAssessment: (formatSize: 48 | 64 = 64) =>
+    request<ApiEnvelope<CombinedAssessment>>(
+      `/astrology/combined-assessment?format_size=${formatSize}`
+    ),
+  astroReviewCandidates: (source: AstroSource, status: SiriusReviewStatus = "pending", offset = 0) =>
+    request<ApiEnvelope<SiriusReviewQueue>>(
+      `/${source}/review-candidates?status=${status}&limit=200&offset=${offset}`
+    ),
+  syncAstroReviewCandidates: (source: AstroSource, apiKey: string) =>
+    request<ApiEnvelope<Record<string, unknown>>>(`/${source}/review-candidates/sync`, {
       method: "POST",
-      body: JSON.stringify({ iterations: 100_000, seed: 2030 })
-    });
-    if (!response.ok) throw new Error(`API ${response.status}: ${await response.text()}`);
-    return response.json() as Promise<{ job_id: string; status: string; detail: string }>;
-  }
+      headers: apiKey ? { "X-API-Key": apiKey } : undefined
+    }),
+  decideAstroReviewCandidate: (
+    source: AstroSource,
+    candidateId: string,
+    payload: SiriusReviewDecisionInput,
+    apiKey: string
+  ) =>
+    request<ApiEnvelope<Record<string, unknown>>>(
+      `/${source}/review-candidates/${candidateId}/decisions`,
+      {
+        method: "POST",
+        headers: apiKey ? { "X-API-Key": apiKey } : undefined,
+        body: JSON.stringify(payload)
+      }
+    ),
+  asset: (path: string) => `${API_URL}${path}`
 };

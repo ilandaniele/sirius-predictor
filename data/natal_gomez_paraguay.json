@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Gustavo Raúl Gómez Portillo",
+      "birth_date": "1993-05-06",
+      "birth_time": null,
+      "timezone": "America/Asuncion",
+      "place": "San Juan Bautista, Misiones, Paraguay",
+      "latitude": -26.6717,
+      "longitude": -57.1467,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

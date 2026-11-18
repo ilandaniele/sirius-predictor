@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Fernando Ariel Batista",
+      "birth_date": "1970-08-20",
+      "birth_time": null,
+      "timezone": "America/Argentina/Buenos_Aires",
+      "place": "Buenos Aires, Argentina",
+      "latitude": -34.6037,
+      "longitude": -58.3816,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

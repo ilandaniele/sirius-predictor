@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Anastasios Bakasetas",
+      "birth_date": "1993-06-28",
+      "birth_time": null,
+      "timezone": "Europe/Athens",
+      "place": "Corinto, Grecia",
+      "latitude": 37.9061,
+      "longitude": 22.9339,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

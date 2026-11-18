@@ -1,5 +1,8 @@
 from datetime import UTC, datetime, timedelta
 
+import pytest
+from pydantic import ValidationError
+
 from packages.common.provenance import DataGrade, SourceClaimInput, should_auto_replace
 
 
@@ -43,3 +46,8 @@ def test_newer_equal_quality_can_replace_but_inference_needs_review() -> None:
     )
     assert should_auto_replace(current, newer)
     assert not should_auto_replace(current, newer.model_copy(update={"inferred": True}))
+
+
+def test_consulted_timestamp_requires_an_explicit_timezone() -> None:
+    with pytest.raises(ValidationError, match="consulted_at must be timezone-aware"):
+        make_claim(DataGrade.B, "value", consulted_at=datetime(2026, 8, 20))

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "NGA",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2025-03-21T18:00:00+02:00",
+      "location": {
+        "latitude": -1.9537,
+        "longitude": 30.0783,
+        "name": "Estadio Amahoro, Kigali, Ruanda"
+      },
+      "label": "Ruanda vs Nigeria, debut de Éric Chelle como seleccionador",
+      "coach_name": "Éric Chelle"
+    }
+  ]
+}

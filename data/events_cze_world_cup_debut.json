@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CZE",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "2006-06-12T18:00:00+02:00",
+      "location": {
+        "latitude": 51.5548,
+        "longitude": 7.0678,
+        "name": "Arena AufSchalke, Gelsenkirchen, Alemania"
+      },
+      "label": "Chequia 3-0 Estados Unidos, debut mundialista de la Chequia moderna (federación distinta de Checoslovaquia, disuelta en 1993), Mundial 2006",
+      "coach_name": null
+    }
+  ]
+}

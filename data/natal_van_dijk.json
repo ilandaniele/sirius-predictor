@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Virgil van Dijk",
+      "birth_date": "1991-07-08",
+      "birth_time": null,
+      "timezone": "Europe/Amsterdam",
+      "place": "Breda, Países Bajos",
+      "latitude": 51.5719,
+      "longitude": 4.7683,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

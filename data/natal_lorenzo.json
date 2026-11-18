@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Néstor Gabriel Lorenzo",
+      "birth_date": "1966-02-28",
+      "birth_time": null,
+      "timezone": "America/Argentina/Buenos_Aires",
+      "place": "Ciudad Celina, Buenos Aires, Argentina",
+      "latitude": -34.5567,
+      "longitude": -58.5372,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

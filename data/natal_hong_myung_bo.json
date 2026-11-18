@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hong Myung-bo",
+      "birth_date": "1969-02-12",
+      "birth_time": null,
+      "timezone": "Asia/Seoul",
+      "place": "Seúl, Corea del Sur",
+      "latitude": 37.5665,
+      "longitude": 126.978,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

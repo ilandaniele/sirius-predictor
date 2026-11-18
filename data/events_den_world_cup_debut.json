@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "DEN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1986-06-04T16:00:00-06:00",
+      "location": {
+        "latitude": 19.4003,
+        "longitude": -99.0294,
+        "name": "Estadio Neza 86, Ciudad Nezahualcóyotl, México"
+      },
+      "label": "Dinamarca 1-0 Escocia, debut mundialista de Dinamarca, Mundial 1986",
+      "coach_name": null
+    }
+  ]
+}

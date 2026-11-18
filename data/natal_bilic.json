@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Slaven Bilić",
+      "birth_date": "1968-09-11",
+      "birth_time": null,
+      "timezone": "Europe/Zagreb",
+      "place": "Split, Croacia",
+      "latitude": 43.5081,
+      "longitude": 16.4402,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

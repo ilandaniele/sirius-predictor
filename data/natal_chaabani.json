@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mouin Chaâbani",
+      "birth_date": "1981-06-18",
+      "birth_time": null,
+      "timezone": "Africa/Tunis",
+      "place": "Béja, Túnez",
+      "latitude": 36.7256,
+      "longitude": 9.1817,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

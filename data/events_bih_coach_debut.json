@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "BIH",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-06-03T19:45:00+01:00",
+      "location": {
+        "latitude": 54.9756,
+        "longitude": -1.6217,
+        "name": "St James' Park, Newcastle upon Tyne, Inglaterra"
+      },
+      "label": "Inglaterra 3-0 Bosnia y Herzegovina, debut de Sergej Barbarez como seleccionador",
+      "coach_name": "Sergej Barbarez"
+    }
+  ]
+}

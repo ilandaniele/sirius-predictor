@@ -6,12 +6,16 @@ import random
 from collections import Counter
 from datetime import datetime, timedelta
 from pathlib import Path
+from typing import Any
 from zoneinfo import ZoneInfo
 
 import numpy as np
 import pandas as pd
 
+from packages.common.config import ROOT, get_settings
 from packages.common.types import ModelMode
+from packages.sirius import build_sirius_assessments
+from packages.sirius.models import SiriusAssessment
 
 from .config import Scenario, load_scenario, load_teams, validate_scenario
 from .domain import SimulationBundle, SimulationManifest, Team, TournamentResult
@@ -21,13 +25,63 @@ from .tournament import ROUND_SEQUENCE, simulate_tournament
 
 STAGES = ("Group", "R32", "R16", "QF", "SF", "F", "Champion")
 STAGE_INDEX = {stage: index for index, stage in enumerate(STAGES)}
+PROJECT_ROOT = ROOT
 
 
-def _input_hash(teams: list[Team], scenario: Scenario) -> str:
+def _decisive_matches(
+    result: TournamentResult,
+    team_map: dict[str, Team],
+) -> list[dict[str, Any]]:
+    matches = sorted(
+        (match for match in result.matches if match.round_name in {"SF", "F"}),
+        key=lambda match: (0 if match.round_name == "SF" else 1, match.match_index),
+    )
+    return [
+        {
+            "round": match.round_name,
+            "match_index": match.match_index,
+            "team_a_id": match.home_id,
+            "team_a": team_map[match.home_id].team,
+            "team_b_id": match.away_id,
+            "team_b": team_map[match.away_id].team,
+            "winner_id": match.winner_id,
+            "winner": team_map[str(match.winner_id)].team,
+        }
+        for match in matches
+    ]
+
+
+def _assessments(
+    teams: list[Team],
+    scenario: Scenario,
+    reviewed_observations_path: str | Path | None = None,
+) -> tuple[dict[str, SiriusAssessment], dict[str, Any]]:
+    path = PROJECT_ROOT / scenario.models.sirius_observations_file
+    return build_sirius_assessments(
+        {team.team_id for team in teams},
+        path,
+        additional_observations_path=reviewed_observations_path,
+    )
+
+
+def _input_hash(
+    teams: list[Team],
+    scenario: Scenario,
+    reviewed_observations_path: str | Path | None = None,
+) -> str:
+    static_observations_path = PROJECT_ROOT / scenario.models.sirius_observations_file
     payload = {
         "scenario": scenario.scenario_id,
         "as_of": scenario.as_of,
         "teams": [team.to_dict() for team in teams],
+        "sirius_observations_sha256": hashlib.sha256(
+            static_observations_path.read_bytes()
+        ).hexdigest(),
+        "reviewed_sirius_sha256": (
+            hashlib.sha256(Path(reviewed_observations_path).read_bytes()).hexdigest()
+            if reviewed_observations_path is not None
+            else None
+        ),
     }
     return hashlib.sha256(
         json.dumps(payload, ensure_ascii=False, sort_keys=True).encode("utf-8")
@@ -39,11 +93,23 @@ def _sensitivity_table(
     teams: list[Team],
     scenario: Scenario,
     mode: str | ModelMode,
+    reviewed_observations_path: str | Path | None = None,
+    host_advantage_elo: float | None = None,
+    penalty_skill_weight: float | None = None,
 ) -> pd.DataFrame:
     if pair is None:
         return pd.DataFrame()
-    layer = SiriusExperimentalLayer(scenario.models.max_sirius_elo_adjustment)
-    model = FootballMatchModel(teams, layer, mode=mode)
+    assessments, _ = _assessments(teams, scenario, reviewed_observations_path)
+    layer = SiriusExperimentalLayer(
+        scenario.models.max_sirius_elo_adjustment, assessments=assessments
+    )
+    model = FootballMatchModel(
+        teams,
+        layer,
+        mode=mode,
+        host_advantage_elo=host_advantage_elo,
+        penalty_skill_weight=penalty_skill_weight,
+    )
     ratings = {team.team_id: team.projected_elo for team in teams}
     team_map = {team.team_id: team.team for team in teams}
     base_date = datetime.fromisoformat(scenario.final.local_date)
@@ -82,18 +148,30 @@ def run_engine(
     scenario: Scenario,
     n: int = 5_000,
     seed: int = 2030,
-    mode: str | ModelMode = ModelMode.HYBRID,
+    mode: str | ModelMode = ModelMode.SIRIUS_ONLY,
     final_hour: int = 18,
     progress=None,
     top_bracket_limit: int = 5,
+    reviewed_observations_path: str | Path | None = None,
+    host_advantage_elo: float | None = None,
+    penalty_skill_weight: float | None = None,
 ) -> SimulationBundle:
     if n <= 0:
         raise ValueError("n must be positive")
     if final_hour not in scenario.final.sensitivity_hours:
         raise ValueError("final_hour must be one of the configured sensitivity hours")
     validate_scenario(scenario, teams)
-    layer = SiriusExperimentalLayer(scenario.models.max_sirius_elo_adjustment)
-    model = FootballMatchModel(teams, layer, mode=mode)
+    assessments, evidence_audit = _assessments(teams, scenario, reviewed_observations_path)
+    layer = SiriusExperimentalLayer(
+        scenario.models.max_sirius_elo_adjustment, assessments=assessments
+    )
+    model = FootballMatchModel(
+        teams,
+        layer,
+        mode=mode,
+        host_advantage_elo=host_advantage_elo,
+        penalty_skill_weight=penalty_skill_weight,
+    )
     rng = np.random.default_rng(seed)
     draw_rng = random.Random(seed ^ 0x5F3759DF)
     team_map = {team.team_id: team for team in teams}
@@ -150,13 +228,18 @@ def run_engine(
                 "ID": team.team_id,
                 "Selección": team.team,
                 "Campeón %": 100 * champion_probability,
-                "IC95 ± pp": 100 * margin,
-                "Final %": 100 * reached[team.team_id]["F"] / n,
-                "Semi %": 100 * reached[team.team_id]["SF"] / n,
-                "R32 %": 100 * reached[team.team_id]["R32"] / n,
                 "Elo proyectado": team.projected_elo,
-                "Índice Sirius": team.sirius_index,
-                "Confianza Sirius": team.sirius_confidence,
+                "Índice Recorrido": assessments[team.team_id].journey_index.value,
+                "Índice Coronación": assessments[team.team_id].coronation_index.value,
+                "Semi %": 100 * reached[team.team_id]["SF"] / n,
+                "Final %": 100 * reached[team.team_id]["F"] / n,
+                "R32 %": 100 * reached[team.team_id]["R32"] / n,
+                "IC95 ± pp": 100 * margin,
+                "Confianza Datos Sirius": assessments[team.team_id].data_confidence,
+                "Evidencias Sirius": (
+                    assessments[team.team_id].journey_index.evidence_count
+                    + assessments[team.team_id].coronation_index.evidence_count
+                ),
             }
         )
     ranking = pd.DataFrame(ranking_rows).sort_values("Campeón %", ascending=False)
@@ -204,17 +287,21 @@ def run_engine(
         top_brackets.append(
             {
                 "signature": signature,
+                "signature_version": "decisive-v1",
+                "scope": "SF_AND_FINAL",
                 "count": int(cluster["count"]),
                 "density_percent": 100 * int(cluster["count"]) / n,
                 "champion": team_map[representative.champion_id].team,
                 "runner_up": team_map[representative.runner_up_id].team,
+                "decisive_matches": _decisive_matches(representative, team_map),
                 "representative": representative,
             }
         )
     most_common_pair = final_pairs.most_common(1)[0][0] if final_pairs else None
-    digest = _input_hash(teams, scenario)
+    digest = _input_hash(teams, scenario, reviewed_observations_path)
+    model_version = get_settings().model_version
     run_id = hashlib.sha256(
-        f"{digest}:{n}:{seed}:{model.mode.value}:{final_hour}".encode()
+        f"{digest}:{n}:{seed}:{model.mode.value}:{final_hour}:{model_version}".encode()
     ).hexdigest()[:16]
     manifest = SimulationManifest.now(
         run_id=run_id,
@@ -236,12 +323,22 @@ def run_engine(
         argentina_groups=argentina_group_frame,
         final_pairs=final_pair_frame,
         top_brackets=top_brackets,
-        sensitivity=_sensitivity_table(most_common_pair, teams, scenario, mode),
+        sensitivity=_sensitivity_table(
+            most_common_pair,
+            teams,
+            scenario,
+            mode,
+            reviewed_observations_path,
+        ),
         convergence=pd.DataFrame(convergence_rows),
         cluster_counts={
             signature: int(cluster["count"]) for signature, cluster in clusters.items()
         },
         samples=[item["representative"] for item in top_brackets],
+        sirius_assessments={
+            team_id: assessment.to_dict() for team_id, assessment in assessments.items()
+        },
+        sirius_evidence_audit=evidence_audit,
     )
 
 
@@ -249,9 +346,8 @@ def run(df=None, n: int = 5_000, seed: int = 2030):
     """Compatibility facade returning the four original dashboard values."""
 
     del df
-    root = Path(__file__).resolve().parents[1]
-    scenario = load_scenario(root / "data" / "scenario.yaml")
-    teams = load_teams(root / "data" / "teams.csv")
+    scenario = load_scenario(ROOT / "data" / "scenario.yaml")
+    teams = load_teams(ROOT / "data" / "teams.csv")
     bundle = run_engine(teams, scenario, n=n, seed=seed)
     return (
         bundle.ranking,

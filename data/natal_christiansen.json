@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Thomas Christiansen Tarín",
+      "birth_date": "1973-03-11",
+      "birth_time": null,
+      "timezone": "Europe/Copenhagen",
+      "place": "Dinamarca",
+      "latitude": 55.6761,
+      "longitude": 12.5683,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

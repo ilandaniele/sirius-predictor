@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Graham Arnold",
+      "birth_date": "1963-08-03",
+      "birth_time": null,
+      "timezone": "Australia/Sydney",
+      "place": "Sídney, Australia",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ARG",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2018-09-07T20:00:00-07:00",
+      "location": {
+        "latitude": 34.0141,
+        "longitude": -118.2879,
+        "name": "Los Angeles Memorial Coliseum, Estados Unidos"
+      },
+      "label": "Argentina 3-0 Guatemala, debut de Lionel Scaloni como DT interino",
+      "coach_name": "Lionel Scaloni"
+    }
+  ]
+}

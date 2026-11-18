@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Tony Popovic",
+      "birth_date": "1973-07-04",
+      "birth_time": null,
+      "timezone": "Australia/Sydney",
+      "place": "Sídney, Australia",
+      "latitude": -33.8688,
+      "longitude": 151.2093,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

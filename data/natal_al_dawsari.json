@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Salem Al-Dawsari",
+      "birth_date": "1991-08-19",
+      "birth_time": null,
+      "timezone": "Asia/Riyadh",
+      "place": "Yeda, Arabia Saudita",
+      "latitude": 21.4858,
+      "longitude": 39.1925,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

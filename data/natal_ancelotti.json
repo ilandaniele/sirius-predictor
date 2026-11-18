@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Carlo Ancelotti",
+      "birth_date": "1959-06-10",
+      "birth_time": null,
+      "timezone": "Europe/Rome",
+      "place": "Reggiolo, Emilia-Romaña, Italia",
+      "latitude": 44.9186,
+      "longitude": 10.8988,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

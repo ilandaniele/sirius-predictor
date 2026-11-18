@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hugo Henri Broos",
+      "birth_date": "1952-04-10",
+      "birth_time": null,
+      "timezone": "Europe/Brussels",
+      "place": "Humbeek, Bélgica",
+      "latitude": 51.0167,
+      "longitude": 4.4667,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

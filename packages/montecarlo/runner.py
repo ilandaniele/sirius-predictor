@@ -11,9 +11,10 @@ from typing import Any
 
 import pandas as pd  # type: ignore[import-untyped]
 
-from engine.config import load_scenario, load_teams
+from engine.config import load_scenario, load_teams, teams_for_scenario
 from engine.domain import SimulationBundle
 from engine.sim import _sensitivity_table, run_engine
+from packages.common.config import get_settings
 from packages.common.types import ModelMode
 
 
@@ -32,12 +33,26 @@ class ParallelSimulationResult:
     top_brackets: list[dict[str, Any]]
     sensitivity: pd.DataFrame
     chunks: list[SimulationBundle]
+    sirius_assessments: dict[str, dict[str, Any]]
+    sirius_evidence_audit: dict[str, Any]
 
 
-def _chunk_job(arguments: tuple[str, str, int, int, str, int]) -> SimulationBundle:
-    scenario_path, teams_path, count, seed, mode, final_hour = arguments
+def _chunk_job(
+    arguments: tuple[str, str, int, int, str, int, str | None, float | None, float | None],
+) -> SimulationBundle:
+    (
+        scenario_path,
+        teams_path,
+        count,
+        seed,
+        mode,
+        final_hour,
+        reviewed_path,
+        host_advantage_elo,
+        penalty_skill_weight,
+    ) = arguments
     scenario = load_scenario(scenario_path)
-    teams = load_teams(teams_path)
+    teams = teams_for_scenario(load_teams(teams_path), scenario)
     return run_engine(
         teams,
         scenario,
@@ -46,6 +61,9 @@ def _chunk_job(arguments: tuple[str, str, int, int, str, int]) -> SimulationBund
         mode,
         final_hour,
         top_bracket_limit=100,
+        reviewed_observations_path=reviewed_path,
+        host_advantage_elo=host_advantage_elo,
+        penalty_skill_weight=penalty_skill_weight,
     )
 
 
@@ -98,20 +116,33 @@ def run_parallel(
     teams_path: str | Path,
     iterations: int = 100_000,
     seed: int = 2030,
-    mode: ModelMode = ModelMode.HYBRID,
+    mode: ModelMode = ModelMode.SIRIUS_ONLY,
     final_hour: int = 18,
     workers: int | None = None,
+    reviewed_observations_path: str | Path | None = None,
+    host_advantage_elo: float | None = None,
+    penalty_skill_weight: float | None = None,
 ) -> ParallelSimulationResult:
     if iterations <= 0:
         raise ValueError("iterations must be positive")
     scenario = load_scenario(scenario_path)
-    teams = load_teams(teams_path)
+    teams = teams_for_scenario(load_teams(teams_path), scenario)
     worker_count = max(1, min(workers or (os.cpu_count() or 1), iterations))
     base, remainder = divmod(iterations, worker_count)
     counts = [base + int(index < remainder) for index in range(worker_count)]
     seeds = [seed + 1_000_003 * index for index in range(worker_count)]
     jobs = [
-        (str(scenario_path), str(teams_path), count, chunk_seed, mode.value, final_hour)
+        (
+            str(scenario_path),
+            str(teams_path),
+            count,
+            chunk_seed,
+            mode.value,
+            final_hour,
+            str(reviewed_observations_path) if reviewed_observations_path else None,
+            host_advantage_elo,
+            penalty_skill_weight,
+        )
         for count, chunk_seed in zip(counts, seeds, strict=True)
     ]
     if worker_count == 1:
@@ -180,7 +211,15 @@ def run_parallel(
             name_to_id[str(leading_final["Finalista A"])],
             name_to_id[str(leading_final["Finalista B"])],
         )
-        sensitivity = _sensitivity_table(pair, teams, scenario, mode)
+        sensitivity = _sensitivity_table(
+            pair,
+            teams,
+            scenario,
+            mode,
+            reviewed_observations_path,
+            host_advantage_elo,
+            penalty_skill_weight,
+        )
     cluster_counts: Counter[str] = Counter()
     representatives: dict[str, dict[str, Any]] = {}
     for chunk in chunks:
@@ -197,7 +236,12 @@ def run_parallel(
         bracket["count"] = cluster_counts[str(bracket["signature"])]
         bracket["density_percent"] = 100 * int(bracket["count"]) / iterations
     run_id = hashlib.sha256(
-        f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}".encode()
+        (
+            f"{scenario.scenario_id}:{chunks[0].manifest.input_sha256}:"
+            f"{iterations}:{seed}:{mode.value}:{final_hour}:{worker_count}:"
+            f"{host_advantage_elo}:{penalty_skill_weight}:"
+            f"{get_settings().model_version}"
+        ).encode()
     ).hexdigest()[:16]
     if not math.isclose(float(ranking["Campeón %"].sum()), 100.0, abs_tol=1e-9):
         raise RuntimeError("parallel aggregation lost champion probability mass")
@@ -215,4 +259,6 @@ def run_parallel(
         top_brackets=top_brackets,
         sensitivity=sensitivity,
         chunks=chunks,
+        sirius_assessments=chunks[0].sirius_assessments,
+        sirius_evidence_audit=chunks[0].sirius_evidence_audit,
     )

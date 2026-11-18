@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Éric Sékou Chelle",
+      "birth_date": "1977-11-11",
+      "birth_time": null,
+      "timezone": "Africa/Abidjan",
+      "place": "Abiyán, Costa de Marfil",
+      "latitude": 5.3599,
+      "longitude": -4.0083,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

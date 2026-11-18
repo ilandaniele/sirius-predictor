@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Achraf Hakimi Mouh",
+      "birth_date": "1998-11-04",
+      "birth_time": null,
+      "timezone": "Europe/Madrid",
+      "place": "Madrid, España",
+      "latitude": 40.4168,
+      "longitude": -3.7038,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

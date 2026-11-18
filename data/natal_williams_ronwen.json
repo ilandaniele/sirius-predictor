@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ronwen Hayden Williams",
+      "birth_date": "1992-01-21",
+      "birth_time": null,
+      "timezone": "Africa/Johannesburg",
+      "place": "Gqeberha, Sudáfrica",
+      "latitude": -33.9608,
+      "longitude": 25.6022,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

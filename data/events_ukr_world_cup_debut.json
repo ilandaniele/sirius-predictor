@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "UKR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "2006-06-14T15:00:00+02:00",
+      "location": {
+        "latitude": 51.3458,
+        "longitude": 12.3486,
+        "name": "Zentralstadion (hoy Red Bull Arena), Leipzig, Alemania"
+      },
+      "label": "España 4-0 Ucrania, debut mundialista de Ucrania, Mundial 2006",
+      "coach_name": null
+    }
+  ]
+}

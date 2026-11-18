@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Steve Clarke",
+      "birth_date": "1963-08-29",
+      "birth_time": null,
+      "timezone": "Europe/London",
+      "place": "Saltcoats, Ayrshire, Escocia",
+      "latitude": 55.6367,
+      "longitude": -4.7864,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

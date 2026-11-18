@@ -1,7 +1,7 @@
 from __future__ import annotations
 
 import csv
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 from typing import Any
 
@@ -26,6 +26,7 @@ class FormatSpec:
     groups: int
     group_size: int
     qualifiers_per_group: int
+    best_third_placed: int = 0
 
 
 @dataclass(frozen=True, slots=True)
@@ -63,6 +64,7 @@ class ModelSpec:
     baseline_version: str
     sirius_version: str
     max_sirius_elo_adjustment: float
+    sirius_observations_file: str = "data/sirius_observations.yaml"
 
 
 @dataclass(frozen=True, slots=True)
@@ -146,6 +148,52 @@ def load_teams(path: str | Path) -> list[Team]:
         ]
 
 
+def teams_for_scenario(teams: list[Team], scenario: Scenario) -> list[Team]:
+    """Derive a deterministic 48/64-team field from the canonical projection.
+
+    The six configured hosts are retained. Remaining places and rebuilt pots
+    follow the existing projected Elo. This is a scenario projection, never an
+    assertion that a team has officially qualified.
+    """
+
+    if scenario.format.teams == len(teams) and all(
+        sum(team.pot == pot for team in teams) == scenario.format.pot_size
+        for pot in range(1, scenario.format.pots + 1)
+    ):
+        return list(teams)
+    if scenario.format.teams not in {48, 64}:
+        raise ScenarioValidationError(
+            [f"only 48 and 64 team projections are supported, got {scenario.format.teams}"]
+        )
+
+    hosts = [team for team in teams if team.team_id in scenario.hosts]
+    if len(hosts) != len(scenario.hosts):
+        raise ScenarioValidationError(["the canonical field does not contain every host"])
+    non_hosts = sorted(
+        (team for team in teams if team.team_id not in scenario.hosts),
+        key=lambda team: (-team.projected_elo, team.team_id),
+    )
+    selected = hosts + non_hosts[: scenario.format.teams - len(hosts)]
+    host_ids = {team.team_id for team in hosts}
+    ordered_non_hosts = sorted(
+        (team for team in selected if team.team_id not in host_ids),
+        key=lambda team: (-team.projected_elo, team.team_id),
+    )
+    pot_assignments = {team.team_id: scenario.host_pot for team in hosts}
+    cursor = 0
+    for pot in range(1, scenario.format.pots + 1):
+        places = (
+            scenario.format.pot_size - len(hosts)
+            if pot == scenario.host_pot
+            else scenario.format.pot_size
+        )
+        for team in ordered_non_hosts[cursor : cursor + places]:
+            pot_assignments[team.team_id] = pot
+        cursor += places
+    projected = [replace(team, pot=pot_assignments[team.team_id]) for team in selected]
+    return sorted(projected, key=lambda team: (team.pot, -team.projected_elo, team.team_id))
+
+
 def validate_scenario(scenario: Scenario, teams: list[Team]) -> None:
     errors: list[str] = []
     spec = scenario.format
@@ -161,6 +209,8 @@ def validate_scenario(scenario: Scenario, teams: list[Team]) -> None:
         errors.append("pots * pot_size must equal teams")
     if spec.groups * spec.group_size != spec.teams:
         errors.append("groups * group_size must equal teams")
+    if spec.groups * spec.qualifiers_per_group + spec.best_third_placed != 32:
+        errors.append("group qualification must produce a 32-team knockout field")
     if len(scenario.draw.group_names) != spec.groups:
         errors.append("group_names count must equal groups")
     for pot in range(1, spec.pots + 1):
@@ -190,5 +240,7 @@ def validate_scenario(scenario: Scenario, teams: list[Team]) -> None:
     argentina = next((team for team in teams if team.team_id == "ARG"), None)
     if argentina is None or argentina.coach != scenario.assumptions["argentina_coach"]:
         errors.append("Argentina coach does not match the fixed scenario assumption")
+    if argentina is None or argentina.captain != scenario.assumptions["argentina_captain"]:
+        errors.append("Argentina captain does not match the fixed scenario assumption")
     if errors:
         raise ScenarioValidationError(errors)

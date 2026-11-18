@@ -1,0 +1,24 @@
+version: argumental-rules-public-v1
+status: experimental_not_scientifically_validated
+weights_trained: false
+source: Astrología Argumental — Santiago Rodríguez Spuch (@AstroArgumental, @astrologia.argumental)
+source_url: https://astrologiaargumental.blogspot.com/
+methodology_note: >
+  Astrología tradicional y electiva aplicada a cartas evento (carta del partido) y cartas
+  nacionales/de federación, distinta del enfoque de Sirius de combinar múltiples cartas
+  natales (país, federación, DT, capitán). El técnica insignia es el "método Frawley"
+  (analisis horario de la carta eventual del partido mediante significadores y aspectos).
+rules:
+  - {id: frawley_method, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: configurable}
+  - {id: house_rulers, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: configurable}
+  - {id: aspects_applying_separating, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: configurable}
+  - {id: midheaven_ascendant, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: configurable}
+  - {id: electional_domification, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: configurable}
+  - {id: essential_dignities_argumental, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: transits_argumental, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: directed_progressions_argumental, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: lunar_nodes, layer: annual, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: fixed_stars_argumental, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: retrograde_planets, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: synastry, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}
+  - {id: mundane_astrology, layer: structural, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable}

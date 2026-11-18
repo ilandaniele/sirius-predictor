@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CMR",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2025-12-24T21:00:00+01:00",
+      "location": {
+        "latitude": 30.4045,
+        "longitude": -9.5981,
+        "name": "Stade Adrar, Agadir, Marruecos"
+      },
+      "label": "Camerún 1-0 Gabón, debut de David Pagou como seleccionador (Copa Africana de Naciones 2025)",
+      "coach_name": "David Pagou"
+    }
+  ]
+}

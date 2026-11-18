@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Dirk Nicolaas Advocaat",
+      "birth_date": "1947-09-27",
+      "birth_time": null,
+      "timezone": "Europe/Amsterdam",
+      "place": "La Haya, Países Bajos",
+      "latitude": 52.0705,
+      "longitude": 4.3007,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

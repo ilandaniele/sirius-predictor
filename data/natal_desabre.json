@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Sébastien Serge Louis Desabre",
+      "birth_date": "1976-08-02",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Valence, Francia",
+      "latitude": 44.9334,
+      "longitude": 4.8924,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

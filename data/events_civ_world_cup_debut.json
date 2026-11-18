@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CIV",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "2006-06-10T21:00:00+02:00",
+      "location": {
+        "latitude": 53.5866,
+        "longitude": 9.8983,
+        "name": "Volksparkstadion, Hamburgo, Alemania"
+      },
+      "label": "Argentina 2-1 Costa de Marfil, debut mundialista de Costa de Marfil, Mundial 2006",
+      "coach_name": null
+    }
+  ]
+}

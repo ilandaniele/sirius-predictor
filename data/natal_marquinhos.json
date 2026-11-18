@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Marcos Aoás Corrêa",
+      "birth_date": "1994-05-14",
+      "birth_time": null,
+      "timezone": "America/Sao_Paulo",
+      "place": "São Paulo, Brasil",
+      "latitude": -23.5505,
+      "longitude": -46.6333,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

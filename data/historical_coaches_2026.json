@@ -1,0 +1,413 @@
+{
+  "schema_version": "sirius-historical-coaches-v1",
+  "edition": 2026,
+  "methodology_note": "Real coach-per-edition data researched for the 2026 FIFA World Cup (USA/Mexico/Canada) specifically, extending the Argumental coach-cycle solar-revolution signal backtest to a fifth real past edition -- the most recent and best-documented one. Keyed by team name exactly as it appears in engine.backtest's parsed historical matches (post-alias). Each entry is the coach who actually led the team AT the 2026 tournament and the date/time/venue of THEIR first match in charge of that continuous tenure, including two genuine mid-cycle coaching changes close to or during the tournament (Morocco: Ouahbi replaced Regragui in March 2026; Tunisia: Renard replaced Lamouchi during the tournament itself in June 2026). 3 of the 48 real 2026 participants are deliberately omitted because a genuine kickoff time could not be sourced despite the date/opponent/score/venue being well confirmed.",
+  "excluded_no_confirmed_time": ["Colombia", "Morocco", "South Africa"],
+  "coaches": {
+    "Algeria": {
+      "coach_name": "Vladimir Petković",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-03-22T22:00:00+01:00",
+        "location": {"latitude": 36.69333, "longitude": 3.12167, "name": "Stade Nelson Mandela, Baraki (Algiers), Algeria"},
+        "label": "Algeria 3-2 Bolivia, debut de Vladimir Petković como seleccionador de Argelia"
+      }
+    },
+    "Argentina": {
+      "coach_name": "Lionel Scaloni",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-09-07T20:00:00-07:00",
+        "location": {"latitude": 34.01417, "longitude": -118.28778, "name": "Los Angeles Memorial Coliseum, Los Angeles, United States"},
+        "label": "Argentina 3-0 Guatemala, debut de Lionel Scaloni como (interino) DT de Argentina"
+      }
+    },
+    "Australia": {
+      "coach_name": "Tony Popovic",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-10-10T19:30:00+10:30",
+        "location": {"latitude": -34.91556, "longitude": 138.59611, "name": "Adelaide Oval, Adelaide, Australia"},
+        "label": "Australia 3-1 China PR, debut de Tony Popovic como DT de Australia"
+      }
+    },
+    "Austria": {
+      "coach_name": "Ralf Rangnick",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-06-03T20:45:00+02:00",
+        "location": {"latitude": 45.54500, "longitude": 18.69583, "name": "Stadion Gradski vrt, Osijek, Croatia"},
+        "label": "Croatia 0-3 Austria, debut de Ralf Rangnick como seleccionador de Austria"
+      }
+    },
+    "Belgium": {
+      "coach_name": "Rudi Garcia",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-03-20T19:45:00+01:00",
+        "location": {"latitude": 38.04222, "longitude": -1.14472, "name": "Estadio Enrique Roca, Murcia, Spain"},
+        "label": "Ukraine 3-1 Belgium, debut de Rudi Garcia como seleccionador de Bélgica"
+      }
+    },
+    "Bosnia & Herzegovina": {
+      "coach_name": "Sergej Barbarez",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-06-03T19:45:00+01:00",
+        "location": {"latitude": 54.97517, "longitude": -1.622539, "name": "St James' Park, Newcastle upon Tyne, England"},
+        "label": "England 3-0 Bosnia and Herzegovina, debut de Sergej Barbarez como seleccionador de Bosnia y Herzegovina"
+      }
+    },
+    "Brazil": {
+      "coach_name": "Carlo Ancelotti",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-06-05T18:00:00-05:00",
+        "location": {"latitude": -2.18587, "longitude": -79.92493, "name": "Estadio Monumental Banco Pichincha, Guayaquil, Ecuador"},
+        "label": "Ecuador 0-0 Brazil, debut de Carlo Ancelotti como seleccionador de Brasil"
+      }
+    },
+    "Canada": {
+      "coach_name": "Jesse Marsch",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-06-06T20:45:00+02:00",
+        "location": {"latitude": 51.89389, "longitude": 4.52306, "name": "De Kuip (Stadion Feijenoord), Rotterdam, Netherlands"},
+        "label": "Netherlands 4-0 Canada, debut de Jesse Marsch como DT de Canadá"
+      }
+    },
+    "Cape Verde": {
+      "coach_name": "Pedro Leitão Brito (\"Bubista\")",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2020-10-07T20:45:00+02:00",
+        "location": {"latitude": 42.5046, "longitude": 1.5175, "name": "Estadi Nacional, Andorra la Vella, Andorra"},
+        "label": "Andorra 1-2 Cabo Verde, debut de Bubista como seleccionador de Cabo Verde"
+      }
+    },
+    "Croatia": {
+      "coach_name": "Zlatko Dalić",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2017-10-09T20:45:00+03:00",
+        "location": {"latitude": 50.43333, "longitude": 30.52194, "name": "NSC Olimpiyskiy, Kyiv, Ukraine"},
+        "label": "Ucrania 0-2 Croacia, debut de Zlatko Dalić como seleccionador de Croacia (clasificación Mundial 2018)"
+      }
+    },
+    "Curaçao": {
+      "coach_name": "Dick Advocaat",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2026-05-30T13:00:00+01:00",
+        "location": {"latitude": 55.82583, "longitude": -4.25194, "name": "Hampden Park, Glasgow, Scotland"},
+        "label": "Escocia 4-1 Curazao, primer partido de Dick Advocaat tras su regreso como seleccionador de Curazao (segunda etapa, la vigente en el Mundial 2026, tras el interinato de Fred Rutten)"
+      }
+    },
+    "Czech Republic": {
+      "coach_name": "Miroslav Koubek",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2026-03-26T20:45:00+01:00",
+        "location": {"latitude": 50.0675, "longitude": 14.47167, "name": "Fortuna Aréna, Prague, Czech Republic"},
+        "label": "Chequia 2-2 Irlanda (4-3 en penales), debut de Miroslav Koubek como seleccionador de Chequia, semifinal de repechaje mundialista"
+      }
+    },
+    "DR Congo": {
+      "coach_name": "Sébastien Desabre",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2022-09-23T17:00:00+01:00",
+        "location": {"latitude": 33.557436, "longitude": -7.651486, "name": "Stade Père-Jégo, Casablanca, Morocco"},
+        "label": "Burkina Faso 1-0 RD Congo, debut de Sébastien Desabre como seleccionador de RD Congo (amistoso en sede neutral)"
+      }
+    },
+    "Ecuador": {
+      "coach_name": "Sebastián Beccacece",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-09-06T22:00:00-03:00",
+        "location": {"latitude": -25.42111, "longitude": -49.25944, "name": "Estádio Couto Pereira, Curitiba, Brazil"},
+        "label": "Brasil 1-0 Ecuador, debut de Sebastián Beccacece como seleccionador de Ecuador, eliminatorias sudamericanas Mundial 2026"
+      }
+    },
+    "Egypt": {
+      "coach_name": "Hossam Hassan",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-03-22T22:00:00+02:00",
+        "location": {"latitude": 29.89222, "longitude": 31.67306, "name": "Estadio Misr (New Administrative Capital Stadium), New Administrative Capital, Egypt"},
+        "label": "Egipto 1-0 Nueva Zelanda, debut de Hossam Hassan como seleccionador de Egipto, FIFA Series 2024"
+      }
+    },
+    "England": {
+      "coach_name": "Thomas Tuchel",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-03-21T19:45:00+00:00",
+        "location": {"latitude": 51.555973, "longitude": -0.279672, "name": "Wembley Stadium, London, England"},
+        "label": "Inglaterra 2-0 Albania, debut de Thomas Tuchel como seleccionador de Inglaterra"
+      }
+    },
+    "France": {
+      "coach_name": "Didier Deschamps",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2012-08-15T21:00:00+02:00",
+        "location": {"latitude": 49.49889, "longitude": 0.16972, "name": "Stade Océane, Le Havre, France"},
+        "label": "Francia 0-0 Uruguay, debut de Didier Deschamps como seleccionador de Francia (hora inferida por horario habitual de los amistosos de Francia en esa época; no confirmada por fuente primaria)"
+      }
+    },
+    "Germany": {
+      "coach_name": "Julian Nagelsmann",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-10-14T15:00:00-04:00",
+        "location": {"latitude": 41.75972, "longitude": -72.61889, "name": "Pratt & Whitney Stadium at Rentschler Field, East Hartford, Connecticut, United States"},
+        "label": "Estados Unidos 1-3 Alemania, debut de Julian Nagelsmann como seleccionador de Alemania"
+      }
+    },
+    "Ghana": {
+      "coach_name": "Carlos Queiroz",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2026-05-22T20:00:00-06:00",
+        "location": {"latitude": 19.07806, "longitude": -98.16444, "name": "Estadio Cuauhtémoc, Puebla, Mexico"},
+        "label": "México 2-0 Ghana, debut de Carlos Queiroz como seleccionador de Ghana"
+      }
+    },
+    "Haiti": {
+      "coach_name": "Sébastien Migné",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-03-23T16:00:00-03:00",
+        "location": {"latitude": 4.882833, "longitude": -52.286281, "name": "Stade Municipal Dr. Edmard Lama, Rémire-Montjoly (Cayenne), French Guiana"},
+        "label": "Guayana Francesa 1-1 Haití, debut de Sébastien Migné como seleccionador de Haití"
+      }
+    },
+    "Iran": {
+      "coach_name": "Amir Ghalenoei",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2023-03-23T20:30:00+03:30",
+        "location": {"latitude": 35.7244, "longitude": 51.2756, "name": "Azadi Stadium, Tehran, Iran"},
+        "label": "Irán 1-1 Rusia, debut de Amir Ghalenoei en su segunda etapa como seleccionador de Irán"
+      }
+    },
+    "Iraq": {
+      "coach_name": "Graham Arnold",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-06-05T21:15:00+03:00",
+        "location": {"latitude": 30.44000, "longitude": 47.77972, "name": "Basra International Stadium, Basra, Iraq"},
+        "label": "Irak 0-2 Corea del Sur, debut de Graham Arnold como seleccionador de Irak"
+      }
+    },
+    "Ivory Coast": {
+      "coach_name": "Emerse Faé",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-01-29T20:00:00+00:00",
+        "location": {"latitude": 6.82861, "longitude": -5.24639, "name": "Stade Charles Konan Banny, Yamoussoukro, Ivory Coast"},
+        "label": "Senegal 1-1 Costa de Marfil (Costa de Marfil ganó por penales), debut de Emerse Faé como seleccionador interino de Costa de Marfil"
+      }
+    },
+    "Japan": {
+      "coach_name": "Hajime Moriyasu",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2018-09-11T19:20:00+09:00",
+        "location": {"latitude": 34.8028, "longitude": 135.5382, "name": "Panasonic Stadium Suita, Suita, Japan"},
+        "label": "Japón 3-0 Costa Rica, debut de Hajime Moriyasu como seleccionador de Japón"
+      }
+    },
+    "Jordan": {
+      "coach_name": "Jamal Sellami",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2024-09-05T21:00:00+03:00",
+        "location": {"latitude": 31.9852, "longitude": 35.9026, "name": "Amman International Stadium, Amman, Jordan"},
+        "label": "Jordania 1-1 Kuwait, debut de Jamal Sellami como seleccionador de Jordania"
+      }
+    },
+    "Mexico": {
+      "coach_name": "Javier Aguirre",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-09-07T18:00:00-07:00",
+        "location": {"latitude": 34.1613, "longitude": -118.1676, "name": "Rose Bowl, Pasadena, United States"},
+        "label": "México 3-0 Nueva Zelanda, debut de Javier Aguirre como seleccionador de México (tercera etapa)"
+      }
+    },
+    "Netherlands": {
+      "coach_name": "Ronald Koeman",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-03-24T20:45:00+01:00",
+        "location": {"latitude": 48.9244, "longitude": 2.3601, "name": "Stade de France, Saint-Denis, France"},
+        "label": "Francia 4-0 Países Bajos, debut de Ronald Koeman como seleccionador de Países Bajos (segunda etapa)"
+      }
+    },
+    "New Zealand": {
+      "coach_name": "Darren Bazeley",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-03-23T19:00:00+13:00",
+        "location": {"latitude": -36.9183, "longitude": 174.8125, "name": "Mount Smart Stadium, Auckland, New Zealand"},
+        "label": "Nueva Zelanda 0-0 China, debut de Darren Bazeley como seleccionador de Nueva Zelanda"
+      }
+    },
+    "Norway": {
+      "coach_name": "Ståle Solbakken",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2021-03-24T20:45:00+01:00",
+        "location": {"latitude": 36.1429, "longitude": -5.3503, "name": "Victoria Stadium, Gibraltar"},
+        "label": "Gibraltar 0-3 Noruega, debut de Ståle Solbakken como seleccionador de Noruega"
+      }
+    },
+    "Panama": {
+      "coach_name": "Thomas Christiansen",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2020-10-10T20:00:00-06:00",
+        "location": {"latitude": 9.9364, "longitude": -84.1078, "name": "Estadio Nacional de Costa Rica, San José, Costa Rica"},
+        "label": "Costa Rica 0-1 Panamá, debut de Thomas Christiansen como seleccionador de Panamá"
+      }
+    },
+    "Paraguay": {
+      "coach_name": "Gustavo Alfaro",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-09-06T20:30:00-03:00",
+        "location": {"latitude": -34.8946611, "longitude": -56.1528389, "name": "Estadio Centenario, Montevideo, Uruguay"},
+        "label": "Uruguay 0-0 Paraguay, debut de Gustavo Alfaro como DT de Paraguay"
+      }
+    },
+    "Portugal": {
+      "coach_name": "Roberto Martínez",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-03-23T19:45:00+00:00",
+        "location": {"latitude": 38.76111, "longitude": -9.16083, "name": "Estadio José Alvalade, Lisbon, Portugal"},
+        "label": "Portugal 4-0 Liechtenstein, debut de Roberto Martínez como seleccionador de Portugal"
+      }
+    },
+    "Qatar": {
+      "coach_name": "Julen Lopetegui",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2025-06-05T21:15:00+03:00",
+        "location": {"latitude": 25.267358, "longitude": 51.484251, "name": "Jassim Bin Hamad Stadium, Al Rayyan, Qatar"},
+        "label": "Qatar 1-0 Irán, debut de Julen Lopetegui como seleccionador de Qatar"
+      }
+    },
+    "Saudi Arabia": {
+      "coach_name": "Georgios Donis",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2026-06-05T18:00:00-05:00",
+        "location": {"latitude": 30.3877, "longitude": -97.7195, "name": "Q2 Stadium, Austin, United States"},
+        "label": "Puerto Rico 0-3 Arabia Saudita, debut de Georgios Donis como seleccionador de Arabia Saudita"
+      }
+    },
+    "Scotland": {
+      "coach_name": "Steve Clarke",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2019-06-08T19:45:00+01:00",
+        "location": {"latitude": 55.82583, "longitude": -4.25194, "name": "Hampden Park, Glasgow, Scotland"},
+        "label": "Escocia 2-1 Chipre, debut de Steve Clarke como seleccionador de Escocia"
+      }
+    },
+    "Senegal": {
+      "coach_name": "Pape Thiaw",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-10-11T19:00:00+00:00",
+        "location": {"latitude": 14.7325, "longitude": -17.20111, "name": "Abdoulaye Wade Stadium, Diamniadio (Dakar), Senegal"},
+        "label": "Senegal 4-0 Malaui, debut de Pape Thiaw (interino) como seleccionador de Senegal"
+      }
+    },
+    "South Korea": {
+      "coach_name": "Hong Myung-bo",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2024-09-05T12:00:00+09:00",
+        "location": {"latitude": 37.568222, "longitude": 126.897361, "name": "Seoul World Cup Stadium, Seoul, South Korea"},
+        "label": "Corea del Sur 0-0 Palestina, debut de Hong Myung-bo (2a etapa) como seleccionador de Corea del Sur"
+      }
+    },
+    "Spain": {
+      "coach_name": "Luis de la Fuente",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-03-25T20:45:00+01:00",
+        "location": {"latitude": 36.7342, "longitude": -4.4266, "name": "Estadio La Rosaleda, Málaga, Spain"},
+        "label": "España 3-0 Noruega, debut de Luis de la Fuente como seleccionador de España"
+      }
+    },
+    "Sweden": {
+      "coach_name": "Graham Potter",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-11-15T20:45:00+01:00",
+        "location": {"latitude": 46.17778, "longitude": 6.12750, "name": "Stade de Genève, Geneva (Lancy), Switzerland"},
+        "label": "Suiza 4-1 Suecia, debut de Graham Potter como seleccionador de Suecia"
+      }
+    },
+    "Switzerland": {
+      "coach_name": "Murat Yakin",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2021-09-01T20:45:00+02:00",
+        "location": {"latitude": 47.54167, "longitude": 7.62028, "name": "St. Jakob-Park, Basel, Switzerland"},
+        "label": "Suiza 2-1 Grecia, debut de Murat Yakin como seleccionador de Suiza"
+      }
+    },
+    "Tunisia": {
+      "coach_name": "Hervé Renard",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2026-06-20T22:00:00-06:00",
+        "location": {"latitude": 25.66917, "longitude": -100.24444, "name": "Estadio BBVA, Guadalupe (Monterrey), Nuevo León, Mexico"},
+        "label": "Túnez 0-4 Japón, debut de Hervé Renard como seleccionador de Túnez -- asumió el 16 de junio de 2026 tras la destitución de Sabri Lamouchi durante el propio Mundial 2026"
+      }
+    },
+    "Turkey": {
+      "coach_name": "Vincenzo Montella",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2023-10-12T20:45:00+02:00",
+        "location": {"latitude": 45.56639, "longitude": 18.65750, "name": "Opus Arena, Osijek, Croatia"},
+        "label": "Croacia 0-1 Turquía, debut de Vincenzo Montella como seleccionador de Turquía"
+      }
+    },
+    "USA": {
+      "coach_name": "Mauricio Pochettino",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2024-10-12T20:07:00-05:00",
+        "location": {"latitude": 30.3877, "longitude": -97.7195, "name": "Q2 Stadium, Austin, Texas, USA"},
+        "label": "USA 2-0 Panamá, debut de Mauricio Pochettino como head coach de USMNT"
+      }
+    },
+    "Uruguay": {
+      "coach_name": "Marcelo Bielsa",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2023-06-14T19:30:00-03:00",
+        "location": {"latitude": -34.8947, "longitude": -56.1528, "name": "Estadio Centenario, Montevideo, Uruguay"},
+        "label": "Uruguay 4-1 Nicaragua, debut de Marcelo Bielsa como seleccionador de Uruguay"
+      }
+    },
+    "Uzbekistan": {
+      "coach_name": "Fabio Cannavaro",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2025-10-13T20:45:00+08:00",
+        "location": {"latitude": 3.05467, "longitude": 101.69117, "name": "Bukit Jalil National Stadium, Kuala Lumpur, Malaysia"},
+        "label": "Uzbekistán 1-2 Uruguay, debut de Fabio Cannavaro como seleccionador de Uzbekistán"
+      }
+    }
+  }
+}

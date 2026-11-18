@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Brian Riemer",
+      "birth_date": "1978-09-22",
+      "birth_time": null,
+      "timezone": "Europe/Copenhagen",
+      "place": "Albertslund, Dinamarca",
+      "latitude": 55.6597,
+      "longitude": 12.3625,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

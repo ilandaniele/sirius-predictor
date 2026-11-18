@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Shao Jiayi",
+      "birth_date": "1980-04-10",
+      "birth_time": null,
+      "timezone": "Asia/Shanghai",
+      "place": "Pekín, China",
+      "latitude": 39.9042,
+      "longitude": 116.4074,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

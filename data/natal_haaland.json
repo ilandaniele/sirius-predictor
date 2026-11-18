@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Erling Braut Haaland",
+      "birth_date": "2000-07-21",
+      "birth_time": null,
+      "timezone": "Europe/London",
+      "place": "Leeds, Inglaterra, Reino Unido",
+      "latitude": 53.8008,
+      "longitude": -1.5491,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

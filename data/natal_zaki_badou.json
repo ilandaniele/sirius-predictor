@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ezzaki Badou",
+      "birth_date": "1959-04-02",
+      "birth_time": null,
+      "timezone": "Africa/Casablanca",
+      "place": "Sidi Kacem, Marruecos",
+      "latitude": 34.2214,
+      "longitude": -5.7057,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

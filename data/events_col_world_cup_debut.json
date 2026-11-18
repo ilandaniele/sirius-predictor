@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "COL",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1962-05-30T15:00:00-04:00",
+      "location": {
+        "latitude": -18.4783,
+        "longitude": -70.3126,
+        "name": "Estadio Carlos Dittborn, Arica, Chile"
+      },
+      "label": "Uruguay 2-1 Colombia, debut mundialista de Colombia, Mundial 1962",
+      "coach_name": null
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "KSA",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1994-06-20T19:30:00-04:00",
+      "location": {
+        "latitude": 38.8898,
+        "longitude": -76.9846,
+        "name": "RFK Stadium, Washington D.C., Estados Unidos"
+      },
+      "label": "Países Bajos 2-1 Arabia Saudita, debut mundialista de Arabia Saudita, Mundial 1994",
+      "coach_name": null
+    }
+  ]
+}

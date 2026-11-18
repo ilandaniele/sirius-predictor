@@ -41,7 +41,9 @@ class UpdatePipeline:
                 seen_payloads.add(fingerprint)
                 previous = active.get(key)
                 if previous is None:
-                    if claim.manually_confirmed or claim.grade.value in {"A", "B"}:
+                    if claim.manually_confirmed or (
+                        claim.grade.value in {"A", "B"} and not claim.inferred
+                    ):
                         active[key] = claim
                         report.accepted.append(claim)
                     else:

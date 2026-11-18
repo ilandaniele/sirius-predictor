@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Son Heung-min",
+      "birth_date": "1992-07-08",
+      "birth_time": null,
+      "timezone": "Asia/Seoul",
+      "place": "Chuncheon, Corea del Sur",
+      "latitude": 37.8813,
+      "longitude": 127.7298,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "EGY",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1934-05-27T16:00:00+01:00",
+      "location": {
+        "latitude": 40.8522,
+        "longitude": 14.2681,
+        "name": "Stadio Giorgio Ascarelli, Nápoles, Italia"
+      },
+      "label": "Hungría 4-2 Egipto, debut mundialista de Egipto, Mundial 1934",
+      "coach_name": null
+    }
+  ]
+}

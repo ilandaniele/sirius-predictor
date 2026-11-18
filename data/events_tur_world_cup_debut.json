@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "TUR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1954-06-17T18:00:00+01:00",
+      "location": {
+        "latitude": 46.9631,
+        "longitude": 7.4653,
+        "name": "Estadio Wankdorf, Berna, Suiza"
+      },
+      "label": "Alemania Occidental 4-1 Turquía, debut mundialista de Turquía, Mundial 1954",
+      "coach_name": null
+    }
+  ]
+}

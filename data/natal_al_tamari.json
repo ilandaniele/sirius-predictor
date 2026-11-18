@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mousa Al-Tamari",
+      "birth_date": "1997-06-10",
+      "birth_time": null,
+      "timezone": "Asia/Amman",
+      "place": "Amán, Jordania",
+      "latitude": 31.9454,
+      "longitude": 35.9284,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

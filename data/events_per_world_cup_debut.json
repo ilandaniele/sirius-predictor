@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "PER",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1930-07-14T14:50:00-03:30",
+      "location": {
+        "latitude": -34.9011,
+        "longitude": -56.1325,
+        "name": "Estadio Pocitos, Montevideo, Uruguay"
+      },
+      "label": "Rumania 3-1 Perú, debut mundialista de Perú, Mundial 1930",
+      "coach_name": null
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Christopher Grant Wood",
+      "birth_date": "1991-12-07",
+      "birth_time": null,
+      "timezone": "Pacific/Auckland",
+      "place": "Auckland, Nueva Zelanda",
+      "latitude": -36.8485,
+      "longitude": 174.7633,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jordan Ayew",
+      "birth_date": "1991-09-11",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Marsella, Francia",
+      "latitude": 43.2965,
+      "longitude": 5.3698,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

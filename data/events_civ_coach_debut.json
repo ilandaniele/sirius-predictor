@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CIV",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-01-29T20:00:00+00:00",
+      "location": {
+        "latitude": 6.8206,
+        "longitude": -5.2767,
+        "name": "Stade Charles Konan Banny, Yamoussoukro, Costa de Marfil"
+      },
+      "label": "Senegal 1-1 Costa de Marfil (5-4 pen.), debut de Emerse Faé como seleccionador interino en octavos de la CAN 2024, camino al título",
+      "coach_name": "Emerse Faé"
+    }
+  ]
+}

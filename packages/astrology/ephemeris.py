@@ -108,7 +108,10 @@ def _swiss_body_ids() -> dict[str, int]:
 def _position(name: str, julian_day: float) -> BodyPosition:
     if swe is None:
         return _fallback_position(name, julian_day)
-    values, _flags = swe.calc_ut(julian_day, _swiss_body_ids()[name], swe.FLG_SPEED)
+    calculation = swe.calc_ut(julian_day, _swiss_body_ids()[name], swe.FLG_SPEED)
+    # pysweph adds a third, human-readable warning/error field while retaining
+    # positions and flags in the first two entries.
+    values = calculation[0]
     return BodyPosition(
         name=name,
         longitude=float(values[0] % 360.0),
@@ -155,12 +158,17 @@ def _houses(request: ChartRequest, julian_day: float) -> HouseAngles | None:
         raise EphemerisUnavailable(
             "ASC/MC/houses require Swiss Ephemeris; no unknown time is imputed"
         )
-    cusps, ascmc = swe.houses_ex(
+    raw_cusps, ascmc = swe.houses_ex(
         julian_day,
         request.location.latitude,
         request.location.longitude,
         request.house_system.encode("ascii"),
     )
+    # pysweph 2.10.3.4+ follows the C API's 1-based convention and exposes an
+    # empty item at index zero; older pyswisseph returned the 12 cusps directly.
+    cusps = raw_cusps[1:] if len(raw_cusps) == 13 else raw_cusps
+    if len(cusps) != 12:
+        raise EphemerisUnavailable("Swiss Ephemeris returned an invalid house cusp count")
     return HouseAngles(
         cusps=tuple(float(value % 360.0) for value in cusps),
         ascendant=float(ascmc[0] % 360.0),
@@ -181,8 +189,7 @@ def chart(
         raise ValueError(f"unsupported bodies: {sorted(unknown)}")
     julian_day = _julian_day(request.moment)
     positions = {name: _position(name, julian_day) for name in bodies}
-    provider = "Swiss Ephemeris" if swe is not None else "explicit mean-motion fallback"
-    version = str(getattr(swe, "version", "fallback-v1"))
+    provider, version = ephemeris_identity()
     return AstrologyChart(
         request=request,
         provider=provider,
@@ -202,6 +209,13 @@ def chart(
 
 def ephemeris_available() -> bool:
     return swe is not None
+
+
+def ephemeris_identity() -> tuple[str, str]:
+    """Return the calculation provider identity used by content-addressed caches."""
+
+    provider = "Swiss Ephemeris" if swe is not None else "explicit mean-motion fallback"
+    return provider, str(getattr(swe, "version", "fallback-v1"))
 
 
 def body_longitude(name: str, moment: datetime) -> float:

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "CRC",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1990-06-11T17:00:00+02:00",
+      "location": {
+        "latitude": 44.4166,
+        "longitude": 8.9524,
+        "name": "Estadio Luigi Ferraris, Génova, Italia"
+      },
+      "label": "Costa Rica 1-0 Escocia, debut mundialista de Costa Rica, Mundial 1990",
+      "coach_name": null
+    }
+  ]
+}

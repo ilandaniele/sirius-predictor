@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Morten Hjulmand",
+      "birth_date": "1999-06-25",
+      "birth_time": null,
+      "timezone": "Europe/Copenhagen",
+      "place": "Kastrup, Dinamarca",
+      "latitude": 55.6333,
+      "longitude": 12.65,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

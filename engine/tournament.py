@@ -20,8 +20,16 @@ NEXT_STAGE = {"R32": "R16", "R16": "QF", "QF": "SF", "SF": "F", "F": "Champion"}
 def _rank_group(
     team_ids: list[str], matches: list[MatchResult], rng: np.random.Generator
 ) -> list[str]:
+    ranking, _ = _rank_group_with_stats(team_ids, matches, rng)
+    return ranking
+
+
+def _rank_group_with_stats(
+    team_ids: list[str], matches: list[MatchResult], rng: np.random.Generator
+) -> tuple[list[str], dict[str, dict[str, float]]]:
     stats = {
-        team_id: {"pts": 0, "gf": 0, "ga": 0, "lot": float(rng.random())} for team_id in team_ids
+        team_id: {"pts": 0.0, "gf": 0.0, "ga": 0.0, "wins": 0.0, "lot": float(rng.random())}
+        for team_id in team_ids
     }
     for match in matches:
         home = stats[match.home_id]
@@ -32,8 +40,10 @@ def _rank_group(
         away["ga"] += match.home_goals
         if match.home_goals > match.away_goals:
             home["pts"] += 3
+            home["wins"] += 1
         elif match.away_goals > match.home_goals:
             away["pts"] += 3
+            away["wins"] += 1
         else:
             home["pts"] += 1
             away["pts"] += 1
@@ -77,7 +87,70 @@ def _rank_group(
             reverse=True,
         )
         ordered.extend(tied)
-    return ordered
+    return ordered, stats
+
+
+def _cross_group_order(
+    team_ids: list[str], stats: dict[str, dict[str, float]]
+) -> list[str]:
+    """Rank teams from different groups with the available sporting tiebreakers.
+
+    Fair-play points are not simulated. The pre-sampled lot is therefore the
+    final deterministic-for-seed tiebreaker and is recorded by the simulation.
+    """
+
+    return sorted(
+        team_ids,
+        key=lambda team_id: (
+            stats[team_id]["pts"],
+            stats[team_id]["gf"] - stats[team_id]["ga"],
+            stats[team_id]["gf"],
+            stats[team_id]["wins"],
+            stats[team_id]["lot"],
+        ),
+        reverse=True,
+    )
+
+
+def _projected_48_pairings(
+    seeded: list[str],
+    unseeded: list[str],
+    team_groups: dict[str, str],
+    scenario: Scenario,
+) -> list[tuple[str, str]]:
+    """Create a reproducible projected R32 while avoiding same-group rematches."""
+
+    group_index = {name: index for index, name in enumerate(scenario.draw.group_names)}
+
+    def preference(seed: str, opponent: str) -> tuple[int, str]:
+        target = (
+            group_index[team_groups[seed]] + scenario.bracket.opposite_group_offset
+        ) % scenario.format.groups
+        opponent_index = group_index[team_groups[opponent]]
+        distance = min(
+            (opponent_index - target) % scenario.format.groups,
+            (target - opponent_index) % scenario.format.groups,
+        )
+        return distance, opponent
+
+    def search(index: int, remaining: tuple[str, ...]) -> list[tuple[str, str]] | None:
+        if index == len(seeded):
+            return []
+        seed = seeded[index]
+        candidates = sorted(
+            (team for team in remaining if team_groups[team] != team_groups[seed]),
+            key=lambda team: preference(seed, team),
+        )
+        for opponent in candidates:
+            tail = search(index + 1, tuple(team for team in remaining if team != opponent))
+            if tail is not None:
+                return [(seed, opponent), *tail]
+        return None
+
+    pairings = search(0, tuple(unseeded))
+    if pairings is None:
+        raise RuntimeError("the projected 48-team R32 could not avoid same-group rematches")
+    return pairings
 
 
 def _final_kickoff(scenario: Scenario, final_hour: int) -> datetime:
@@ -108,6 +181,8 @@ def simulate_tournament(
     matches: list[MatchResult] = []
     tables: dict[str, list[str]] = {}
     qualifiers: list[tuple[str, str, str]] = []
+    group_stats: dict[str, dict[str, float]] = {}
+    team_groups: dict[str, str] = {}
     stage_reached = {team.team_id: "Group" for team in teams}
     group_match_index = 0
     for group_name, group in groups.items():
@@ -125,7 +200,11 @@ def simulate_tournament(
             group_match_index += 1
             group_matches.append(result)
             matches.append(result)
-        ranking = _rank_group([team.team_id for team in group], group_matches, rng)
+        ranking, stats = _rank_group_with_stats(
+            [team.team_id for team in group], group_matches, rng
+        )
+        group_stats.update(stats)
+        team_groups.update({team.team_id: group_name for team in group})
         tables[group_name] = ranking
         qualifiers.append((group_name, ranking[0], ranking[1]))
         stage_reached[ranking[0]] = "R32"
@@ -134,12 +213,35 @@ def simulate_tournament(
     first = {group: winner for group, winner, _ in qualifiers}
     second = {group: runner for group, _, runner in qualifiers}
     letters = list(scenario.draw.group_names)
+    if scenario.format.best_third_placed:
+        thirds = _cross_group_order(
+            [tables[group][2] for group in letters], group_stats
+        )[: scenario.format.best_third_placed]
+        for team_id in thirds:
+            stage_reached[team_id] = "R32"
+        ordered_runners = _cross_group_order(list(second.values()), group_stats)
+        seeded = [first[group] for group in letters] + ordered_runners[:4]
+        unseeded = ordered_runners[4:] + thirds
+        r32_pairings = _projected_48_pairings(
+            seeded, unseeded, team_groups, scenario
+        )
+    else:
+        r32_pairings = [
+            (
+                first[group_name],
+                second[
+                    letters[
+                        (index + scenario.bracket.opposite_group_offset) % len(letters)
+                    ]
+                ],
+            )
+            for index, group_name in enumerate(letters)
+        ]
     current: list[str] = []
-    for index, group_name in enumerate(letters):
-        opponent_group = letters[(index + scenario.bracket.opposite_group_offset) % len(letters)]
+    for index, (home_id, away_id) in enumerate(r32_pairings):
         result = model.simulate(
-            first[group_name],
-            second[opponent_group],
+            home_id,
+            away_id,
             ratings,
             rng,
             round_name="R32",

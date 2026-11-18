@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Rafael Márquez Álvarez",
+      "birth_date": "1979-02-13",
+      "birth_time": null,
+      "timezone": "America/Mexico_City",
+      "place": "Zamora, Michoacán, México",
+      "latitude": 19.9856,
+      "longitude": -102.2836,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

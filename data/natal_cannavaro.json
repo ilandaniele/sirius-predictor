@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Fabio Cannavaro",
+      "birth_date": "1973-09-13",
+      "birth_time": null,
+      "timezone": "Europe/Rome",
+      "place": "Nápoles, Italia",
+      "latitude": 40.8518,
+      "longitude": 14.2681,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

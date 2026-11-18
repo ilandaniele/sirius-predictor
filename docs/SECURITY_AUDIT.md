@@ -6,7 +6,8 @@ Fecha: 2026-08-17.
 
 - Secretos sólo por variables de entorno; `.env` está ignorado y producción exige API key.
 - Endpoints de mutación requieren `X-API-Key` en producción.
-- CORS allow-list, cuerpo POST máximo de 1 MiB y rate limit local.
+- CORS allow-list, cuerpo POST ordinario máximo de 1 MiB y bundle local máximo configurable de
+  64 MiB, siempre autenticado y verificado durante streaming.
 - Collectors sólo HTTPS, hosts explícitos, puerto 443, sin credenciales, redirects desactivados,
   proxy de entorno desactivado, validación DNS pública previa, timeout, límite de 5 MiB y pausa
   entre solicitudes.
@@ -14,6 +15,10 @@ Fecha: 2026-08-17.
 - SQLAlchemy parametriza consultas; no se construye SQL con entradas HTTP.
 - React escapa valores; exportación SVG aplica escape HTML.
 - IDs de snapshot aceptan exclusivamente SHA-256 lowercase antes de resolver rutas.
+- Bundles ZIP rechazan paths absolutos, `..`, duplicados, cifrado, archivos extra, zip bombs y
+  checksums divergentes; PNG, SVG y PDF pasan además validación de formato.
+- Una publicación local exige código, escenario, equipos, tres modos, sensibilidad e input vigentes;
+  no puede degradar automáticamente una fuente A a C/D.
 - Snapshots/predicciones son append-only y atómicos; una fuente caída conserva el último hash.
 - Errores de collectors se aíslan y no incluyen payloads o secretos en la respuesta.
 - Imágenes Docker ejecutan como usuario no root; bases/Redis no se publican en producción.
@@ -38,5 +43,5 @@ Fecha: 2026-08-17.
 
 - Sorteos masivos usan una cadena de swaps válidos luego del backtracking inicial.
 - Monte Carlo se divide en procesos y agrega masa probabilística con verificación.
-- Jobs largos se ejecutan en Celery con límite de una hora y prefetch uno.
-- API no ejecuta 100.000 torneos dentro del request HTTP.
+- Jobs largos de producción se ejecutan en la PC del operador; el worker Celery no arranca en Fly.
+- La API sólo congela inputs e importa derivados; no ejecuta 100.000 torneos dentro del request.

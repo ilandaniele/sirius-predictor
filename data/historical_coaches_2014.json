@@ -1,0 +1,260 @@
+{
+  "schema_version": "sirius-historical-coaches-v1",
+  "edition": 2014,
+  "methodology_note": "Real coach-per-edition data researched for the 2014 FIFA World Cup (Brazil) specifically, extending the Argumental coach-cycle solar-revolution signal backtest to a fourth real past edition. Keyed by team name exactly as it appears in engine.backtest's parsed historical matches (post-alias). Each entry is the coach who actually led the team AT the 2014 tournament and the date/time/venue of THEIR first match in charge of that continuous tenure. 4 of the 32 real 2014 participants are deliberately omitted because a genuine kickoff time could not be sourced despite the date/opponent/score/venue being well confirmed -- this project's no-placeholder-time policy applies as strictly to 2014 as to every other edition.",
+  "excluded_no_confirmed_time": ["Algeria", "Iran", "Nigeria", "Switzerland"],
+  "coaches": {
+    "Argentina": {
+      "coach_name": "Alejandro Sabella",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2011-09-02T19:00:00+05:30",
+        "location": {"latitude": 22.5680, "longitude": 88.4055, "name": "Salt Lake Stadium (Vivekananda Yuba Bharati Krirangan), Kolkata, India"},
+        "label": "Argentina 1-0 Venezuela, debut de Alejandro Sabella como DT de Argentina"
+      }
+    },
+    "Australia": {
+      "coach_name": "Ange Postecoglou",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2013-11-19T19:30:00+11:00",
+        "location": {"latitude": -33.8892, "longitude": 151.2253, "name": "Allianz Stadium (Sydney Football Stadium), Sydney, Australia"},
+        "label": "Australia 1-0 Costa Rica, debut de Ange Postecoglou como DT de los Socceroos"
+      }
+    },
+    "Belgium": {
+      "coach_name": "Marc Wilmots",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2012-05-25T20:45:00+02:00",
+        "location": {"latitude": 50.8956, "longitude": 4.3342, "name": "King Baudouin Stadium (Stade Roi Baudouin), Brussels, Belgium"},
+        "label": "Bélgica 2-2 Montenegro, debut de Marc Wilmots como seleccionador de Bélgica"
+      }
+    },
+    "Bosnia-Herzegovina": {
+      "coach_name": "Safet Sušić",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2010-03-03T19:45:00+01:00",
+        "location": {"latitude": 43.8739, "longitude": 18.4086, "name": "Asim Ferhatović Hase Stadium (Koševo), Sarajevo, Bosnia and Herzegovina"},
+        "label": "Bosnia y Herzegovina 2-1 Ghana, debut de Safet Sušić como seleccionador"
+      }
+    },
+    "Brazil": {
+      "coach_name": "Luiz Felipe Scolari",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2013-02-06T19:30:00+00:00",
+        "location": {"latitude": 51.5560, "longitude": -0.2795, "name": "Wembley Stadium, London, England"},
+        "label": "Inglaterra 2-1 Brasil, debut de Luiz Felipe Scolari en su segundo ciclo como DT de Brasil"
+      }
+    },
+    "Cameroon": {
+      "coach_name": "Volker Finke",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2013-06-02T21:00:00+03:00",
+        "location": {"latitude": 50.4330, "longitude": 30.5219, "name": "NSC Olimpiyskiy, Kyiv, Ukraine"},
+        "label": "Ucrania 0-0 Camerún, debut de Volker Finke como DT de Camerún"
+      }
+    },
+    "Chile": {
+      "coach_name": "Jorge Sampaoli",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2013-01-15T22:00:00-03:00",
+        "location": {"latitude": -29.9067, "longitude": -71.2512, "name": "Estadio La Portada, La Serena, Chile"},
+        "label": "Chile 2-1 Senegal, debut de Jorge Sampaoli como DT de Chile"
+      }
+    },
+    "Colombia": {
+      "coach_name": "José Néstor Pékerman",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2012-02-29T20:00:00-05:00",
+        "location": {"latitude": 25.95806, "longitude": -80.23889, "name": "Sun Life Stadium, Miami Gardens, United States"},
+        "label": "Colombia 2-0 México, debut de José Pékerman como seleccionador"
+      }
+    },
+    "Costa Rica": {
+      "coach_name": "Jorge Luis Pinto",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2011-10-07T20:00:00-06:00",
+        "location": {"latitude": 9.93639, "longitude": -84.10778, "name": "Estadio Nacional de Costa Rica, San José, Costa Rica"},
+        "label": "Costa Rica 0-1 Brasil, debut de Jorge Luis Pinto como seleccionador"
+      }
+    },
+    "Croatia": {
+      "coach_name": "Niko Kovač",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2013-11-15T19:00:00+00:00",
+        "location": {"latitude": 64.14361, "longitude": -21.87889, "name": "Laugardalsvöllur, Reykjavík, Iceland"},
+        "label": "Islandia 0-0 Croacia, debut de Niko Kovač como seleccionador (ida del repechaje mundialista)"
+      }
+    },
+    "Côte d'Ivoire": {
+      "coach_name": "Sabri Lamouchi",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2012-06-02T19:00:00+00:00",
+        "location": {"latitude": 5.32833, "longitude": -4.01833, "name": "Stade Félix Houphouët-Boigny, Abidjan, Côte d'Ivoire"},
+        "label": "Costa de Marfil 2-0 Tanzania, debut de Sabri Lamouchi como seleccionador (hora inferida, horario habitual de los partidos de clasificatoria CAF en Abidjan)"
+      }
+    },
+    "Ecuador": {
+      "coach_name": "Reinaldo Rueda",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2010-09-04T20:00:00-05:00",
+        "location": {"latitude": 20.68167, "longitude": -103.46278, "name": "Estadio Omnilife (hoy Estadio Akron), Zapopan, México"},
+        "label": "Ecuador 2-1 México, debut de Reinaldo Rueda como seleccionador (hora inferida, no confirmada en fuente primaria)"
+      }
+    },
+    "England": {
+      "coach_name": "Roy Hodgson",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2012-05-26T19:45:00+02:00",
+        "location": {"latitude": 59.94889, "longitude": 10.73417, "name": "Ullevaal Stadion, Oslo, Norway"},
+        "label": "Noruega 0-1 Inglaterra, debut de Roy Hodgson como seleccionador"
+      }
+    },
+    "France": {
+      "coach_name": "Didier Deschamps",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2012-08-15T21:00:00+02:00",
+        "location": {"latitude": 49.49889, "longitude": 0.16972, "name": "Stade Océane, Le Havre, France"},
+        "label": "Francia 0-0 Uruguay, debut de Didier Deschamps como seleccionador"
+      }
+    },
+    "Germany": {
+      "coach_name": "Joachim Löw",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2006-08-16T20:45:00+02:00",
+        "location": {"latitude": 51.55444, "longitude": 7.06750, "name": "Veltins-Arena, Gelsenkirchen, Germany"},
+        "label": "Alemania 3-0 Suecia, debut de Joachim Löw como seleccionador"
+      }
+    },
+    "Ghana": {
+      "coach_name": "James Kwesi Appiah",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2012-06-01T17:00:00+00:00",
+        "location": {"latitude": 6.6827, "longitude": -1.6051, "name": "Baba Yara Stadium, Kumasi, Ghana"},
+        "label": "Ghana 7-0 Lesotho, debut de James Kwesi Appiah como seleccionador de Ghana"
+      }
+    },
+    "Greece": {
+      "coach_name": "Fernando Santos",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2010-08-11T19:30:00+02:00",
+        "location": {"latitude": 44.78333, "longitude": 20.46472, "name": "Stadion Rajko Mitić (Marakana), Belgrade, Serbia"},
+        "label": "Serbia 0-1 Grecia, debut de Fernando Santos como seleccionador de Grecia"
+      }
+    },
+    "Honduras": {
+      "coach_name": "Luis Fernando Suárez",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2011-06-06T20:00:00-07:00",
+        "location": {"latitude": 33.8635, "longitude": -118.2611, "name": "Home Depot Center (now Dignity Health Sports Park), Carson, California, USA"},
+        "label": "Honduras 0-0 Guatemala, debut de Luis Fernando Suárez como seleccionador de Honduras (2011 CONCACAF Gold Cup)"
+      }
+    },
+    "Italy": {
+      "coach_name": "Cesare Prandelli",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2010-08-10T18:45:00+01:00",
+        "location": {"latitude": 51.53194, "longitude": 0.03944, "name": "Boleyn Ground (Upton Park), London, England"},
+        "label": "Italia 0-1 Costa de Marfil, debut de Cesare Prandelli como seleccionador de Italia"
+      }
+    },
+    "Japan": {
+      "coach_name": "Alberto Zaccheroni",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2010-10-08T19:45:00+09:00",
+        "location": {"latitude": 35.9031, "longitude": 139.7175, "name": "Saitama Stadium 2002, Saitama, Japan"},
+        "label": "Japón 1-0 Argentina, debut de Alberto Zaccheroni como seleccionador de Japón (Kirin Challenge Cup 2010)"
+      }
+    },
+    "Mexico": {
+      "coach_name": "Miguel Herrera",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2013-10-30T20:00:00-07:00",
+        "location": {"latitude": 32.78306, "longitude": -117.11944, "name": "Qualcomm Stadium, San Diego, California, USA"},
+        "label": "México 4-2 Finlandia, debut de Miguel Herrera como seleccionador de México (hora estimada a partir del horario de transmisión de ESPN2, 11pm ET)"
+      }
+    },
+    "Netherlands": {
+      "coach_name": "Louis van Gaal",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2012-09-07T20:30:00+02:00",
+        "location": {"latitude": 52.31417, "longitude": 4.94194, "name": "Amsterdam ArenA (now Johan Cruyff Arena), Amsterdam, Netherlands"},
+        "label": "Países Bajos 2-0 Turquía, debut de Louis van Gaal como seleccionador de los Países Bajos (segunda etapa)"
+      }
+    },
+    "Portugal": {
+      "coach_name": "Paulo Bento",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2010-10-08T20:45:00+01:00",
+        "location": {"latitude": 41.1618, "longitude": -8.5839, "name": "Estádio do Dragão, Porto, Portugal"},
+        "label": "Portugal 3-1 Dinamarca, debut de Paulo Bento como seleccionador de Portugal"
+      }
+    },
+    "Russia": {
+      "coach_name": "Fabio Capello",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2012-08-15T19:00:00+04:00",
+        "location": {"latitude": 55.80361, "longitude": 37.74111, "name": "Lokomotiv Stadium (RZD Arena), Moscow, Russia"},
+        "label": "Rusia 1-1 Costa de Marfil, debut de Fabio Capello como seleccionador de Rusia"
+      }
+    },
+    "South Korea": {
+      "coach_name": "Hong Myung-bo",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2013-07-20T19:00:00+09:00",
+        "location": {"latitude": 37.568222, "longitude": 126.897361, "name": "Seoul World Cup Stadium, Seoul, South Korea"},
+        "label": "Corea del Sur 0-0 Australia, debut de Hong Myung-bo como seleccionador de Corea del Sur"
+      }
+    },
+    "Spain": {
+      "coach_name": "Vicente del Bosque",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2008-08-20T20:15:00+02:00",
+        "location": {"latitude": 55.70250, "longitude": 12.57222, "name": "Parken, Copenhagen, Denmark"},
+        "label": "Dinamarca 0-3 España, debut de Vicente del Bosque como seleccionador de España"
+      }
+    },
+    "USA": {
+      "coach_name": "Jürgen Klinsmann",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2011-08-10T21:00:00-04:00",
+        "location": {"latitude": 39.90083, "longitude": -75.16750, "name": "Lincoln Financial Field, Philadelphia, United States"},
+        "label": "Estados Unidos 1-1 México, debut de Jürgen Klinsmann como seleccionador de Estados Unidos"
+      }
+    },
+    "Uruguay": {
+      "coach_name": "Óscar Tabárez",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2006-05-21T14:00:00-04:00",
+        "location": {"latitude": 40.81222, "longitude": -74.07694, "name": "Giants Stadium, East Rutherford, New Jersey, United States"},
+        "label": "Uruguay 1-0 Irlanda del Norte, debut de Óscar Tabárez como seleccionador de Uruguay (segundo ciclo, El Proceso)"
+      }
+    }
+  }
+}

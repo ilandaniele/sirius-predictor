@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ellyes Joris Skhiri",
+      "birth_date": "1995-05-10",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Lunel, Francia",
+      "latitude": 43.6773,
+      "longitude": 4.1357,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

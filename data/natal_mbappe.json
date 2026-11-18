@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Kylian Mbappé Lottin",
+      "birth_date": "1998-12-20",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Bondy, Francia",
+      "latitude": 48.9017,
+      "longitude": 2.4864,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Hervé Renard",
+      "birth_date": "1968-09-30",
+      "birth_time": null,
+      "timezone": "Europe/Paris",
+      "place": "Aix-les-Bains, Francia",
+      "latitude": 45.6886,
+      "longitude": 5.9153,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

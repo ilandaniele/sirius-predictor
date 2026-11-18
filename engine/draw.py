@@ -163,12 +163,11 @@ def draw_groups(
 def draw_16_groups(df, seed: int | None = None, attempts: int = 64):
     """Compatibility adapter for the original DataFrame API."""
 
-    from pathlib import Path
+    from packages.common.config import ROOT
 
     from .config import load_scenario, load_teams
 
     del df  # The professional engine reads the validated canonical contract.
-    root = Path(__file__).resolve().parents[1]
-    scenario = load_scenario(root / "data" / "scenario.yaml")
-    teams = load_teams(root / "data" / "teams.csv")
+    scenario = load_scenario(ROOT / "data" / "scenario.yaml")
+    teams = load_teams(ROOT / "data" / "teams.csv")
     return draw_groups(teams, scenario, random.Random(seed), attempts=attempts)

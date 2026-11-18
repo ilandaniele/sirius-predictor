@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Eldor Shomurodov",
+      "birth_date": "1995-06-29",
+      "birth_time": null,
+      "timezone": "Asia/Samarkand",
+      "place": "Jarqoʻrgʻon, Surjandarya, Uzbekistán",
+      "latitude": 37.9833,
+      "longitude": 67.4167,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "NOR",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2021-03-24T20:45:00+01:00",
+      "location": {
+        "latitude": 36.1408,
+        "longitude": -5.3536,
+        "name": "Victoria Stadium, Gibraltar"
+      },
+      "label": "Gibraltar 0-3 Noruega, debut de Ståle Solbakken como seleccionador",
+      "coach_name": "Ståle Solbakken"
+    }
+  ]
+}

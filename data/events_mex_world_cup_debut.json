@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "MEX",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1930-07-13T15:00:00-03:30",
+      "location": {
+        "latitude": -34.9011,
+        "longitude": -56.1325,
+        "name": "Estadio Pocitos, Montevideo, Uruguay"
+      },
+      "label": "Francia 4-1 México, debut mundialista de México, Mundial 1930",
+      "coach_name": null
+    }
+  ]
+}

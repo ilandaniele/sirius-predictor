@@ -1,0 +1,217 @@
+{
+  "schema_version": "sirius-historical-coaches-v1",
+  "edition": 2010,
+  "methodology_note": "Real coach-per-edition data researched for the 2010 FIFA World Cup (South Africa) specifically, extending the Argumental coach-cycle solar-revolution signal backtest to a third real past edition -- the oldest one this project has researched. Keyed by team name exactly as it appears in engine.backtest's parsed historical matches (post-alias). Each entry is the coach who actually led the team AT the 2010 tournament and the date/time/venue of THEIR first match in charge of that continuous tenure. 10 of the 32 real 2010 participants are deliberately omitted because a genuine kickoff time could not be sourced despite the date/opponent/score/venue being well confirmed by RSSSF and other independent sources -- this project's no-placeholder-time policy applies as strictly to 2010 as to every other edition.",
+  "excluded_no_confirmed_time": [
+    "Algeria",
+    "Côte d'Ivoire",
+    "Denmark",
+    "Ghana",
+    "Honduras",
+    "Japan",
+    "North Korea",
+    "Slovakia",
+    "Slovenia",
+    "Uruguay"
+  ],
+  "coaches": {
+    "Argentina": {
+      "coach_name": "Diego Maradona",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-11-19T20:00:00+00:00",
+        "location": {"latitude": 55.82583, "longitude": -4.25194, "name": "Hampden Park, Glasgow, Scotland, United Kingdom"},
+        "label": "Escocia 0-1 Argentina, debut de Diego Maradona como seleccionador de Argentina"
+      }
+    },
+    "Australia": {
+      "coach_name": "Pim Verbeek",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2008-02-06T19:30:00+11:00",
+        "location": {"latitude": -37.81639, "longitude": 144.94750, "name": "Telstra Dome (Docklands Stadium), Melbourne, Australia"},
+        "label": "Australia 3-0 Qatar, debut de Pim Verbeek como seleccionador de Australia"
+      }
+    },
+    "Brazil": {
+      "coach_name": "Dunga (Carlos Caetano Bledorn Verri)",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2006-08-16T20:10:00+02:00",
+        "location": {"latitude": 59.94889, "longitude": 10.73417, "name": "Ullevaal Stadion, Oslo, Norway"},
+        "label": "Noruega 1-1 Brasil, debut de Dunga como seleccionador de Brasil"
+      }
+    },
+    "Cameroon": {
+      "coach_name": "Paul Le Guen",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2009-08-12T18:30:00+02:00",
+        "location": {"latitude": 46.60889, "longitude": 14.27806, "name": "Wörthersee Stadion, Klagenfurt, Austria"},
+        "label": "Austria 0-2 Camerún, debut de Paul Le Guen como seleccionador de Camerún"
+      }
+    },
+    "Chile": {
+      "coach_name": "Marcelo Bielsa",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2007-09-07T18:00:00+02:00",
+        "location": {"latitude": 48.2072, "longitude": 16.4208, "name": "Ernst-Happel-Stadion, Vienna, Austria"},
+        "label": "Suiza 2-1 Chile, debut de Marcelo Bielsa como seleccionador de Chile"
+      }
+    },
+    "England": {
+      "coach_name": "Fabio Capello",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2008-02-06T20:00:00+00:00",
+        "location": {"latitude": 51.5560, "longitude": -0.2795, "name": "Wembley Stadium, London, England"},
+        "label": "England 2-1 Switzerland, debut de Fabio Capello como seleccionador de Inglaterra"
+      }
+    },
+    "France": {
+      "coach_name": "Raymond Domenech",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2004-08-18T20:45:00+02:00",
+        "location": {"latitude": 48.1074, "longitude": -1.7128, "name": "Stade de la Route de Lorient, Rennes, France"},
+        "label": "France 1-1 Bosnia-Herzegovina, debut de Raymond Domenech como seleccionador de Francia"
+      }
+    },
+    "Germany": {
+      "coach_name": "Joachim Löw",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2006-08-16T20:45:00+02:00",
+        "location": {"latitude": 51.5544, "longitude": 7.0675, "name": "Veltins-Arena, Gelsenkirchen, Germany"},
+        "label": "Germany 3-0 Sweden, debut de Joachim Löw como seleccionador de Alemania"
+      }
+    },
+    "Greece": {
+      "coach_name": "Otto Rehhagel",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2001-09-05T18:00:00+03:00",
+        "location": {"latitude": 60.1869, "longitude": 24.9272, "name": "Helsinki Olympic Stadium, Helsinki, Finland"},
+        "label": "Finland 5-1 Greece, debut de Otto Rehhagel como seleccionador de Grecia"
+      }
+    },
+    "Italy": {
+      "coach_name": "Marcello Lippi",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-08-20T19:45:00+02:00",
+        "location": {"latitude": 43.7207, "longitude": 7.2553, "name": "Stade du Ray, Nice, France"},
+        "label": "Italy 2-2 Austria, debut de Marcello Lippi (segundo ciclo) como seleccionador de Italia"
+      }
+    },
+    "Mexico": {
+      "coach_name": "Javier Aguirre",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2009-06-06T21:00:00-06:00",
+        "location": {"latitude": 13.68111, "longitude": -89.22250, "name": "Estadio Cuscatlán, San Salvador, El Salvador"},
+        "label": "El Salvador 2-1 México, debut de Javier Aguirre en su segunda etapa como seleccionador de México"
+      }
+    },
+    "Netherlands": {
+      "coach_name": "Bert van Marwijk",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-08-20T20:00:00+04:00",
+        "location": {"latitude": 55.80361, "longitude": 37.74111, "name": "Lokomotiv Stadium (RZD Arena), Moscow, Russia"},
+        "label": "Rusia 1-1 Países Bajos, debut de Bert van Marwijk como seleccionador de Países Bajos"
+      }
+    },
+    "New Zealand": {
+      "coach_name": "Ricki Herbert",
+      "time_confidence": "low",
+      "debut": {
+        "occurred_at": "2005-06-09T14:45:00+01:00",
+        "location": {"latitude": 51.4717, "longitude": -0.2197, "name": "Craven Cottage, London, England"},
+        "label": "Australia 1-0 Nueva Zelanda, debut de Ricki Herbert como seleccionador de Nueva Zelanda (partido neutral en Londres)"
+      }
+    },
+    "Nigeria": {
+      "coach_name": "Lars Lagerbäck",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2010-05-25T18:00:00+02:00",
+        "location": {"latitude": 47.2953, "longitude": 11.5825, "name": "Alpenstadion (Gernot-Langes-Stadion), Wattens, Austria"},
+        "label": "Nigeria 0-0 Arabia Saudita, debut de Lars Lagerbäck como seleccionador de Nigeria"
+      }
+    },
+    "Paraguay": {
+      "coach_name": "Gerardo Martino",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2007-03-25T21:00:00-06:00",
+        "location": {"latitude": 25.723, "longitude": -100.312, "name": "Estadio Universitario (UANL), San Nicolás de los Garza, Monterrey, Mexico"},
+        "label": "México 2-1 Paraguay, debut de Gerardo Martino como seleccionador de Paraguay"
+      }
+    },
+    "Portugal": {
+      "coach_name": "Carlos Queiroz",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2008-08-20T20:45:00+01:00",
+        "location": {"latitude": 40.6418, "longitude": -8.5895, "name": "Estádio Municipal de Aveiro, Aveiro, Portugal"},
+        "label": "Portugal 5-0 Islas Feroe, debut de Carlos Queiroz como seleccionador de Portugal"
+      }
+    },
+    "Serbia": {
+      "coach_name": "Radomir Antić",
+      "time_confidence": "high",
+      "debut": {
+        "occurred_at": "2008-09-06T18:15:00+02:00",
+        "location": {"latitude": 44.78333, "longitude": 20.46472, "name": "Stadion Rajko Mitić (Marakana), Belgrade, Serbia"},
+        "label": "Serbia 2-0 Islas Feroe, debut de Radomir Antić como seleccionador de Serbia"
+      }
+    },
+    "South Africa": {
+      "coach_name": "Carlos Alberto Parreira",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2009-11-14T15:30:00+02:00",
+        "location": {"latitude": -26.2346, "longitude": 28.0516, "name": "Rand Stadium, Johannesburg, South Africa"},
+        "label": "Sudáfrica 0-0 Japón, debut de Carlos Alberto Parreira en su segundo ciclo como seleccionador de Sudáfrica"
+      }
+    },
+    "South Korea": {
+      "coach_name": "Huh Jung-moo",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-01-30T20:00:00+09:00",
+        "location": {"latitude": 37.568222, "longitude": 126.897361, "name": "Seoul World Cup Stadium, Seoul, South Korea"},
+        "label": "Corea del Sur 0-1 Chile, debut de Huh Jung-moo en su segundo ciclo como seleccionador de Corea del Sur"
+      }
+    },
+    "Spain": {
+      "coach_name": "Vicente del Bosque",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-08-20T14:15:00+02:00",
+        "location": {"latitude": 55.70250, "longitude": 12.57222, "name": "Parken Stadium, Copenhagen, Denmark"},
+        "label": "Dinamarca 0-3 España, debut de Vicente del Bosque como seleccionador de España"
+      }
+    },
+    "Switzerland": {
+      "coach_name": "Ottmar Hitzfeld",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2008-08-20T20:45:00+02:00",
+        "location": {"latitude": 46.17778, "longitude": 6.12750, "name": "Stade de Genève, Lancy/Geneva, Switzerland"},
+        "label": "Suiza 4-1 Chipre, debut de Ottmar Hitzfeld como seleccionador de Suiza"
+      }
+    },
+    "USA": {
+      "coach_name": "Bob Bradley",
+      "time_confidence": "moderate",
+      "debut": {
+        "occurred_at": "2007-01-20T14:00:00-08:00",
+        "location": {"latitude": 33.8639, "longitude": -118.2611, "name": "Home Depot Center, Carson, California, USA"},
+        "label": "Estados Unidos 3-1 Dinamarca, debut de Bob Bradley como entrenador de Estados Unidos"
+      }
+    }
+  }
+}

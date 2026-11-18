@@ -1,19 +1,25 @@
 metadata:
-  version: public-method-proxy-v1
+  version: public-method-evidence-v2
   status: experimental_not_scientifically_validated
   primary_archive: https://astrologiadeportivaa.blogspot.com/
   reconstructed_as_of: 2026-08-17
   policy: Publicar aciertos y errores; no ajustar pesos después de conocer resultados.
-implemented_proxy:
+legacy_scenario_proxy:
+  production_enabled: false
   structural_prior:
     input: sirius_index
     confidence: sirius_confidence
     formula: max_elo_adjustment * sirius_index * confidence * modulation
     warning: Índice hipotético del escenario; no es un dato observado ni un resultado científico.
-  event_time:
+  event_time_legacy:
     input: lunar_longitude_at_kickoff
     provider: Swiss Ephemeris when available; explicit mean-lunar fallback otherwise
     scope: Sólo final con fecha y hora; otras rondas usan señal estructural sin carta de evento.
+reviewed_evidence_pipeline:
+  observations: data/sirius_observations.yaml
+  archive: complete_paginated_blogger_feed
+  automatic_archive_integration: false
+  missing_evidence: neutral
   historical_backtest:
     input: expanding_team_performance_by_moon_sign
     leakage_control: Sólo partidos anteriores al pronosticado, con prior bayesiano.
@@ -69,7 +75,15 @@ public_method_registry:
     - part_of_victory
     - part_of_spirit
     - fixed_mutable_cardinal_modality
-    - historical_moon_sign_stats
+    - id: historical_moon_sign_stats
+      implemented: true
+      note: >
+        Implemented in engine/sirius.py (MOON_SIGN_RECORDS, moon_sign_signal) using
+        Argentina's real win/draw/loss-by-Moon-sign World Cup record as Sirius himself
+        published it across his 2026 World Cup posts (his single most publicly validated
+        technique). Only activates for matches with a real kickoff datetime and a team/sign
+        pair with recorded evidence (currently Argentina, 7 of 12 signs) — every other
+        case stays neutral rather than being imputed, per the project's sourcing policy.
     - critical_minutes
 rules:
   unknown_birth_time: marginalize_or_omit_angles
@@ -77,4 +91,3 @@ rules:
   avoid_posthoc: true
   separate_signal_from_data_confidence: true
   publish_negative_results: true
-

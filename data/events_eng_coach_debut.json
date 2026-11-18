@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ENG",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2025-03-21T19:45:00+00:00",
+      "location": {
+        "latitude": 51.556,
+        "longitude": -0.2795,
+        "name": "Wembley Stadium, Londres, Inglaterra"
+      },
+      "label": "Inglaterra 2-0 Albania, debut de Thomas Tuchel como seleccionador",
+      "coach_name": "Thomas Tuchel"
+    }
+  ]
+}

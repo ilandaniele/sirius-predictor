@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "NZL",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2023-03-23T19:00:00+13:00",
+      "location": {
+        "latitude": -36.9183,
+        "longitude": 174.8125,
+        "name": "Mt Smart Stadium, Auckland, Nueva Zelanda"
+      },
+      "label": "Nueva Zelanda 0-0 China, debut de Darren Bazeley como entrenador interino",
+      "coach_name": "Darren Bazeley"
+    }
+  ]
+}

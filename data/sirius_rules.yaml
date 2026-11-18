@@ -19,7 +19,7 @@ rules:
   - {id: demi_lunar, layer: tournament, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
   - {id: quarti_lunar, layer: tournament, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}
   - {id: lunations_eclipses_ingresses, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: partial_eclipse_guarded}
-  - {id: harmonics, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: pending}
+  - {id: harmonics, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented_descriptive_unweighted}
   - {id: fixed_stars, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: configurable_catalog}
   - {id: antiscia, layer: tournament, explicit_public_rule: true, requires_known_time: false, implementation_status: implemented}
   - {id: kickoff_chart, layer: match, explicit_public_rule: true, requires_known_time: true, implementation_status: implemented}

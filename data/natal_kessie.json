@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Franck Kessié",
+      "birth_date": "1996-12-19",
+      "birth_time": null,
+      "timezone": "Africa/Abidjan",
+      "place": "Ouragahio, Costa de Marfil",
+      "latitude": 6.2833,
+      "longitude": -6.7,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

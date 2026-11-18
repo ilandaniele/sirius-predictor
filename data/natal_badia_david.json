@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "David Badía Cequier",
+      "birth_date": "1974-09-04",
+      "birth_time": null,
+      "timezone": "Europe/Madrid",
+      "place": "Gavà, Cataluña, España",
+      "latitude": 41.3057,
+      "longitude": 2.0034,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

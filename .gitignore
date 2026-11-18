@@ -7,6 +7,8 @@ __pycache__/
 coverage.xml
 htmlcov/
 .venv/
+.venv-sirius-local/
+.venv-sirius-local-py312/
 .env
 node_modules/
 .next/
@@ -17,3 +19,4 @@ storage/
 dist/
 build/
 *.egg-info/
+*.tsbuildinfo

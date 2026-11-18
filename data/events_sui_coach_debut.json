@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "SUI",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2021-09-01T20:45:00+02:00",
+      "location": {
+        "latitude": 47.5410,
+        "longitude": 7.6208,
+        "name": "St. Jakob-Park, Basilea, Suiza"
+      },
+      "label": "Suiza 2-1 Grecia, debut de Murat Yakin como seleccionador",
+      "coach_name": "Murat Yakin"
+    }
+  ]
+}

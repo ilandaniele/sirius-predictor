@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "TUN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1978-06-02T16:45:00-03:00",
+      "location": {
+        "latitude": -32.9424,
+        "longitude": -60.6432,
+        "name": "Estadio Gigante de Arroyito, Rosario, Argentina"
+      },
+      "label": "Túnez 3-1 México, debut mundialista de Túnez (primera victoria de un equipo africano en un Mundial), Mundial 1978",
+      "coach_name": null
+    }
+  ]
+}

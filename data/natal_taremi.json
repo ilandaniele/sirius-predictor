@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Mehdi Taremi",
+      "birth_date": "1992-07-18",
+      "birth_time": null,
+      "timezone": "Asia/Tehran",
+      "place": "Bushehr, Irán",
+      "latitude": 28.9684,
+      "longitude": 50.8385,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

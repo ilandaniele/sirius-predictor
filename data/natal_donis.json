@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Georgios Donis",
+      "birth_date": "1969-10-22",
+      "birth_time": null,
+      "timezone": "Europe/Berlin",
+      "place": "Fráncfort del Meno, Alemania",
+      "latitude": 50.1109,
+      "longitude": 8.6821,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

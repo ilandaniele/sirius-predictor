@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Ryan Isaac Mendes da Graça",
+      "birth_date": "1990-01-08",
+      "birth_time": null,
+      "timezone": "Atlantic/Cape_Verde",
+      "place": "Mindelo, São Vicente, Cabo Verde",
+      "latitude": 16.8901,
+      "longitude": -24.9956,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

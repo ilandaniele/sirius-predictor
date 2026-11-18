@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "PAN",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "2018-06-18T18:00:00+03:00",
+      "location": {
+        "latitude": 43.4048,
+        "longitude": 39.9566,
+        "name": "Estadio Olímpico Fisht, Sochi, Rusia"
+      },
+      "label": "Bélgica 3-0 Panamá, debut mundialista de Panamá, Mundial 2018",
+      "coach_name": null
+    }
+  ]
+}

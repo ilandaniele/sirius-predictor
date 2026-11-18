@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Amir Ghalenoei",
+      "birth_date": "1963-11-21",
+      "birth_time": null,
+      "timezone": "Asia/Tehran",
+      "place": "Teherán, Irán",
+      "latitude": 35.6892,
+      "longitude": 51.389,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

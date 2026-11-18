@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "David Alaba",
+      "birth_date": "1992-06-24",
+      "birth_time": null,
+      "timezone": "Europe/Vienna",
+      "place": "Viena, Austria",
+      "latitude": 48.2082,
+      "longitude": 16.3738,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

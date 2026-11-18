@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "COD",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2022-09-23T12:00:00+00:00",
+      "location": {
+        "latitude": 11.1771,
+        "longitude": -4.2979,
+        "name": "Stade Père-Jégo, Bobo-Dioulasso, Burkina Faso"
+      },
+      "label": "Burkina Faso 1-0 RD Congo, debut de Sébastien Desabre como seleccionador",
+      "coach_name": "Sébastien Desabre"
+    }
+  ]
+}

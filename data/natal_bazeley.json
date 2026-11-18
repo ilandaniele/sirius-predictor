@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Darren Shaun Bazeley",
+      "birth_date": "1972-10-05",
+      "birth_time": null,
+      "timezone": "Europe/London",
+      "place": "Northampton, Inglaterra",
+      "latitude": 52.2405,
+      "longitude": -0.9027,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

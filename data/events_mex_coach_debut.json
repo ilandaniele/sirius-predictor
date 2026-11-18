@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "MEX",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2026-09-26T21:00:00-04:00",
+      "location": {
+        "latitude": 39.278,
+        "longitude": -76.6227,
+        "name": "M&T Bank Stadium, Baltimore, Maryland, Estados Unidos"
+      },
+      "label": "México vs Colombia, debut de Rafael Márquez como seleccionador (amistoso, fecha y horario oficialmente confirmados)",
+      "coach_name": "Rafael Márquez"
+    }
+  ]
+}

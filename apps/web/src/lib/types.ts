@@ -19,7 +19,15 @@ export type Scenario = {
   scenario_id: string;
   as_of: string;
   status: string;
-  format: { teams: number; groups: number; group_size: number };
+  format: {
+    teams: 48 | 64;
+    pots: number;
+    pot_size: number;
+    groups: number;
+    group_size: number;
+    qualifiers_per_group: number;
+    best_third_placed: number;
+  };
   final: { city: string; local_date: string; base_hour: number };
 };
 
@@ -31,6 +39,9 @@ export type Team = {
   projected_elo: number;
   sirius_index: number;
   sirius_confidence: number;
+  qualification_status: string;
+  coach: string;
+  captain: string;
   source_id: string;
   as_of: string;
 };
@@ -45,10 +56,213 @@ export type Prediction = {
   argentina_groups?: Array<Record<string, string | number>>;
   final_pairs: Array<Record<string, string | number>>;
   sensitivity?: Array<Record<string, string | number>>;
-  top_brackets: Array<Record<string, string | number>>;
+  top_brackets: Array<{
+    signature: string;
+    signature_version?: "decisive-v1";
+    scope?: "SF_AND_FINAL";
+    champion: string;
+    runner_up: string;
+    density_percent: number;
+    decisive_matches?: Array<{
+      round: "SF" | "F";
+      match_index: number;
+      team_a_id: string;
+      team_a: string;
+      team_b_id: string;
+      team_b: string;
+      winner_id: string;
+      winner: string;
+    }>;
+  }>;
   model_comparison?: Record<string, number | null>;
   changes?: string[];
   update_summary?: string;
+  format_size?: 48 | 64;
+  scenario_id?: string;
+  bracket_urls?: Array<{
+    rank: number;
+    png: string;
+    svg: string;
+    pdf: string;
+  }>;
+  sirius_assessments?: Record<string, SiriusAssessment>;
+  sirius_evidence_audit?: {
+    reviewed_observations: number;
+    pending_observations: number;
+    teams_with_evidence: number;
+  };
+  sirius_application?: {
+    status: string;
+    label: string;
+    effective: boolean;
+    reviewed_observations: number;
+    pending_observations: number;
+    teams_with_evidence: number;
+    teams_with_nonzero_adjustment: number;
+  };
+  chart_recalculation?: {
+    sensitivity_computed?: NatalSensitivitySummary[];
+    sensitivity_cache_hits?: NatalSensitivitySummary[];
+  };
+};
+
+export type NatalSensitivitySummary = {
+  entity: string;
+  record_id: string;
+  input_hash: string;
+  sample_count: number;
+  invariant_signs: Record<string, string>;
+  variable_signs: Record<string, Record<string, number>>;
+  houses_used: false;
+  warning: string;
+};
+
+export type SiriusAssessment = {
+  journey_index: { value: number | null; status: string; evidence_count: number };
+  coronation_index: { value: number | null; status: string; evidence_count: number };
+  data_confidence: number;
+  explanation: string;
+};
+
+export type TrackRecordMatch = {
+  round: string;
+  post_url: string;
+  published_at: string;
+  claim: string;
+  outcome: "correct" | "incorrect";
+  note?: string;
+};
+
+export type TrackRecordAstrologer = {
+  source_id: string;
+  astrologer: string;
+  self_reported_summary: string;
+  self_reported_url: string;
+  verifiability: "verifiable_from_dated_posts" | "unverifiable_from_archive";
+  matches: TrackRecordMatch[];
+  verifiability_note?: string;
+};
+
+export type TrackRecordAudit = {
+  edition: number;
+  consulted_at: string;
+  methodology_note: string;
+  astrologers: TrackRecordAstrologer[];
+  final_outcome: {
+    summary: string;
+    both_predicted: string;
+    both_wrong: boolean;
+  };
+};
+
+export type CycleFortune = {
+  team_id: string;
+  coach_name: string;
+  debut_label: string;
+  solar_return_year: number;
+  solar_return_moment: string;
+  midheaven_sign: string;
+  midheaven_ruler: string;
+  midheaven_ruler_dignity: string;
+  midheaven_ruler_house_class: string;
+  favorable_testimonies: string[];
+  adverse_testimonies: string[];
+  fortune_index: number;
+  status: "computed" | "ephemeris_unavailable";
+};
+
+export type SiriusArchive = {
+  source_name: string;
+  source_url: string;
+  consulted_at: string;
+  quality: "B";
+  declared_total: number;
+  captured_total: number;
+  complete: boolean;
+  earliest_published_at: string;
+  latest_published_at: string;
+  sports_relevant_total: number;
+  technique_mentions: Record<string, number>;
+  review_policy: string;
+  recent_sports_posts: Array<{
+    post_id: string;
+    published_at: string;
+    url: string;
+    title: string;
+    technique_mentions: string[];
+    review_status: string;
+  }>;
+};
+
+export type SiriusReviewStatus = "pending" | "approved" | "rejected" | "all";
+
+export type SiriusReviewDecision = {
+  id: string;
+  action: "approved" | "rejected";
+  reviewer: string;
+  reason: string;
+  decided_at: string;
+  supersedes_decision_id: string | null;
+  observation: Record<string, unknown> | null;
+};
+
+export type AstroSource = "sirius" | "argumental";
+
+export type SiriusReviewCandidate = {
+  id: string;
+  fingerprint: string;
+  post_id: string;
+  claim_index: number;
+  claim_text: string;
+  title: string;
+  published_at: string;
+  source_id: "sirius_blog" | "argumental_blog";
+  source_url: string;
+  consulted_at: string;
+  quality: "B";
+  content_sha256: string;
+  technique_mentions: string[];
+  inferred: true;
+  status: Exclude<SiriusReviewStatus, "all">;
+  latest_decision: SiriusReviewDecision | null;
+};
+
+export type SiriusReviewQueue = {
+  counts: { pending: number; approved: number; rejected: number; total: number };
+  status: SiriusReviewStatus;
+  offset: number;
+  limit: number;
+  items: SiriusReviewCandidate[];
+};
+
+export type SiriusReviewDecisionInput = {
+  action: "approved" | "rejected";
+  reviewer: string;
+  reason: string;
+  expected_decision_id: string | null;
+  approval?: {
+    team_id: string;
+    feature_id: string;
+    polarity: "favorable" | "adverse" | "neutral";
+    strength: number;
+    data_confidence: number;
+    hour_robustness: number | null;
+    description: string;
+    time_known: boolean;
+    time_source_url: string | null;
+    time_consulted_at: string | null;
+    time_data_grade: Provenance["quality"] | null;
+    time_source_note: string | null;
+  };
+};
+
+export type CombinedAssessment = {
+  sirius: Record<string, SiriusAssessment>;
+  argumental: Record<string, SiriusAssessment>;
+  combined: Record<string, SiriusAssessment>;
+  sirius_evidence_audit: { reviewed_observations: number; pending_observations: number };
+  argumental_evidence_audit: { reviewed_observations: number; pending_observations: number };
+  combined_evidence_audit: { reviewed_observations: number; pending_observations: number };
 };
 
 export type Draw = Record<string, Team[]>;
@@ -73,6 +287,54 @@ export type BacktestResult = {
   round_accuracy: Array<Record<string, string | number>>;
   ablations: Array<Record<string, string | number | null>>;
   calibration_manifest: Array<Record<string, string | number | number[] | boolean>>;
+  next_edition_calibration?: { alpha: number; host_bonus_elo: number; argumental_bonus_elo: number };
+  altitude_diagnostic?: {
+    matches_total: number;
+    matches_mapped: number;
+    venues_unmapped: string[];
+    applied_to_model: boolean;
+    finding: string;
+    thresholds_m: Record<
+      string,
+      {
+        high_altitude: { matches: number; draws: number; draw_rate: number; avg_goals: number };
+        low_altitude: { matches: number; draws: number; draw_rate: number; avg_goals: number };
+      }
+    >;
+  };
+  argumental_signal_diagnostic?: {
+    editions_covered: number[];
+    editions_pending_research: number[];
+    applied_to_model: boolean;
+    finding: string;
+    by_edition: Record<
+      string,
+      {
+        edition: number;
+        champion?: string;
+        teams_covered: number;
+        status?: string;
+        pearson_r?: number;
+        t_statistic?: number;
+        statistically_significant_p05?: boolean;
+        advanced_past_group?: { n: number; mean_fortune_index: number | null };
+        eliminated_in_group?: { n: number; mean_fortune_index: number | null };
+        applied_to_model: boolean;
+        finding: string;
+      }
+    >;
+    pooled?: {
+      editions: number[];
+      teams_covered: number;
+      pearson_r: number;
+      t_statistic: number;
+      statistically_significant_p05: boolean;
+      advanced_past_group: { n: number; mean_fortune_index: number | null };
+      eliminated_in_group: { n: number; mean_fortune_index: number | null };
+      applied_to_model: boolean;
+      finding: string;
+    } | null;
+  };
 };
 
 export type UpdateEvent = {

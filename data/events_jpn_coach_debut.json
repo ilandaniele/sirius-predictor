@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "JPN",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2018-09-11T19:20:00+09:00",
+      "location": {
+        "latitude": 34.7885,
+        "longitude": 135.5228,
+        "name": "Panasonic Stadium Suita, Osaka, Japón"
+      },
+      "label": "Japón 3-0 Costa Rica, debut de Hajime Moriyasu como seleccionador (Kirin Challenge Cup 2018)",
+      "coach_name": "Hajime Moriyasu"
+    }
+  ]
+}

@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "GER",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1934-05-27T16:00:00+01:00",
+      "location": {
+        "latitude": 43.7803,
+        "longitude": 11.2828,
+        "name": "Stadio Giovanni Berta, Florencia, Italia"
+      },
+      "label": "Alemania 5-2 Bélgica, debut mundialista de Alemania, Mundial 1934",
+      "coach_name": null
+    }
+  ]
+}

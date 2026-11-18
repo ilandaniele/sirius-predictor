@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "ESP",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1934-05-27T15:30:00+02:00",
+      "location": {
+        "latitude": 44.4166,
+        "longitude": 8.9524,
+        "name": "Estadio Luigi Ferraris, Génova, Italia"
+      },
+      "label": "España 3-1 Brasil, debut mundialista de España, Mundial 1934 (octavos de final)",
+      "coach_name": null
+    }
+  ]
+}

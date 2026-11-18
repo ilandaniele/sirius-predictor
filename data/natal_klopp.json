@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Jürgen Norbert Klopp",
+      "birth_date": "1967-06-16",
+      "birth_time": null,
+      "timezone": "Europe/Berlin",
+      "place": "Stuttgart, Alemania",
+      "latitude": 48.7758,
+      "longitude": 9.1829,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}

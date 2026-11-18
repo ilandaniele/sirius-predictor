@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "POR",
+  "events": [
+    {
+      "event_type": "world_cup_debut",
+      "occurred_at": "1966-07-13T19:30:00+01:00",
+      "location": {
+        "latitude": 53.4631,
+        "longitude": -2.2913,
+        "name": "Old Trafford, Mánchester, Inglaterra"
+      },
+      "label": "Portugal 3-1 Hungría, debut mundialista de Portugal, Mundial 1966",
+      "coach_name": null
+    }
+  ]
+}

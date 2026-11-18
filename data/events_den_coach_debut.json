@@ -1,0 +1,17 @@
+{
+  "schema_version": "sirius-team-events-v1",
+  "team_code": "DEN",
+  "events": [
+    {
+      "event_type": "coach_debut",
+      "occurred_at": "2024-11-15T20:45:00+01:00",
+      "location": {
+        "latitude": 55.7031,
+        "longitude": 12.5775,
+        "name": "Parken Stadium, Copenhague, Dinamarca"
+      },
+      "label": "Dinamarca 1-2 España, debut de Brian Riemer como seleccionador",
+      "coach_name": "Brian Riemer"
+    }
+  ]
+}

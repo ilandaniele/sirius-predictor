@@ -1,0 +1,16 @@
+{
+  "schema_version": "sirius-birth-data-v1",
+  "records": [
+    {
+      "person_name": "Miroslav Koubek",
+      "birth_date": "1951-09-01",
+      "birth_time": null,
+      "timezone": "Europe/Prague",
+      "place": "Praga, Chequia",
+      "latitude": 50.0755,
+      "longitude": 14.4378,
+      "time_known": false,
+      "rodden_rating": "X"
+    }
+  ]
+}
